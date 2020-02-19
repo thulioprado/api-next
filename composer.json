@@ -24,7 +24,8 @@
     "illuminate/events": "^6",
     "illuminate/http": "^6",
     "illuminate/routing": "^6",
-    "illuminate/support": "^6"
+    "illuminate/support": "^6",
+    "webmozart/path-util": "^2.3"
   },
   "require-dev": {
     "cedx/coveralls": "^11.2",
