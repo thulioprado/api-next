@@ -16,12 +16,12 @@ final class Project
      *
      * @var ConfigInterface
      */
-    private $_config;
+    private $name;
 
     /**
      * Project constructor.
      */
-    public function __construct(ConfigInterface $config)
+    public function __construct(Directus $directus)
     {
         $this->_config = $config;
     }

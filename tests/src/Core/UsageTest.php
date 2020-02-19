@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Directus\Tests\Core;
 
-use Directus\Core\Directus;
 use Directus\Tests\Helpers\DirectusTestCase;
 
 /**
@@ -14,37 +13,26 @@ use Directus\Tests\Helpers\DirectusTestCase;
 final class UsageTest extends DirectusTestCase
 {
     /**
-     * protected $provider;
-     *
-     * protected function setUp(): void
-     * {
-     * $this->provider = new
-     * }
+     * Some example usage.
      */
-    public function testUsage1(): void
+    public function testMultipleProjects(): void
     {
-        $directus = new Directus([
-            'config' => [
-                'provider' => 'array',
-                'options' => [
-                    'data' => [
-                        'project1' => [
-                            'database' => [
-                                'driver' => 'mysql',
-                                'host' => '127.0.0.1',
-                            ],
-                        ],
-                        'project2' => [
-                            'database' => [
-                                'driver' => 'mysql',
-                                'host' => '127.0.0.1',
-                            ],
-                        ],
-                    ],
-                ],
-            ],
+        $repository = new FileRepository([
+            'path' => $this->getDataFilePath('config/projects/{project}.php'),
         ]);
 
-        $project1 = $directus->getProject('project1');
+        $project = $repository->get('project1');
+    }
+
+    /**
+     * Some example usage.
+     */
+    public function testSimple(): void
+    {
+        $repository = new FilesRepository([
+            'path' => $this->getDataFilePath('config/projects/{project}.php'),
+        ]);
+
+        $project = $repository->get('project1');
     }
 }

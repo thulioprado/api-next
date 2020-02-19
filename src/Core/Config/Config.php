@@ -4,10 +4,6 @@ declare(strict_types=1);
 
 namespace Directus\Core\Config;
 
-use Directus\Core\Config\Exception\UnknownProvider;
-use Directus\Core\Config\Providers\ArrayProvider;
-use Directus\Core\Config\Providers\Php\DirectoryProvider as PhpDirectoryProvider;
-use Directus\Core\Config\Providers\Php\FileProvider as PhpFileProvider;
 use Directus\Core\Config\Providers\ProviderInterface;
 
 /**
@@ -15,17 +11,6 @@ use Directus\Core\Config\Providers\ProviderInterface;
  */
 class Config implements ConfigInterface
 {
-    /**
-     * Config driver factories.
-     *
-     * @var array
-     */
-    private static $providers = [
-        'php' => PhpDirectoryProvider::class,
-        'php_file' => PhpFileProvider::class,
-        'array' => ArrayProvider::class,
-    ];
-
     /**
      * Project name.
      *
@@ -47,29 +32,6 @@ class Config implements ConfigInterface
     {
         $this->project = $project;
         $this->provider = $provider;
-    }
-
-    /**
-     * Registers a config driver.
-     */
-    public static function register(string $name, string $provider): void
-    {
-        static::$providers[$name] = $provider;
-    }
-
-    /**
-     * Gets an instance of a config loader.
-     */
-    public static function create(string $project, string $provider, array $options): ConfigInterface
-    {
-        if (!\array_key_exists($provider, static::$providers)) {
-            throw new UnknownProvider();
-        }
-
-        /** @var ProviderInterface */
-        $instance = new static::$providers[$provider]($options);
-
-        return new self($project, $instance);
     }
 
     /**

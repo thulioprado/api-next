@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Directus\Core\Options\Exception;
+namespace Directus\Utils\Options\Exception;
 
 /**
  * Empty schema exception.

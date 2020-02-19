@@ -6,6 +6,7 @@ return [
     'databases' => [
         'data' => [
             'connection' => 'default',
+            'prefix' => 'default_',
         ],
         'system' => [
             'connection' => 'default',

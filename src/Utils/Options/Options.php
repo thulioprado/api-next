@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Directus\Core\Options;
+namespace Directus\Utils\Options;
 
-use Directus\Core\Options\Exception\EmptySchema;
-use Directus\Core\Options\Exception\InvalidOption;
-use Directus\Core\Options\Exception\MissingOptions;
+use Directus\Utils\Options\Exception\EmptySchema;
+use Directus\Utils\Options\Exception\InvalidOption;
+use Directus\Utils\Options\Exception\MissingOptions;
 use Illuminate\Support\Arr;
 
 /**

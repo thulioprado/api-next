@@ -4,8 +4,9 @@ declare(strict_types=1);
 
 namespace Directus\Core;
 
-use Directus\Core\Config\Config;
-use Directus\Core\Options\Options;
+use Directus\Core\Projects\Repositories\DirectoryRepository;
+use Directus\Core\Projects\Repositories\RepositoryInterface;
+use Illuminate\Container\Container;
 
 /**
  * Directus.
@@ -13,72 +14,39 @@ use Directus\Core\Options\Options;
 final class Directus
 {
     /**
-     * Options for directus.
+     * Service container instance.
      *
-     * @var Options
+     * @var Container
      */
-    private $options;
-
-    /**
-     * Instantiated projects.
-     *
-     * @var array
-     */
-    private $projects;
-
-    /**
-     * Current working project.
-     *
-     * @var null|Project
-     */
-    private $current;
+    private $container;
 
     /**
      * Directus SDK constructor.
      *
      * @param array $options
      */
-    public function __construct($options)
+    public function __construct()
     {
-        $this->current = null;
-        $this->projects = [];
-        $this->options = new Options([
-            'config.provider',
-            'config.options',
-        ], $options);
+        $this->container = new Container();
+        $this->container->bind(RepositoryInterface::class, DirectoryRepository::class);
     }
 
     /**
-     * Undocumented function.
+     * Gets the project repository.
      */
-    public function setCurrentProject(string $project): Project
+    public function getProjectRepository(): RepositoryInterface
     {
-        return $this->current = $this->getProject($project);
+        /** @var RepositoryInterface */
+        $repository = $this->container->resolve(RepositoryInterface::class);
+
+        return $repository;
     }
 
     /**
-     * Get current project.
+     * Service container.
      */
-    public function getCurrentProject(): ?Project
+    public function getContainer(): Container
     {
-        return $this->current;
-    }
-
-    /**
-     * Gets a project by name.
-     */
-    public function getProject(string $project): Project
-    {
-        if (isset($this->projects[$project])) {
-            return $this->projects[$project];
-        }
-
-        $config = Config::create(
-            $project,
-            $this->options->get('config.provider'),
-            $this->options->get('config.options')
-        );
-
-        return $this->projects[$project] = new Project($config);
+        return $this->container;
     }
 }

@@ -9,15 +9,18 @@ use Illuminate\Support\ServiceProvider;
 /**
  * Admin provider.
  */
-class AdminProvider extends ServiceProvider
+final class AdminProvider extends ServiceProvider
 {
     /**
-     * Service boot.
+     * Publishes admin files to public folder.
      */
     public function boot(): void
     {
-        $this->publishes([
-            __DIR__.'/../Admin/Assets' => public_path(config('directus.routes.admin', '/admin')),
-        ], 'directus.admin');
+        $location = __DIR__.'/../../../app/dist';
+        if (file_exists($location) && is_dir($location)) {
+            $this->publishes([
+                $location => public_path(config('directus.routes.admin', '/admin')),
+            ], ['directus', 'directus.admin']);
+        }
     }
 }

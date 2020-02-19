@@ -18,8 +18,10 @@
   "require": {
     "php": ">=7.2",
     "doctrine/dbal": "^2.10",
+    "illuminate/config": "^6.16",
     "illuminate/console": "^6",
     "illuminate/database": "^6",
+    "illuminate/events": "^6",
     "illuminate/http": "^6",
     "illuminate/routing": "^6",
     "illuminate/support": "^6"
@@ -33,7 +35,7 @@
     "phpstan/phpstan": "^0.12",
     "phpstan/phpstan-phpunit": "^0.12",
     "phpstan/phpstan-strict-rules": "^0.12",
-    "phpunit/phpunit": "^8"
+    "phpunit/phpunit": "^9"
   },
   "autoload": {
     "psr-4": {
@@ -74,7 +76,7 @@
   "extra": {
     "laravel": {
       "providers": [
-        "Directus\\Laravel\\Providers\\DirectusProvider"
+        "Directus\\Laravel\\Providers\\MainProvider"
       ]
     }
   }

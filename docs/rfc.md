@@ -14,3 +14,9 @@
 
 -   Event based? Hooks?
 -   What about concurrency?
+
+# Server vs Projects
+
+Directus <= 8 has `/server` and `/:project` routes, which makes `server` a restricted project name. The idea is to get these routes to be more flexible, in a way that app is able to access the project endpoints without relying on a fixed URL pattern.
+
+##

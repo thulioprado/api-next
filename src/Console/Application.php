@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Directus\Console;
 
 use Directus\Console\Commands\Migrate;
-use Directus\Core\Project;
+use Directus\Core\Projects\Project;
 use Directus\Core\Version;
 use Symfony\Component\Console\Application as SymfonyApplication;
 use Symfony\Component\Console\ConsoleEvents;

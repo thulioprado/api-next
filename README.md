@@ -28,7 +28,13 @@ This is a work-in-progress branch. Please **DO NOT** use this for any kind of en
 
 # Installing
 
-To install Directus laravel package, for now you should add the git repository to your project's `composer.json` file. Then you can use the `directus/directus` package using `dev-laravel` version.
+To install Directus package, you should make some changes to your `composer.json` file. Then you can use the `directus/directus` package using `dev-*` versions. This requirement is temporary as we develop the new version.
+
+## Allow "dev" stability
+
+```
+    "minimum-stability": "dev",
+```
 
 ## Add the repository
 
@@ -36,7 +42,7 @@ To install Directus laravel package, for now you should add the git repository t
     "repositories": [
         {
             "type": "vcs",
-            "url":  "git@github.com:directus/api.git"
+            "url":  "git@github.com:directus/api-next.git"
         }
     ]
 ```
@@ -49,7 +55,7 @@ If you want to use a local repository, you should use a symlink instead.
     "repositories": [
         {
             "type": "path",
-            "url": "/path/to/directus/api",
+            "url": "/path/to/directus/api-next",
             "symlink": true
         }
     ],
@@ -58,5 +64,5 @@ If you want to use a local repository, you should use a symlink instead.
 ## Add the dependency
 
 ```
-composer require directus/directus:dev-laravel
+composer require directus/directus
 ```

@@ -16,8 +16,8 @@ class ProjectController extends Controller
      */
     public function test(Project $project, string $collection): string
     {
-        $name = $project->config()->key();
+        //$name = $project->config()->key();
 
-        return "project: {$name}, collection: {$collection}";
+        return "project: {$project}, collection: {$collection}";
     }
 }
