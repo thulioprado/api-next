@@ -6,33 +6,39 @@ namespace Directus\Framework\Projects;
 
 use Directus\Framework\Contracts\Projects\Project;
 use Directus\Framework\Contracts\Config as DirectusConfig;
-use Directus\Framework\Contracts\Projects\Config as ProjectConfig;
+use Directus\Framework\Contracts\Projects\Config as Config;
 use Directus\Framework\Contracts\Projects\Repository as ProjectRepository;
 use Illuminate\Contracts\Container\Container;
 use Illuminate\Support\Collection;
+use Webmozart\PathUtil\Path;
 
 /**
  * File repository.
  */
-class FileRepository implements ProjectRepository
+class FilesystemRepository implements ProjectRepository
 {
+    /**
+     * Directory key.
+     */
+    public const CONFIG_DIRECTORY = 'project.repository.filesystem.directory';
+
     /**
      * @var Repository
      */
-    private $config;
+    private $_config;
 
     /**
      * @var Container
      */
-    private $container;
+    private $_container;
 
     /**
      * Constructor.
      */
     public function __construct(Container $container, DirectusConfig $config)
     {
-        $this->container = $container;
-        $this->config = $config;
+        $this->_config = $config;
+        $this->_container = $container;
     }
 
     /**
@@ -40,7 +46,7 @@ class FileRepository implements ProjectRepository
      */
     public function all(): Collection
     {
-        return Collection::make(glob($this->getPath('*.php')))->map(function ($file) {
+        return Collection::make(glob($this->getProjectFile('*')))->map(function ($file) {
             [ 'filename' => $name ] = pathinfo($file);
 
             return $this->project($name);
@@ -52,14 +58,14 @@ class FileRepository implements ProjectRepository
      */
     public function project(string $name): Project
     {
-        /** @var ProjectConfig */
-        $projectConfig = $this->container->make(ProjectConfig::class, [
+        /** @var Config */
+        $config = $this->_container->make(Config::class, [
             'name' => $name,
         ]);
 
         /** @var Project */
-        $project = $this->container->make(Project::class, [
-            'config' => $projectConfig,
+        $project = $this->_container->make(Project::class, [
+            'config' => $config,
             'name' => $name,
         ]);
 
@@ -71,22 +77,18 @@ class FileRepository implements ProjectRepository
      */
     public function exists(string $name): bool
     {
-        $target = $this->getPath($name.'.php');
+        $file = $this->getProjectFile($name);
 
-        return file_exists($target) && is_file($target) && is_readable($target);
+        return file_exists($file) && is_file($file) && is_readable($file);
     }
 
     /**
      * Gets a relative path within the root folder.
      */
-    private function getPath(string $file = ''): string
+    private function getProjectFile(string $name = ''): string
     {
-        $root = $this->config->get('repository.files.root');
-        $end = substr($root, -1);
-        if ($end !== '\\' && $end !== '/') {
-            $root .= DIRECTORY_SEPARATOR;
-        }
+        $root = $this->_config->get(self::CONFIG_DIRECTORY);
 
-        return $root.$file;
+        return Path::join($root, "{$name}.php");
     }
 }

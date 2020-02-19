@@ -12,6 +12,16 @@ use Directus\Framework\Contracts\Collections\Collection;
 interface Project
 {
     /**
+     * Gets the project name.
+     */
+    public function name(): string;
+
+    /**
+     * Checks if project is private.
+     */
+    public function private(): bool;
+
+    /**
      * Gets a collection.
      */
     public function collection(string $name): Collection;
