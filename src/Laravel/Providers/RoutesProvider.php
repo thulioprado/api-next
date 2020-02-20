@@ -47,7 +47,7 @@ class RoutesProvider extends ServiceProvider
             Route::group([
                 'prefix' => '{project}',
             ], function (): void {
-                Route::get('{collection}/items', [ProjectController::class, 'test']);
+                Route::get('items/{collection}', [ProjectController::class, 'index']);
             });
         });
     }

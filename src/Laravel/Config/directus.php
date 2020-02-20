@@ -8,4 +8,8 @@ return [
         'base' => '/',
         'admin' => '/admin',
     ],
+    'identifier' => [
+        'provider' => '\Directus\Laravel\Identifiers\PathIdentifer',
+        'parameters' => [],
+    ],
 ];

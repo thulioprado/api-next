@@ -16,16 +16,9 @@ class MainProvider extends ServiceProvider
      */
     public function register(): void
     {
-        //die('hello');
-
         $this->app->register(AdminProvider::class);
 
         $this->app->register(DirectusProvider::class);
-
-        $this->app->register(IdentificationProvider::class);
-        $this->app->register(ProjectProvider::class);
-
-        $this->app->register(CommandLineProvider::class);
 
         $this->app->register(RoutesProvider::class);
     }

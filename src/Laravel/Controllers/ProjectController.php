@@ -4,7 +4,8 @@ declare(strict_types=1);
 
 namespace Directus\Laravel\Controllers;
 
-use Directus\Core\Project;
+use Directus\Framework\Projects\Project;
+use Illuminate\Http\JsonResponse;
 
 /**
  * Server controller.
@@ -12,12 +13,18 @@ use Directus\Core\Project;
 class ProjectController extends Controller
 {
     /**
-     * Server information.
+     * Gets all resources on specified collection.
      */
-    public function test(Project $project, string $collection): string
+    public function index(Project $project, string $collection): JsonResponse
     {
-        //$name = $project->config()->key();
+        return response()->json($project->collection($collection)->items()->get());
+    }
 
-        return "project: {$project}, collection: {$collection}";
+    /**
+     * Gets specific resource on specified collection.
+     */
+    public function show(Project $project, string $collection, string $id): JsonResponse
+    {
+        return response()->json($project->collection($collection)->items()->findOrFail($id));
     }
 }
