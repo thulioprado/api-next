@@ -28,7 +28,7 @@ class PathIdentifier implements Identifier
     /**
      * Project name.
      *
-     * @var string|null
+     * @var null|string
      */
     private $_project;
 
@@ -50,9 +50,7 @@ class PathIdentifier implements Identifier
     }
 
     /**
-     * Gets the identified project name.
-     *
-     * @return string
+     * {@inheritdoc}
      */
     public function get(): ?string
     {

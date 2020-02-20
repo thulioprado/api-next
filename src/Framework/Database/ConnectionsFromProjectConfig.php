@@ -27,7 +27,7 @@ final class ConnectionsFromProjectConfig implements ConnectionsContract
     /**
      * System connection.
      *
-     * @var ConnectionInterface[]
+     * @var array
      */
     private $_connections;
 
@@ -77,15 +77,15 @@ final class ConnectionsFromProjectConfig implements ConnectionsContract
     /**
      * Gets a connection by name in project config.
      */
-    private function get($name): ConnectionInterface
+    private function get(string $name): ConnectionInterface
     {
         $projectName = $this->_project->name();
 
-        $connectionName = "${projectName}.${name}";
+        $connectionName = "{$projectName}.{$name}";
         if ($this->_connections[$name] === null) {
             $connections = $this->_manager->getDatabaseManager()->getConnections();
-            if (!array_key_exists($connectionName, $connections)) {
-                $this->_manager->addConnection($this->_project->config()->get("databases.${name}"), $connectionName);
+            if (!\array_key_exists($connectionName, $connections)) {
+                $this->_manager->addConnection($this->_project->config()->get("databases.{$name}"), $connectionName);
             }
             $this->_connections[$name] = $this->_manager->getConnection($connectionName);
         }

@@ -16,14 +16,11 @@ final class Directus extends Container
 {
     /**
      * Directus constructor.
-     *
-     * @param array $config
      */
-    public function __construct($config = [])
+    public function __construct()
     {
-        $this->config = $config;
-        $this->instance(Directus::class, $this);
-        $this->alias(Directus::class, ContainerContract::class);
+        $this->instance(self::class, $this);
+        $this->alias(self::class, ContainerContract::class);
     }
 
     /**
@@ -31,10 +28,8 @@ final class Directus extends Container
      */
     public function config(): ConfigRepositoryContract
     {
-        /** @var ConfigRepositoryContract */
-        $config = $this->resolve(ConfigRepositoryContract::class);
-
-        return $config;
+        // @var ConfigRepositoryContract
+        return $this->resolve(ConfigRepositoryContract::class);
     }
 
     /**
@@ -42,9 +37,7 @@ final class Directus extends Container
      */
     public function projects(): ProjectRepositoryContract
     {
-        /** @var ProjectRepositoryContract */
-        $projects = $this->resolve(ProjectRepositoryContract::class);
-
-        return $projects;
+        // @var ProjectRepositoryContract
+        return $this->resolve(ProjectRepositoryContract::class);
     }
 }

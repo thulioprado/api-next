@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Directus\Framework\Projects;
 
-use Directus\Framework\Contracts\Projects\Project;
 use Directus\Framework\Contracts\Config as DirectusConfig;
 use Directus\Framework\Contracts\Projects\Config as Config;
+use Directus\Framework\Contracts\Projects\Project;
 use Directus\Framework\Contracts\Projects\Repository as ProjectRepository;
 use Illuminate\Contracts\Container\Container;
 use Illuminate\Support\Collection;
@@ -23,7 +23,7 @@ class FilesystemRepository implements ProjectRepository
     public const CONFIG_DIRECTORY = 'project.repository.filesystem.directory';
 
     /**
-     * @var Repository
+     * @var DirectusConfig
      */
     private $_config;
 
@@ -46,7 +46,7 @@ class FilesystemRepository implements ProjectRepository
      */
     public function all(): Collection
     {
-        return Collection::make(glob($this->getProjectFile('*')))->map(function ($file) {
+        return Collection::make(glob($this->getProjectFile('*')))->map(function ($file): Project {
             [ 'filename' => $name ] = pathinfo($file);
 
             return $this->project($name);
@@ -63,13 +63,11 @@ class FilesystemRepository implements ProjectRepository
             'name' => $name,
         ]);
 
-        /** @var Project */
-        $project = $this->_container->make(Project::class, [
+        // @var Project
+        return $this->_container->make(Project::class, [
             'config' => $config,
             'name' => $name,
         ]);
-
-        return $project;
     }
 
     /**

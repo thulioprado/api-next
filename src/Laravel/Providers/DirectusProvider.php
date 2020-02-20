@@ -30,24 +30,27 @@ class DirectusProvider extends ServiceProvider
             $provider = config('directus.identifier.provider');
             $parameters = config('directus.identifier.parameters');
 
-            /** @var IdentifierContract */
-            $identifier = new $provider(...$parameters);
-
-            return $identifier;
+            // @var IdentifierContract
+            return new $provider(...$parameters);
         });
 
         $this->app->bind(Project::class, function (): Project {
             /** @var Directus */
             $directus = resolve(Directus::class);
 
-            /** @var DirectusIdentifierContract */
+            /** @var IdentifierContract */
             $identifier = resolve(IdentifierContract::class);
 
             if (!$identifier->identified() && !$identifier->identify()) {
                 throw new \Exception('Unable to identify working project.');
             }
 
-            return $directus->projects()->project($identifier->get());
+            $project = $identifier->get();
+            if ($project === null) {
+                throw new \Exception('Invalid identified project.');
+            }
+
+            return $directus->projects()->project($project);
         });
     }
 
@@ -77,10 +80,15 @@ class DirectusProvider extends ServiceProvider
             );
 
             $files = glob(config_path('projects/*.php'));
+            if ($files === false) {
+                return;
+            }
+
             foreach ($files as $file) {
                 [ 'filename' => $filename ] = pathinfo($file);
                 $this->mergeConfigFrom(
-                    $file, "directus.projects.${filename}"
+                    $file,
+                    "directus.projects.{$filename}"
                 );
             }
         }

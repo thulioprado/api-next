@@ -25,6 +25,6 @@ class ProjectController extends Controller
      */
     public function show(Project $project, string $collection, string $id): JsonResponse
     {
-        return response()->json($project->collection($collection)->items()->findOrFail($id));
+        return response()->json($project->collection($collection)->items()->find($id));
     }
 }

@@ -4,17 +4,17 @@ declare(strict_types=1);
 
 namespace Directus\Framework;
 
-use Directus\Framework\Projects\FilesystemRepository;
 use Directus\Framework\Collections\Collection;
 use Directus\Framework\Contracts\Collections\Collection as CollectionContract;
 use Directus\Framework\Contracts\Config as ConfigContract;
+use Directus\Framework\Contracts\Databases\Connections;
 use Directus\Framework\Contracts\Projects\Config as ProjectConfigContract;
 use Directus\Framework\Contracts\Projects\Project as ProjectContract;
 use Directus\Framework\Contracts\Projects\Repository as ProjectRepositoryContract;
-use Directus\Framework\Contracts\Databases\Connections;
 use Directus\Framework\Database\ConnectionsFromProjectConfig;
 use Directus\Framework\Exception\InitializationException;
 use Directus\Framework\Projects\FilesystemConfig;
+use Directus\Framework\Projects\FilesystemRepository;
 use Directus\Framework\Projects\Project;
 use Illuminate\Database\Capsule\Manager;
 use Illuminate\Support\Arr;
@@ -41,24 +41,22 @@ final class Builder
 
     /**
      * Creates a new builder.
-     *
-     * @return Builder
      */
-    public static function create(): Builder
+    public static function create(): self
     {
-        return new Builder();
+        return new self();
     }
 
     /**
      * Statically configure the directus instance.
      */
-    public function mergeConfig(array $data): Builder
+    public function mergeConfig(array $data): self
     {
         $config = $this->useConfig();
 
         $data = Arr::dot($data);
         foreach ($data as $key => $value) {
-            $config->set($key, $value);
+            $config->set((string) $key, $value);
         }
 
         return $this;
@@ -67,7 +65,7 @@ final class Builder
     /**
      * Loads configs from a file.
      */
-    public function loadConfigFromFile(string $file): Builder
+    public function loadConfigFromFile(string $file): self
     {
         $this->directus->singleton(ConfigContract::class, function () use ($file): ConfigContract {
             return new Config(require $file);
@@ -79,7 +77,7 @@ final class Builder
     /**
      * Loads configs from a file.
      */
-    public function loadProjectsFromFiles(string $directory): Builder
+    public function loadProjectsFromFiles(string $directory): self
     {
         $this->useConfig()->set(FilesystemRepository::CONFIG_DIRECTORY, $directory);
 
@@ -92,7 +90,7 @@ final class Builder
     /**
      * Loads database information based on project's configuration.
      */
-    public function loadDatabasesFromProjectConfig(): Builder
+    public function loadDatabasesFromProjectConfig(): self
     {
         $this->directus->bind(Connections::class, ConnectionsFromProjectConfig::class);
 
@@ -101,8 +99,6 @@ final class Builder
 
     /**
      * Gets the built directus instance.
-     *
-     * @return Directus
      */
     public function get(): Directus
     {
@@ -138,9 +134,7 @@ final class Builder
     {
         $this->directus->singletonIf(ConfigContract::class, Config::class);
 
-        /** @var ConfigContract */
-        $config = $this->directus->make(ConfigContract::class);
-
-        return $config;
+        // @var ConfigContract
+        return $this->directus->make(ConfigContract::class);
     }
 }
