@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Directus\Framework\Contracts\Projects;
 
 use Directus\Framework\Contracts\Collections\Collection;
+use Directus\Framework\Contracts\Databases\Connections;
 
 /**
  * Directus project.
@@ -25,4 +26,14 @@ interface Project
      * Gets a collection.
      */
     public function collection(string $name): Collection;
+
+    /**
+     * Gets the project database connections.
+     */
+    public function connections(): Connections;
+
+    /**
+     * Gets the project config.
+     */
+    public function config(): Config;
 }

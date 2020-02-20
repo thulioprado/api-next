@@ -11,9 +11,12 @@ use Directus\Framework\Contracts\Config as ConfigContract;
 use Directus\Framework\Contracts\Projects\Config as ProjectConfigContract;
 use Directus\Framework\Contracts\Projects\Project as ProjectContract;
 use Directus\Framework\Contracts\Projects\Repository as ProjectRepositoryContract;
+use Directus\Framework\Contracts\Databases\Connections;
+use Directus\Framework\Database\ConnectionsFromProjectConfig;
 use Directus\Framework\Exception\InitializationException;
 use Directus\Framework\Projects\FilesystemConfig;
 use Directus\Framework\Projects\Project;
+use Illuminate\Database\Capsule\Manager;
 use Illuminate\Support\Arr;
 
 /**
@@ -51,6 +54,8 @@ final class Builder
      */
     public function mergeConfig(array $data): Builder
     {
+        $config = $this->useConfig();
+
         $data = Arr::dot($data);
         foreach ($data as $key => $value) {
             $config->set($key, $value);
@@ -85,6 +90,16 @@ final class Builder
     }
 
     /**
+     * Loads database information based on project's configuration.
+     */
+    public function loadDatabasesFromProjectConfig(): Builder
+    {
+        $this->directus->bind(Connections::class, ConnectionsFromProjectConfig::class);
+
+        return $this;
+    }
+
+    /**
      * Gets the built directus instance.
      *
      * @return Directus
@@ -94,6 +109,9 @@ final class Builder
         // Base classes
         $this->directus->bind(ProjectContract::class, Project::class);
         $this->directus->bind(CollectionContract::class, Collection::class);
+
+        // Database
+        $this->directus->singleton(Manager::class, Manager::class);
 
         // Config
         $this->directus->singletonIf(ConfigContract::class, Config::class);

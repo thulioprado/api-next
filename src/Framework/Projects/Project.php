@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Directus\Framework\Projects;
 
 use Directus\Framework\Contracts\Collections\Collection;
+use Directus\Framework\Contracts\Databases\Connections;
 use Directus\Framework\Contracts\Projects\Config;
 use Directus\Framework\Contracts\Projects\Project as ProjectContract;
 use Illuminate\Contracts\Container\Container;
@@ -33,6 +34,11 @@ class Project implements ProjectContract
     private $_name;
 
     /**
+     * @var Connections
+     */
+    private $_connections;
+
+    /**
      * Constructor.
      */
     public function __construct(Container $container, Config $config, string $name)
@@ -40,6 +46,9 @@ class Project implements ProjectContract
         $this->_name = $name;
         $this->_config = $config;
         $this->_container = $container;
+        $this->_connections = $container->make(Connections::class, [
+            'project' => $this,
+        ]);
     }
 
     /**
@@ -66,9 +75,26 @@ class Project implements ProjectContract
         /** @var Collection */
         $collection = $this->_container->make(Collection::class, [
             'project' => $this,
+            'connection' => $this->connections()->data(),
             'name' => $name,
         ]);
 
         return $collection;
+    }
+
+    /**
+     * Gets the database connections.
+     */
+    public function connections(): Connections
+    {
+        return $this->_connections;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function config(): Config
+    {
+        return $this->_config;
     }
 }
