@@ -6,12 +6,10 @@
     "directus",
     "laravel"
   ],
-  "authors": [
-    {
-      "name": "WoLfulus",
-      "email": "wolfulus@gmail.com"
-    }
-  ],
+  "authors": [{
+    "name": "WoLfulus",
+    "email": "wolfulus@gmail.com"
+  }],
   "bin": [
     "./bin/directus"
   ],
@@ -52,22 +50,16 @@
   "minimum-stability": "dev",
   "prefer-stable": true,
   "scripts": {
-    "task:linter": "php-cs-fixer fix --verbose --diff --dry-run --config=etc/.php_cs.dist",
-    "task:static-analysis": "phpstan --memory-limit=2G --ansi --configuration=etc/phpstan.neon analyse",
-    "task:test": "phpunit --colors=always --bootstrap vendor/autoload.php --testdox tests",
-    "task:test:with-coverage": "phpunit --colors=always --bootstrap vendor/autoload.php --testdox --log-junit=./var/phpunit.xml --coverage-html=./var/html --coverage-clover=./var/coverage.xml --whitelist=src tests",
-    "task:coverage:report": "coveralls var/coverage.xml",
-    "test": [
-      "@task:linter",
-      "@task:static-analysis",
-      "@task:test"
+    "format": "php-cs-fixer --ansi fix",
+    "lint:php-cs-fixer": "php-cs-fixer --ansi fix --diff --dry-run",
+    "lint:phpstan": "phpstan --ansi --memory-limit=2G analyse",
+    "lint": [
+      "@lint:php-cs-fixer",
+      "@lint:phpstan"
     ],
-    "test:ci": [
-      "@task:linter",
-      "@task:static-analysis",
-      "@task:test:with-coverage"
-    ],
-    "lint": "php-cs-fixer fix --verbose --diff --config=etc/.php_cs.dist"
+    "test": "phpunit --colors=always",
+    "test:with-coverage": "phpunit --colors=always",
+    "coverage:report": "coveralls dist/coverage.xml"
   },
   "config": {
     "sort-packages": true,

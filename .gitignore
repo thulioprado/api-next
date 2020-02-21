@@ -1,3 +1,7 @@
+# Generated files
+
+/dist
+
 # OS
 
 Thumbs.db
@@ -13,7 +17,6 @@ Thumbs.db
 
 !/app/dist/.gitkeep
 /app/dist/**/*
-
 
 # Dependencies
 

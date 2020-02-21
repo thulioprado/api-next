@@ -2,7 +2,7 @@ parameters:
   level: 8
   checkMissingIterableValueType: false
   paths:
-    - ../bin
-    - ../bin/directus
-    - ../src
-    - ../tests
+    - bin
+    - bin/directus
+    - src
+    - tests
