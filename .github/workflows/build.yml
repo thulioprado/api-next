@@ -10,7 +10,7 @@ jobs:
           #- "windows-latest"
           #- "macOS-latest"
         php:
-          - "7.2"
+          # - "7.2"
           - "7.3"
           - "7.4"
     name: PHP ${{ matrix.php }} checks on ${{ matrix.os }}
