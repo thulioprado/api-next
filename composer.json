@@ -6,10 +6,12 @@
     "directus",
     "laravel"
   ],
-  "authors": [{
-    "name": "WoLfulus",
-    "email": "wolfulus@gmail.com"
-  }],
+  "authors": [
+    {
+      "name": "WoLfulus",
+      "email": "wolfulus@gmail.com"
+    }
+  ],
   "bin": [
     "./bin/directus"
   ],
@@ -57,8 +59,11 @@
       "@lint:php-cs-fixer",
       "@lint:phpstan"
     ],
+    "ci": [
+      "@lint",
+      "@test"
+    ],
     "test": "phpunit --colors=always",
-    "test:with-coverage": "phpunit --colors=always",
     "coverage:report": "coveralls dist/coverage.xml"
   },
   "config": {
