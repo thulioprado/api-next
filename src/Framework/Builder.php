@@ -11,10 +11,11 @@ use Directus\Framework\Contracts\Databases\Connections;
 use Directus\Framework\Contracts\Projects\Config as ProjectConfigContract;
 use Directus\Framework\Contracts\Projects\Project as ProjectContract;
 use Directus\Framework\Contracts\Projects\Repository as ProjectRepositoryContract;
+use Directus\Framework\Database\ConnectionsFromFile;
 use Directus\Framework\Database\ConnectionsFromProjectConfig;
 use Directus\Framework\Exception\InitializationException;
-use Directus\Framework\Projects\FilesystemConfig;
-use Directus\Framework\Projects\FilesystemRepository;
+use Directus\Framework\Projects\FileConfig;
+use Directus\Framework\Projects\DirectoryRepository;
 use Directus\Framework\Projects\Project;
 use Illuminate\Database\Capsule\Manager;
 use Illuminate\Support\Arr;
@@ -79,10 +80,10 @@ final class Builder
      */
     public function loadProjectsFromFiles(string $directory): self
     {
-        $this->useConfig()->set(FilesystemRepository::CONFIG_DIRECTORY, $directory);
+        $this->useConfig()->set(DirectoryRepository::CONFIG_DIRECTORY, $directory);
 
-        $this->directus->singleton(ProjectConfigContract::class, FilesystemConfig::class);
-        $this->directus->bind(ProjectRepositoryContract::class, FilesystemRepository::class);
+        $this->directus->singleton(ProjectConfigContract::class, FileConfig::class);
+        $this->directus->bind(ProjectRepositoryContract::class, DirectoryRepository::class);
 
         return $this;
     }
@@ -93,6 +94,16 @@ final class Builder
     public function loadDatabasesFromProjectConfig(): self
     {
         $this->directus->bind(Connections::class, ConnectionsFromProjectConfig::class);
+
+        return $this;
+    }
+
+    /**
+     * Loads database information based on provided file.
+     */
+    public function loadDatabasesFromFile(): self
+    {
+        $this->directus->bind(Connections::class, ConnectionsFromFile::class);
 
         return $this;
     }

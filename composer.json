@@ -77,7 +77,7 @@
   "extra": {
     "laravel": {
       "providers": [
-        "Directus\\Laravel\\Providers\\MainProvider"
+        "Directus\\Laravel\\Providers\\DirectusProvider"
       ]
     }
   }

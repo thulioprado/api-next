@@ -15,7 +15,7 @@ use Webmozart\PathUtil\Path;
 /**
  * File repository.
  */
-class FilesystemRepository implements ProjectRepository
+class DirectoryRepository implements ProjectRepository
 {
     /**
      * Directory key.

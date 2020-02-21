@@ -12,14 +12,14 @@ use Webmozart\PathUtil\Path;
 /**
  * File config.
  */
-class FilesystemConfig extends ConfigRepository implements ProjectConfigContract
+class FileConfig extends ConfigRepository implements ProjectConfigContract
 {
     /**
      * Constructor.
      */
     public function __construct(DirectusConfigContract $config, string $name)
     {
-        $root = $config->get(FilesystemRepository::CONFIG_DIRECTORY);
+        $root = $config->get(DirectoryRepository::CONFIG_DIRECTORY);
         $data = require Path::join($root, "{$name}.php");
 
         parent::__construct($data);

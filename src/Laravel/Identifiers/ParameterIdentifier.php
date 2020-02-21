@@ -11,7 +11,7 @@ use Illuminate\Routing\Route;
 /**
  * Identification interface.
  */
-class PathIdentifier implements Identifier
+class ParameterIdentifier implements Identifier
 {
     /**
      * Project parameter.
@@ -28,7 +28,7 @@ class PathIdentifier implements Identifier
     /**
      * Project name.
      *
-     * @var null|string
+     * @var string|null
      */
     private $_project;
 
@@ -81,7 +81,7 @@ class PathIdentifier implements Identifier
         $this->_project = $parameters[self::PROJECT_PATH_PARAM];
 
         // We don't need to propagate this parameter
-        $route->forgetParameter(self::PROJECT_PATH_PARAM);
+        $request->route()->forgetParameter('project');
 
         return true;
     }

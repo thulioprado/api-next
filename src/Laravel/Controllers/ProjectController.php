@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Directus\Laravel\Controllers;
 
-use Directus\Framework\Projects\Project;
+use Directus\Framework\Contracts\Projects\Project;
 use Illuminate\Http\JsonResponse;
 
 /**

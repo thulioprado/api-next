@@ -8,6 +8,12 @@ use Directus\Framework\Builder;
 use Directus\Framework\Contracts\Projects\Project;
 use Directus\Framework\Directus;
 use Directus\Laravel\Contracts\Identifiers\Identifier as IdentifierContract;
+use Directus\Laravel\Controllers\ProjectController;
+use Directus\Laravel\Controllers\ServerController;
+use Directus\Laravel\Identifiers\Middleware;
+use Directus\Laravel\Identifiers\ParameterIdentifier;
+use Illuminate\Routing\Router;
+use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
 
 /**
@@ -20,17 +26,68 @@ class DirectusProvider extends ServiceProvider
      */
     public function register(): void
     {
-        $this->configure();
+        $this->registerConfigs();
+        $this->registerDependencies();
+    }
 
+    /**
+     * Service boot.
+     */
+    public function boot(Router $router): void
+    {
+        $this->bootConfigs();
+        $this->bootAdmin();
+        $this->bootRoutes($router);
+    }
+
+    /**
+     * Merges configuration.
+     */
+    private function registerConfigs(): void
+    {
+        // Do not load configs if it's cached.
+        if ($this->app->configurationIsCached()) {
+            return;
+        }
+
+        $this->mergeConfigFrom(
+            __DIR__.'/../Config/directus.php',
+            'directus'
+        );
+
+        $files = glob(config_path('projects/*.php'));
+        if ($files === false) {
+            return;
+        }
+
+        foreach ($files as $file) {
+            [ 'filename' => $filename ] = pathinfo($file);
+            $this->mergeConfigFrom(
+                $file,
+                "directus.projects.{$filename}"
+            );
+        }
+    }
+
+    /**
+     * Register dependencies.
+     */
+    private function registerDependencies(): void
+    {
         $this->app->singleton(Directus::class, function (): Directus {
-            return Builder::create()->get();
+            return Builder::create()
+                ->loadConfigFromFile(config_path('directus.php'))
+                // TODO: use config file to specify how projects will be loaded
+                ->loadProjectsFromFiles(config_path('projects'))
+                // TODO: use config file to specify how databases will be loaded
+                ->loadDatabasesFromFile()
+                ->get();
         });
 
         $this->app->singleton(IdentifierContract::class, function (): IdentifierContract {
-            $provider = config('directus.identifier.provider');
-            $parameters = config('directus.identifier.parameters');
+            $provider = config('directus.identifier.provider', ParameterIdentifier::class);
+            $parameters = config('directus.identifier.parameters', []);
 
-            // @var IdentifierContract
             return new $provider(...$parameters);
         });
 
@@ -40,10 +97,6 @@ class DirectusProvider extends ServiceProvider
 
             /** @var IdentifierContract */
             $identifier = resolve(IdentifierContract::class);
-
-            if (!$identifier->identified() && !$identifier->identify()) {
-                throw new \Exception('Unable to identify working project.');
-            }
 
             $project = $identifier->get();
             if ($project === null) {
@@ -55,9 +108,9 @@ class DirectusProvider extends ServiceProvider
     }
 
     /**
-     * Service boot.
+     * Config booting.
      */
-    public function boot(): void
+    private function bootConfigs(): void
     {
         $this->publishes([
             __DIR__.'/../Config/directus.php' => config_path('directus.php'),
@@ -69,28 +122,60 @@ class DirectusProvider extends ServiceProvider
     }
 
     /**
-     * Merges configuration.
+     * Service boot.
      */
-    private function configure(): void
+    private function bootRoutes(Router $router): void
     {
-        if (!$this->app->configurationIsCached()) {
-            $this->mergeConfigFrom(
-                __DIR__.'/../Config/directus.php',
-                'directus'
-            );
+        /** @var bool */
+        $debug = config('directus.debug', false);
 
-            $files = glob(config_path('projects/*.php'));
-            if ($files === false) {
-                return;
-            }
+        // Do not create routes if it's cached.
+        if ($this->app->routesAreCached() && !$debug) {
+            return;
+        }
 
-            foreach ($files as $file) {
-                [ 'filename' => $filename ] = pathinfo($file);
-                $this->mergeConfigFrom(
-                    $file,
-                    "directus.projects.{$filename}"
-                );
-            }
+        $base = config('directus.routes.base', '/');
+
+        $router->middlewareGroup('directus', [
+            Middleware::class,
+        ]);
+
+        // Directus base
+        Route::group([
+            'prefix' => $base,
+        ], function (): void {
+            // Server
+            // https://docs.directus.io/api/server.html#server
+            Route::group([
+                'prefix' => 'server',
+            ], function (): void {
+                Route::get('info', [ServerController::class, 'info']);
+                Route::get('ping', [ServerController::class, 'ping']);
+                Route::get('projects', [ServerController::class, 'projects']);
+            });
+
+            // Project
+            Route::group([
+                'prefix' => '{project}',
+                'middleware' => [
+                    'directus',
+                ],
+            ], function (): void {
+                Route::get('items/{collection}', [ProjectController::class, 'index']);
+            });
+        });
+    }
+
+    /**
+     * Publishes admin files to public folder.
+     */
+    private function bootAdmin(): void
+    {
+        $location = __DIR__.'/../../../app/dist';
+        if (file_exists($location) && is_dir($location)) {
+            $this->publishes([
+                $location => public_path(config('directus.routes.admin', '/admin')),
+            ], ['directus', 'directus.admin']);
         }
     }
 }

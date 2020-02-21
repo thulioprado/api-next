@@ -8,8 +8,16 @@ return [
         'base' => '/',
         'admin' => '/admin',
     ],
+    'databases' => [
+        'filesystem' => [
+            'file' => [
+                'path' => config_path('database.php'),
+                'key' => 'connections',
+            ],
+        ],
+    ],
     'identifier' => [
-        'provider' => '\Directus\Laravel\Identifiers\PathIdentifer',
+        'provider' => '\Directus\Laravel\Identifiers\ParameterIdentifier',
         'parameters' => [],
     ],
 ];
