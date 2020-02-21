@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Directus\Laravel\Providers;
 
 use Directus\Framework\Builder;
+use Directus\Framework\Contracts\Collections\Collection;
 use Directus\Framework\Contracts\Projects\Project;
 use Directus\Framework\Directus;
 use Directus\Laravel\Contracts\Identifiers\Identifier as IdentifierContract;
@@ -91,20 +92,35 @@ class DirectusProvider extends ServiceProvider
             return new $provider(...$parameters);
         });
 
-        $this->app->bind(Project::class, function (): Project {
-            /** @var Directus */
-            $directus = resolve(Directus::class);
-
-            /** @var IdentifierContract */
-            $identifier = resolve(IdentifierContract::class);
-
-            $project = $identifier->get();
-            if ($project === null) {
-                throw new \Exception('Invalid identified project.');
-            }
-
-            return $directus->projects()->project($project);
-        });
+//        $this->app->bind(Project::class, function (): Project {
+//            /** @var Directus */
+//            $directus = resolve(Directus::class);
+//
+//            /** @var IdentifierContract */
+//            $identifier = resolve(IdentifierContract::class);
+//
+//            $project = $identifier->project();
+//            if ($project === null) {
+//                throw new \Exception('Failed to resolve project.');
+//            }
+//
+//            return $directus->projects()->project($project);
+//        });
+//
+//        $this->app->bind(Collection::class, function (): Collection {
+//            /** @var Project */
+//            $project = resolve(Project::class);
+//
+//            /** @var IdentifierContract */
+//            $identifier = resolve(IdentifierContract::class);
+//
+//            $collection = $identifier->collection();
+//            if ($collection === null) {
+//                throw new \Exception('Failed to resolve collection on a route without {collection} parameter.');
+//            }
+//
+//            return $project->collection($collection);
+//        });
     }
 
     /**
@@ -161,7 +177,9 @@ class DirectusProvider extends ServiceProvider
                     'directus',
                 ],
             ], function (): void {
+                // Collection
                 Route::get('items/{collection}', [ProjectController::class, 'index']);
+                Route::get('items/{collection}/{id}', [ProjectController::class, 'show']);
             });
         });
     }

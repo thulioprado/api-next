@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Directus\Laravel\Identifiers;
 
+use Directus\Framework\Directus;
 use Directus\Laravel\Contracts\Identifiers\Identifier;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Route;
@@ -16,7 +17,12 @@ class ParameterIdentifier implements Identifier
     /**
      * Project parameter.
      */
-    private const PROJECT_PATH_PARAM = 'project';
+    private const PROJECT_PARAMETER = 'project';
+
+    /**
+     * Collection parameter.
+     */
+    private const COLLECTION_PARAMETER = 'collection';
 
     /**
      * Is project identified.
@@ -33,12 +39,20 @@ class ParameterIdentifier implements Identifier
     private $_project;
 
     /**
+     * Project collection.
+     *
+     * @var string|null
+     */
+    private $_collection;
+
+    /**
      * Path identifier.
      */
     public function __construct()
     {
         $this->_identified = false;
         $this->_project = null;
+        $this->_collection = null;
     }
 
     /**
@@ -52,9 +66,17 @@ class ParameterIdentifier implements Identifier
     /**
      * {@inheritdoc}
      */
-    public function get(): ?string
+    public function project(): ?string
     {
         return $this->_project;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function collection(): ?string
+    {
+        return $this->_collection;
     }
 
     /**
@@ -66,6 +88,9 @@ class ParameterIdentifier implements Identifier
             return true;
         }
 
+        /** @var Directus */
+        $directus = resolve(Directus::class);
+
         /** @var Request */
         $request = resolve(Request::class);
 
@@ -73,15 +98,22 @@ class ParameterIdentifier implements Identifier
         $route = $request->route();
 
         $parameters = $route->parameters();
-        if (!\array_key_exists(self::PROJECT_PATH_PARAM, $parameters)) {
+
+        if (!\array_key_exists(self::PROJECT_PARAMETER, $parameters)) {
             return false;
         }
 
-        $this->_identified = true;
-        $this->_project = $parameters[self::PROJECT_PATH_PARAM];
+        $this->_project = $parameters[self::PROJECT_PARAMETER];
 
-        // We don't need to propagate this parameter
-        $request->route()->forgetParameter('project');
+        $project = $directus->projects()->project($this->_project);
+        $route->setParameter(self::PROJECT_PARAMETER, $project);
+
+        $this->_identified = true;
+
+        if (\array_key_exists(self::COLLECTION_PARAMETER, $parameters)) {
+            $this->_collection = $parameters[self::COLLECTION_PARAMETER];
+            $route->setParameter(self::COLLECTION_PARAMETER, $project->collection($this->_collection));
+        }
 
         return true;
     }

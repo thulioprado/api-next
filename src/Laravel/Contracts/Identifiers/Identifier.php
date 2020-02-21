@@ -22,7 +22,12 @@ interface Identifier
     /**
      * Gets the identified project.
      */
-    public function get(): ?string;
+    public function project(): ?string;
+
+    /**
+     * Gets the identified collection.
+     */
+    public function collection(): ?string;
 
     /**
      * Switches the current identified project.
