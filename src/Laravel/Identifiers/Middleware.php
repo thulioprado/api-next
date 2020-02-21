@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Directus\Laravel\Identifiers;
 
 use Closure;
@@ -10,6 +12,8 @@ class Middleware
 {
     /**
      * Performs identification on incoming request.
+     *
+     * @return mixed
      */
     public function handle(Request $request, Closure $next)
     {

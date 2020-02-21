@@ -103,7 +103,7 @@ final class ConnectionsFromFile implements ConnectionsContract
         $connectionName = "{$projectName}.{$name}";
         $connectionKey = "{$this->_config->get('databases.filesystem.file.key')}";
 
-        if (!array_key_exists($name, $this->_connections) || $this->_connections[$name] === null) {
+        if (!\array_key_exists($name, $this->_connections) || $this->_connections[$name] === null) {
             $connections = $this->_manager->getDatabaseManager()->getConnections();
             if (!\array_key_exists($connectionName, $connections)) {
                 $this->_manager->addConnection($this->_data->get($connectionKey)[$name], $connectionName);

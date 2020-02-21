@@ -34,14 +34,14 @@ class ParameterIdentifier implements Identifier
     /**
      * Project name.
      *
-     * @var string|null
+     * @var null|string
      */
     private $_project;
 
     /**
      * Project collection.
      *
-     * @var string|null
+     * @var null|string
      */
     private $_collection;
 

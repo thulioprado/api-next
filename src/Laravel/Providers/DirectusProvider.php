@@ -82,7 +82,8 @@ class DirectusProvider extends ServiceProvider
                 ->loadProjectsFromFiles(config_path('projects'))
                 // TODO: use config file to specify how databases will be loaded
                 ->loadDatabasesFromFile()
-                ->get();
+                ->get()
+            ;
         });
 
         $this->app->singleton(IdentifierContract::class, function (): IdentifierContract {

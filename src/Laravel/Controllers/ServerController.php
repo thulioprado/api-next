@@ -31,10 +31,10 @@ class ServerController extends Controller
         return Response::json([
             'data' => $directus->projects()
                 ->all()
-                ->filter(function (Project $project) {
+                ->filter(function (Project $project): bool {
                     return !$project->private();
                 })
-                ->map(function (Project $project) {
+                ->map(function (Project $project): string {
                     return $project->name();
                 }),
             'public' => true,

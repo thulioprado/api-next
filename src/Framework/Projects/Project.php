@@ -72,7 +72,6 @@ class Project implements ProjectContract
      */
     public function collection(string $name): Collection
     {
-        /* @var Collection */
         return $this->_container->make(Collection::class, [
             'project' => $this,
             'connection' => $this->connections()->data(),

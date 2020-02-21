@@ -14,8 +14,8 @@ use Directus\Framework\Contracts\Projects\Repository as ProjectRepositoryContrac
 use Directus\Framework\Database\ConnectionsFromFile;
 use Directus\Framework\Database\ConnectionsFromProjectConfig;
 use Directus\Framework\Exception\InitializationException;
-use Directus\Framework\Projects\FileConfig;
 use Directus\Framework\Projects\DirectoryRepository;
+use Directus\Framework\Projects\FileConfig;
 use Directus\Framework\Projects\Project;
 use Illuminate\Database\Capsule\Manager;
 use Illuminate\Support\Arr;
