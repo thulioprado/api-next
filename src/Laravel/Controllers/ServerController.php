@@ -4,41 +4,50 @@ declare(strict_types=1);
 
 namespace Directus\Laravel\Controllers;
 
-use Directus\Framework\Contracts\Projects\Project;
 use Directus\Framework\Directus;
-use Directus\Laravel\Exceptions\NotImplemented;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Support\Facades\Response;
 
 /**
  * Server controller.
  */
-class ServerController extends Controller
+class ServerController extends BaseController
 {
     /**
      * Server information.
      */
-    public function info(): void
+    public function info(): JsonResponse
     {
-        throw new NotImplemented();
-    }
+        $data = [
+            'directus' => [
+                'version' => 'TODO: fetch current version.',
+            ],
+            'env' => [
+                'os' => php_uname(),
+                'type' => $_SERVER['SERVER_SOFTWARE'],
+                'container' => getenv('DIRECTUS_CONTAINER') === '1',
+            ],
+            'php' => [
+                'arch' => PHP_INT_SIZE > 4 ? "x64" : "x86",
+                'version' => phpversion(),
+                'settings' => [
+                    'upload_size' => ini_get('upload_max_filesize'),
+                ],
+                'extensions' => [
+                    'pdo' => extension_loaded('pdo'),
+                    'curl' => extension_loaded('curl'),
+                    'gd' => extension_loaded('gd'),
+                    'fileinfo' => extension_loaded('fileinfo'),
+                    'mbstring' => extension_loaded('mbstring'),
+                    'json' => extension_loaded('json'),
+                ],
+            ],
+            'laravel' => [
+                'version' => app()->version(),
+                'locale' => app()->getLocale(),
+            ],
+        ];
 
-    /**
-     * Server information.
-     */
-    public function projects(Directus $directus): JsonResponse
-    {
-        return Response::json([
-            'data' => $directus->projects()
-                ->all()
-                ->filter(function (Project $project): bool {
-                    return !$project->private();
-                })
-                ->map(function (Project $project): string {
-                    return $project->name();
-                }),
-            'public' => true,
-        ]);
+        return response()->json($data);
     }
 
     /**

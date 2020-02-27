@@ -4,15 +4,14 @@ declare(strict_types=1);
 
 namespace Directus\Laravel\Controllers;
 
-use Illuminate\Routing\Controller as BaseController;
+use Illuminate\Routing\Controller;
 
 /**
  * Server controller.
  */
-abstract class Controller extends BaseController
+abstract class BaseController extends Controller
 {
     public function __construct()
     {
-        //$this->middleware('directus');
     }
 }

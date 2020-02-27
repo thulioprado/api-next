@@ -6,17 +6,8 @@ namespace Directus\Framework;
 
 use Directus\Framework\Collections\Collection;
 use Directus\Framework\Contracts\Collections\Collection as CollectionContract;
-use Directus\Framework\Contracts\Config as ConfigContract;
-use Directus\Framework\Contracts\Databases\Connections;
-use Directus\Framework\Contracts\Projects\Config as ProjectConfigContract;
-use Directus\Framework\Contracts\Projects\Project as ProjectContract;
-use Directus\Framework\Contracts\Projects\Repository as ProjectRepositoryContract;
-use Directus\Framework\Database\ConnectionsFromFile;
-use Directus\Framework\Database\ConnectionsFromProjectConfig;
-use Directus\Framework\Exception\InitializationException;
-use Directus\Framework\Projects\DirectoryRepository;
-use Directus\Framework\Projects\FileConfig;
-use Directus\Framework\Projects\Project;
+use Illuminate\Config\Repository;
+use Illuminate\Contracts\Config\Repository as RepositoryContract;
 use Illuminate\Database\Capsule\Manager;
 use Illuminate\Support\Arr;
 
@@ -30,14 +21,14 @@ final class Builder
      *
      * @var Directus
      */
-    private $directus;
+    private $instance;
 
     /**
      * Constructor.
      */
     private function __construct()
     {
-        $this->directus = new Directus();
+        $this->instance = new Directus();
     }
 
     /**
@@ -53,7 +44,7 @@ final class Builder
      */
     public function mergeConfig(array $data): self
     {
-        $config = $this->useConfig();
+        $config = $this->withConfig();
 
         $data = Arr::dot($data);
         foreach ($data as $key => $value) {
@@ -66,10 +57,10 @@ final class Builder
     /**
      * Loads configs from a file.
      */
-    public function loadConfigFromFile(string $file): self
+    public function useConfiguration(array $data): self
     {
-        $this->directus->singleton(ConfigContract::class, function () use ($file): ConfigContract {
-            return new Config(require $file);
+        $this->instance->singleton(RepositoryContract::class, function () use ($data): RepositoryContract {
+            return new Repository($data);
         });
 
         return $this;
@@ -78,32 +69,41 @@ final class Builder
     /**
      * Loads configs from a file.
      */
-    public function loadProjectsFromFiles(string $directory): self
+    public function useConfigurationFromFile(string $file): self
     {
-        $this->useConfig()->set(DirectoryRepository::CONFIG_DIRECTORY, $directory);
-
-        $this->directus->singleton(ProjectConfigContract::class, FileConfig::class);
-        $this->directus->bind(ProjectRepositoryContract::class, DirectoryRepository::class);
+        $this->instance->singleton(RepositoryContract::class, function () use ($file): RepositoryContract {
+            return new Repository(require $file);
+        });
 
         return $this;
     }
 
     /**
-     * Loads database information based on project's configuration.
+     * Configures directus to use an external database manager.
      */
-    public function loadDatabasesFromProjectConfig(): self
+    public function useDatabaseManager(Manager $manager): self
     {
-        $this->directus->bind(Connections::class, ConnectionsFromProjectConfig::class);
+        $this->instance->instance(Manager::class, $manager);
 
         return $this;
     }
 
     /**
-     * Loads database information based on provided file.
+     * Configures directus to manage it's own database connections.
      */
-    public function loadDatabasesFromFile(): self
+    public function useDefaultDatabaseManager(): self
     {
-        $this->directus->bind(Connections::class, ConnectionsFromFile::class);
+        $this->instance->singletonIf(Manager::class, function (): Manager {
+            $config = $this->withConfig();
+            $manager = new Manager();
+
+            $connections = $config->get("database.connections", []);
+            foreach ($connections as $name => $data) {
+                $manager->addConnection($data, $name);
+            }
+
+            return $manager;
+        });
 
         return $this;
     }
@@ -111,41 +111,25 @@ final class Builder
     /**
      * Gets the built directus instance.
      */
-    public function get(): Directus
+    public function build(): Directus
     {
-        // Base classes
-        $this->directus->bind(ProjectContract::class, Project::class);
-        $this->directus->bind(CollectionContract::class, Collection::class);
+        $this->instance->bind(CollectionContract::class, Collection::class);
+        $this->instance->singletonIf(RepositoryContract::class, Repository::class);
 
-        // Database
-        $this->directus->singleton(Manager::class, Manager::class);
-
-        // Config
-        $this->directus->singletonIf(ConfigContract::class, Config::class);
-
-        // Check bounds
-        $verifyBounded = [
-            ProjectConfigContract::class,
-            ProjectRepositoryContract::class,
-        ];
-
-        foreach ($verifyBounded as $abstract) {
-            if (!$this->directus->bound($abstract)) {
-                throw new InitializationException("Missing {$abstract} setup.");
-            }
+        if (!$this->instance->bound(Manager::class)) {
+            $this->useDefaultDatabaseManager();
         }
 
-        return $this->directus;
+        return $this->instance;
     }
 
     /**
      * Uses the config contract.
      */
-    private function useConfig(): ConfigContract
+    private function withConfig(): RepositoryContract
     {
-        $this->directus->singletonIf(ConfigContract::class, Config::class);
+        $this->instance->singletonIf(RepositoryContract::class, Repository::class);
 
-        // @var ConfigContract
-        return $this->directus->make(ConfigContract::class);
+        return $this->instance->make(RepositoryContract::class);
     }
 }
