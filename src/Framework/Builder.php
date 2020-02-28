@@ -6,6 +6,8 @@ namespace Directus\Framework;
 
 use Directus\Framework\Collections\Collection;
 use Directus\Framework\Contracts\Collections\Collection as CollectionContract;
+use Directus\Framework\Databases\Connections;
+use Directus\Framework\Contracts\Databases\Connections as ConnectionsContract;
 use Illuminate\Config\Repository;
 use Illuminate\Contracts\Config\Repository as RepositoryContract;
 use Illuminate\Database\Capsule\Manager;
@@ -97,7 +99,7 @@ final class Builder
             $config = $this->withConfig();
             $manager = new Manager();
 
-            $connections = $config->get("database.connections", []);
+            $connections = $config->get('databases.connections', []);
             foreach ($connections as $name => $data) {
                 $manager->addConnection($data, $name);
             }
@@ -119,6 +121,8 @@ final class Builder
         if (!$this->instance->bound(Manager::class)) {
             $this->useDefaultDatabaseManager();
         }
+
+        $this->instance->singletonIf(ConnectionsContract::class, Connections::class);
 
         return $this->instance;
     }

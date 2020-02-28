@@ -10,7 +10,7 @@ return [
         ],
     ],
     'databases' => [
-        'data' => 'default',
-        'system' => 'system',
+        'data' => 'mysql',
+        'system' => 'mysql',
     ],
 ];

@@ -5,10 +5,10 @@ declare(strict_types=1);
 namespace Directus\Laravel\Providers;
 
 use Directus\Framework\Builder;
-use Directus\Framework\Contracts\Collections\Collection;
 use Directus\Framework\Directus;
 use Directus\Laravel\Controllers\CollectionController;
 use Directus\Laravel\Controllers\ServerController;
+use Directus\Laravel\Middlewares\CollectionMiddleware;
 use Illuminate\Database\Capsule\Manager;
 use Illuminate\Routing\Router;
 use Illuminate\Support\Facades\Route;
@@ -26,6 +26,7 @@ class DirectusProvider extends ServiceProvider
     {
         $this->registerConfigs();
         $this->registerDependencies();
+        // TODO: registerMigrations() with $this->loadMigrationsFrom(...)
     }
 
     /**
@@ -51,7 +52,7 @@ class DirectusProvider extends ServiceProvider
         }
 
         $this->mergeConfigFrom(
-            __DIR__ . '/../Config/directus.php',
+            __DIR__.'/../Config/directus.php',
             'directus'
         );
     }
@@ -61,12 +62,12 @@ class DirectusProvider extends ServiceProvider
      */
     private function registerDependencies(): void
     {
-        dd(resolve(Manager::class));
         $this->app->singleton(Directus::class, function (): Directus {
             return Builder::create()
                 ->useConfiguration(config('directus', []))
                 ->useDatabaseManager(resolve(Manager::class))
-                ->build();
+                ->build()
+            ;
         });
     }
 
@@ -76,14 +77,14 @@ class DirectusProvider extends ServiceProvider
     private function bootConfigs(): void
     {
         $this->publishes([
-            __DIR__ . '/../Config/directus.php' => config_path('directus.php'),
+            __DIR__.'/../Config/directus.php' => config_path('directus.php'),
         ], ['config']);
     }
 
     /**
      * Service boot.
      */
-    private function bootRoutes(): void
+    private function bootRoutes(Router $router): void
     {
         /** @var bool */
         $debug = config('app.debug', false);
@@ -111,6 +112,9 @@ class DirectusProvider extends ServiceProvider
             // Items
             Route::group([
                 'prefix' => 'items',
+                'middleware' => [
+                    CollectionMiddleware::class,
+                ],
             ], function (): void {
                 // Collection
                 Route::get('{collection}', [CollectionController::class, 'index']);
