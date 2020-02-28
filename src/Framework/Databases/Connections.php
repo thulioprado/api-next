@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Directus\Framework\Databases;
 
 use Directus\Framework\Contracts\Databases\Connections as ConnectionsContract;
-use Directus\Framework\Directus;
 use Illuminate\Contracts\Config\Repository;
 use Illuminate\Database\Capsule\Manager;
 use Illuminate\Database\ConnectionInterface;

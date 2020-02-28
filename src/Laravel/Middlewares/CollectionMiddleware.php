@@ -8,6 +8,7 @@ use Closure;
 use Directus\Framework\Directus;
 use Directus\Framework\Exception\DirectusException;
 use Illuminate\Http\Request;
+use Illuminate\Routing\Route;
 
 class CollectionMiddleware
 {

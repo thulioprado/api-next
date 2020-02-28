@@ -6,8 +6,8 @@ namespace Directus\Framework;
 
 use Directus\Framework\Collections\Collection;
 use Directus\Framework\Contracts\Collections\Collection as CollectionContract;
-use Directus\Framework\Databases\Connections;
 use Directus\Framework\Contracts\Databases\Connections as ConnectionsContract;
+use Directus\Framework\Databases\Connections;
 use Illuminate\Config\Repository;
 use Illuminate\Contracts\Config\Repository as RepositoryContract;
 use Illuminate\Database\Capsule\Manager;

@@ -6,3 +6,5 @@ parameters:
     - bin/directus
     - src
     - tests
+  excludes_analyse:
+    - src/Framework/Migrations

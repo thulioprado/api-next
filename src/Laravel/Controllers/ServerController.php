@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Directus\Laravel\Controllers;
 
-use Directus\Framework\Directus;
 use Illuminate\Http\JsonResponse;
 
 /**
@@ -27,18 +26,18 @@ class ServerController extends BaseController
                 'container' => getenv('DIRECTUS_CONTAINER') === '1',
             ],
             'php' => [
-                'arch' => PHP_INT_SIZE > 4 ? "x64" : "x86",
-                'version' => phpversion(),
+                'arch' => PHP_INT_SIZE > 4 ? 'x64' : 'x86',
+                'version' => PHP_VERSION,
                 'settings' => [
                     'upload_size' => ini_get('upload_max_filesize'),
                 ],
                 'extensions' => [
-                    'pdo' => extension_loaded('pdo'),
-                    'curl' => extension_loaded('curl'),
-                    'gd' => extension_loaded('gd'),
-                    'fileinfo' => extension_loaded('fileinfo'),
-                    'mbstring' => extension_loaded('mbstring'),
-                    'json' => extension_loaded('json'),
+                    'pdo' => \extension_loaded('pdo'),
+                    'curl' => \extension_loaded('curl'),
+                    'gd' => \extension_loaded('gd'),
+                    'fileinfo' => \extension_loaded('fileinfo'),
+                    'mbstring' => \extension_loaded('mbstring'),
+                    'json' => \extension_loaded('json'),
                 ],
             ],
             'laravel' => [

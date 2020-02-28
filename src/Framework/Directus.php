@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Directus\Framework;
 
-use Directus\Framework\Contracts\Databases\Connections;
 use Directus\Framework\Collections\Collection;
 use Directus\Framework\Contracts\Collections\Collection as CollectionContract;
+use Directus\Framework\Contracts\Databases\Connections;
 use Illuminate\Container\Container;
 use Illuminate\Contracts\Config\Repository as ConfigRepositoryContract;
 use Illuminate\Contracts\Container\Container as ContainerContract;
