@@ -6,29 +6,27 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateActivityTable extends Migration
+class CreateSettingsTable extends Migration
 {
     /**
      * Run the migrations.
-     *
-     * @return void
      */
     public function up()
     {
-        Schema::create('directus_fields', function (Blueprint $table) {
+        Schema::create('directus_settings', function (Blueprint $table) {
             $table->bigIncrements('id');
-            // TODO: add columns
-            $table->timestamps();
+            $table->string('key', 64);
+            $table->text('value')->nullable();
+
+            $table->unique('key', 'idx_key');
         });
     }
 
     /**
      * Reverse the migrations.
-     *
-     * @return void
      */
     public function down()
     {
-        Schema::dropIfExists('directus_fields');
+        Schema::dropIfExists('directus_settings');
     }
 }

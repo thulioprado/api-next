@@ -84,7 +84,7 @@ class DirectusProvider extends ServiceProvider
     /**
      * Service boot.
      */
-    private function bootRoutes(Router $router): void
+    private function bootRoutes(): void
     {
         /** @var bool */
         $debug = config('app.debug', false);
