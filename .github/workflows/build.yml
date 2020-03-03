@@ -54,7 +54,7 @@ jobs:
 
       - name: Sonar Scanner
         uses: sonarsource/sonarcloud-github-action@master
-        if: success() && matrix.php == '7.4'
+        if: success() && matrix.php == '7.4' && github.repository == 'directus/api-next' && github.event_name == 'push'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}

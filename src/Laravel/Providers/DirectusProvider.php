@@ -35,7 +35,9 @@ class DirectusProvider extends ServiceProvider
     public function boot(Router $router): void
     {
         $this->bootConfigs();
-        $this->bootRoutes($router);
+        // FIXME: DirectusProvider::bootRoutes() invoked with 1 parameter, 0 required.
+        // $this->bootRoutes($router);
+        $this->bootRoutes();
     }
 
     /**

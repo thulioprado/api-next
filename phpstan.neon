@@ -7,4 +7,4 @@ parameters:
     - src
     - tests
   excludes_analyse:
-    - src/Framework/Migrations
+    - src/Framework/Databases/Migrations
