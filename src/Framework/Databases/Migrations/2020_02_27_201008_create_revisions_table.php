@@ -13,16 +13,25 @@ class CreateRevisionsTable extends Migration
      */
     public function up()
     {
-        Schema::create('directus_revisions', function (Blueprint $table) {
+        Schema::create('revisions', function (Blueprint $table) {
+            // Identification
             $table->bigIncrements('id');
-            $table->unsignedInteger('activity');
-            $table->string('collection', 64);
+            $table->unsignedBigInteger('activity_id');
+            $table->string('collection_id', 64);
+
+            // Information
             $table->string('item', 255);
             $table->longText('data');
             $table->longText('delta')->nullable();
+
+            // Parent
             $table->string('parent_collection', 64)->nullable();
             $table->string('parent_item', 255)->nullable();
-            $table->unsignedTinyInteger('parent_changed')->default(0);
+            $table->boolean('parent_changed')->default(false);
+
+            // Relations
+            $table->foreign('activity_id')->references('id')->on('activities');
+            $table->foreign('collection_id')->references('name')->on('collections');
         });
     }
 
@@ -31,6 +40,6 @@ class CreateRevisionsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('directus_revisions');
+        Schema::dropIfExists('revisions');
     }
 }

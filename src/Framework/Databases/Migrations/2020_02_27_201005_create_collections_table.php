@@ -13,16 +13,19 @@ class CreateCollectionsTable extends Migration
      */
     public function up()
     {
-        Schema::create('directus_collections', function (Blueprint $table) {
-            $table->string('collection', 64);
+        Schema::create('collections', function (Blueprint $table) {
+            // Information
+            $table->string('name', 64)->primary();
+            $table->string('icon', 30)->nullable();
+            $table->string('note', 255)->nullable();
+
+            // Internationalization
+            $table->json('translation')->nullable();
+
+            // Settings
             $table->boolean('managed')->default(true);
             $table->boolean('hidden')->default(false);
             $table->boolean('single')->default(false);
-            $table->string('icon', 30)->nullable();
-            $table->string('note', 255)->nullable();
-            $table->text('translation')->nullable();
-
-            $table->primary('collection');
         });
     }
 
@@ -31,6 +34,6 @@ class CreateCollectionsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('directus_collections');
+        Schema::dropIfExists('collections');
     }
 }

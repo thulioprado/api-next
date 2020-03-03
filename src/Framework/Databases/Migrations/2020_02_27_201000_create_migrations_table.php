@@ -13,14 +13,17 @@ class CreateMigrationsTable extends Migration
      */
     public function up()
     {
-        Schema::create('directus_migrations', function (Blueprint $table) {
-            $table->bigInteger('version');
+        Schema::create('migrations', function (Blueprint $table) {
+            // Identification
+            $table->bigInteger('version')->primary();
             $table->string('migration_name', 100)->nullable();
+
+            // Metrics
             $table->timestamp('start_time')->nullable();
             $table->timestamp('end_time')->nullable();
-            $table->tinyInteger('breakpoint')->default(0);
 
-            $table->primary('version');
+            // Settings
+            $table->boolean('breakpoint')->default(false);
         });
     }
 
@@ -29,6 +32,6 @@ class CreateMigrationsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('directus_migrations');
+        Schema::dropIfExists('migrations');
     }
 }

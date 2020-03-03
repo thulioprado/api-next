@@ -13,13 +13,19 @@ class CreateWebhooksTable extends Migration
      */
     public function up()
     {
-        Schema::create('directus_webhooks', function (Blueprint $table) {
+        Schema::create('webhooks', function (Blueprint $table) {
+            // Identification
             $table->bigIncrements('id');
+            $table->string('collection_id', 64)->nullable();
+
+            // Settings
             $table->string('status', 16)->default('inactive');
             $table->string('http_action', 255)->nullable();
             $table->string('url', 510)->nullable();
-            $table->string('collection', 255)->nullable();
             $table->string('directus_action', 255)->nullable();
+
+            // Relations
+            $table->foreign('collection_id')->references('name')->on('collections');
         });
     }
 
@@ -28,6 +34,6 @@ class CreateWebhooksTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('directus_webhooks');
+        Schema::dropIfExists('webhooks');
     }
 }

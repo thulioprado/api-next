@@ -13,28 +13,42 @@ class CreateFilesTable extends Migration
      */
     public function up()
     {
-        Schema::create('directus_files', function (Blueprint $table) {
+        Schema::create('files', function (Blueprint $table) {
+            // Identification
             $table->bigIncrements('id');
-            $table->string('storage', 50)->default('local');
-            $table->string('private_hash', 16)->nullable();
-            $table->string('filename_disk', 255);
-            $table->string('filename_download', 255);
+            $table->unsignedBigInteger('folder_id')->nullable();
+
+            // Information
             $table->string('title', 255)->nullable();
+            $table->text('description')->nullable();
             $table->string('type', 255)->nullable();
-            $table->integer('uploaded_by')->unsigned();
-            $table->dateTime('uploaded_on');
-            $table->string('charset', 50)->nullable();
             $table->integer('filesize')->unsigned()->default(0);
             $table->integer('width')->unsigned()->nullable();
             $table->integer('height')->unsigned()->nullable();
             $table->integer('duration')->nullable();
+
+            // Store
+            $table->string('storage', 50)->default('local');
+            $table->string('filename_disk', 255);
+            $table->string('filename_download', 255);
+
+            // Settings
+            $table->string('charset', 50)->nullable();
             $table->string('embed', 200)->nullable();
-            $table->integer('folder')->unsigned()->nullable();
-            $table->text('description')->nullable();
             $table->string('location', 200)->nullable();
             $table->string('tags', 255)->nullable();
-            $table->string('checksum', 32)->nullable();
             $table->text('metadata')->nullable();
+
+            // Validations
+            $table->string('private_hash', 16)->nullable();
+            $table->string('checksum', 32)->nullable();
+
+            // Track
+            $table->integer('uploaded_by')->unsigned();
+            $table->dateTime('uploaded_on');
+
+            // Relations
+            $table->foreign('folder_id')->references('id')->on('folders');
         });
     }
 
@@ -43,6 +57,6 @@ class CreateFilesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('directus_files');
+        Schema::dropIfExists('files');
     }
 }

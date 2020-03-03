@@ -13,12 +13,19 @@ class CreateFoldersTable extends Migration
      */
     public function up()
     {
-        Schema::create('directus_folders', function (Blueprint $table) {
+        Schema::create('folders', function (Blueprint $table) {
+            // Identification
             $table->bigIncrements('id');
             $table->string('name', 200)->charset('utf8mb4');
-            $table->unsignedInteger('parent_folder')->nullable();
 
-            $table->unique(['name', 'parent_folder'], 'idx_name_parent_folder');
+            // Subdirectory
+            $table->unsignedBigInteger('parent_folder')->nullable();
+
+            // Keys
+            $table->unique(['name', 'parent_folder']);
+
+            // Relations
+            $table->foreign('parent_folder')->references('id')->on('folders');
         });
     }
 
@@ -27,6 +34,6 @@ class CreateFoldersTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('directus_folders');
+        Schema::dropIfExists('folders');
     }
 }

@@ -13,8 +13,11 @@ class CreateRelationsTable extends Migration
      */
     public function up()
     {
-        Schema::create('directus_relations', function (Blueprint $table) {
+        Schema::create('relations', function (Blueprint $table) {
+            // Identification
             $table->bigIncrements('id');
+
+            // Information
             $table->string('collection_many', 64);
             $table->string('field_many', 45);
             $table->string('collection_one', 64);
@@ -28,6 +31,6 @@ class CreateRelationsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('directus_relations');
+        Schema::dropIfExists('relations');
     }
 }

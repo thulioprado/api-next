@@ -6,25 +6,35 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateActivityTable extends Migration
+class CreateActivitiesTable extends Migration
 {
     /**
      * Run the migrations.
      */
     public function up()
     {
-        Schema::create('directus_activity', function (Blueprint $table) {
+        Schema::create('activities', function (Blueprint $table) {
+            // Identification
             $table->bigIncrements('id');
+            $table->string('collection_id', 64);
+
+            // Track information
             $table->string('action', 45);
             $table->integer('action_by')->unsigned()->default(0);
             $table->dateTime('action_on');
-            $table->string('ip', 50);
-            $table->string('user_agent', 255);
-            $table->string('collection', 64);
             $table->string('item', 255);
             $table->dateTime('edited_on')->nullable();
+
+            // Origin's information
+            $table->string('ip', 50);
+            $table->string('user_agent', 255);
+
+            // Comment about the activity
             $table->text('comment')->charset('utf8mb4')->nullable();
             $table->dateTime('comment_deleted_on')->nullable();
+
+            // Relations
+            $table->foreign('collection_id')->references('name')->on('collections');
         });
     }
 
@@ -33,6 +43,6 @@ class CreateActivityTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('directus_activity');
+        Schema::dropIfExists('activities');
     }
 }

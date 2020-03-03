@@ -13,15 +13,25 @@ class CreateUserSessionsTable extends Migration
      */
     public function up()
     {
-        Schema::create('directus_user_sessions', function (Blueprint $table) {
+        Schema::create('user_sessions', function (Blueprint $table) {
+            // Identification
             $table->bigIncrements('id');
-            $table->unsignedInteger('user')->nullable();
+            $table->unsignedBigInteger('user_id')->nullable();
+
+            // Settings
             $table->string('token_type', 255)->nullable();
             $table->string('token', 520)->nullable();
+            $table->dateTime('token_expired_at')->nullable();
+
+            // Track
             $table->string('ip_address', 255)->nullable();
             $table->text('user_agent')->nullable();
+
+            // Metric
             $table->dateTime('created_on')->nullable();
-            $table->dateTime('token_expired_at')->nullable();
+
+            // Relations
+            $table->foreign('user_id')->references('id')->on('users');
         });
     }
 
@@ -30,6 +40,6 @@ class CreateUserSessionsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('directus_user_sessions');
+        Schema::dropIfExists('user_sessions');
     }
 }

@@ -13,19 +13,31 @@ class CreateCollectionPresetsTable extends Migration
      */
     public function up()
     {
-        Schema::create('directus_collection_presets', function (Blueprint $table) {
+        Schema::create('collection_presets', function (Blueprint $table) {
+            // Identification
             $table->bigIncrements('id');
+            $table->unsignedBigInteger('user_id')->nullable();
+            $table->unsignedBigInteger('role_id')->nullable();
+            $table->string('collection_id', 64);
+
+            // Information
             $table->string('title', 255)->charset('utf8mb4')->nullable();
-            $table->integer('user')->unsigned()->nullable();
-            $table->integer('role')->unsigned()->nullable();
-            $table->string('collection', 64);
             $table->string('search_query', 100)->nullable();
             $table->text('filters')->nullable();
+
+            // Settings
             $table->string('view_type', 100)->default('tabular');
             $table->text('view_query')->nullable();
             $table->text('view_options')->nullable();
+
+            // Internationalization
             $table->text('translation')->nullable();
-            $table->unique(['user', 'collection', 'title'], 'idx_user_collection_title');
+
+            // Relations
+            $table->unique(['user_id', 'collection_id', 'title'], 'idx_user_collection_title');
+            $table->foreign('user_id')->references('id')->on('users');
+            $table->foreign('role_id')->references('id')->on('roles');
+            $table->foreign('collection_id')->references('name')->on('collections');
         });
     }
 
@@ -34,6 +46,6 @@ class CreateCollectionPresetsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('directus_collection_presets');
+        Schema::dropIfExists('collection_presets');
     }
 }

@@ -13,12 +13,10 @@ class CreateSettingsTable extends Migration
      */
     public function up()
     {
-        Schema::create('directus_settings', function (Blueprint $table) {
+        Schema::create('settings', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->string('key', 64);
+            $table->string('key', 64)->unique();
             $table->text('value')->nullable();
-
-            $table->unique('key', 'idx_key');
         });
     }
 
@@ -27,6 +25,6 @@ class CreateSettingsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('directus_settings');
+        Schema::dropIfExists('settings');
     }
 }
