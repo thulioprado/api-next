@@ -1,8 +1,12 @@
-name: Build
+name: CI
 on: [push, pull_request]
+
 jobs:
+
   build:
+    name: PHP ${{ matrix.php }} checks on ${{ matrix.os }}
     runs-on: ${{ matrix.os }}
+
     strategy:
       matrix:
         os:
@@ -10,16 +14,12 @@ jobs:
           #- "windows-latest"
           #- "macOS-latest"
         php:
-          # - "7.2"
           - "7.3"
           - "7.4"
-    name: PHP ${{ matrix.php }} checks on ${{ matrix.os }}
+
     steps:
       - name: Checkout
         uses: actions/checkout@v2
-
-      - name: Fetch history
-        run: git fetch --prune --unshallow
 
       - name: Install environment
         uses: shivammathur/setup-php@v1
