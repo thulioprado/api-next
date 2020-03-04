@@ -6,7 +6,7 @@ use Directus\Laravel\Database\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateSettingsTable extends Migration
+class CreateDirectusSettingsTable extends Migration
 {
     /**
      * Table name.
@@ -18,7 +18,7 @@ class CreateSettingsTable extends Migration
      */
     public function up()
     {
-        Schema::connection($this->system())->create($this->table(self::TABLE_NAME), function (Blueprint $table) {
+        $this->system()->create($this->table(self::TABLE_NAME), function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->string('key', 64)->unique();
             $table->text('value')->nullable();
@@ -30,6 +30,6 @@ class CreateSettingsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists($this->table(self::TABLE_NAME));
+        $this->system()->dropIfExists($this->table(self::TABLE_NAME));
     }
 }

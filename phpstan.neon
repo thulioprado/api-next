@@ -7,4 +7,4 @@ parameters:
     - src
     - tests
   excludes_analyse:
-    - src/Framework/Databases/Migrations
+    - src/Laravel/Database/Migrations

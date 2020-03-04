@@ -6,7 +6,7 @@ use Directus\Laravel\Database\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateFilesTable extends Migration
+class CreateDirectusFilesTable extends Migration
 {
     /**
      * Table name.
@@ -18,7 +18,7 @@ class CreateFilesTable extends Migration
      */
     public function up()
     {
-        Schema::connection($this->system())->create($this->table(self::TABLE_NAME), function (Blueprint $table) {
+        $this->system()->create($this->table(self::TABLE_NAME), function (Blueprint $table) {
             // Identification
             $table->bigIncrements('id');
             $table->unsignedBigInteger('folder_id')->nullable();
@@ -62,6 +62,6 @@ class CreateFilesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists($this->table(self::TABLE_NAME));
+        $this->system()->dropIfExists($this->table(self::TABLE_NAME));
     }
 }
