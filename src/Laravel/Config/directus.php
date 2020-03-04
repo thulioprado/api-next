@@ -10,7 +10,10 @@ return [
         ],
     ],
     'databases' => [
-        'data' => 'mysql',
-        'system' => 'mysql',
+        'data' => 'default',
+        'system' => 'default',
+    ],
+    'models' => [
+        'prefix' => 'directus_',
     ],
 ];

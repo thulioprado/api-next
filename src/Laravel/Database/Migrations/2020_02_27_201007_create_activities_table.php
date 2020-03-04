@@ -2,18 +2,23 @@
 
 declare(strict_types=1);
 
-use Illuminate\Database\Migrations\Migration;
+use Directus\Laravel\Database\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
 class CreateActivitiesTable extends Migration
 {
     /**
+     * Table name.
+     */
+    private const TABLE_NAME = 'activities';
+
+    /**
      * Run the migrations.
      */
     public function up()
     {
-        Schema::create('activities', function (Blueprint $table) {
+        Schema::connection($this->system())->create($this->table(self::TABLE_NAME), function (Blueprint $table) {
             // Identification
             $table->bigIncrements('id');
             $table->string('collection_id', 64);
@@ -30,7 +35,7 @@ class CreateActivitiesTable extends Migration
             $table->string('user_agent', 255);
 
             // Comment about the activity
-            $table->text('comment')->charset('utf8mb4')->nullable();
+            $table->text('comment')->nullable();
             $table->dateTime('comment_deleted_on')->nullable();
 
             // Relations
@@ -43,6 +48,6 @@ class CreateActivitiesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('activities');
+        Schema::dropIfExists($this->table(self::TABLE_NAME));
     }
 }

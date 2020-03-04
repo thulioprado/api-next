@@ -26,7 +26,6 @@ class DirectusProvider extends ServiceProvider
     {
         $this->registerConfigs();
         $this->registerDependencies();
-        // TODO: registerMigrations() with $this->loadMigrationsFrom(...)
     }
 
     /**
@@ -38,6 +37,7 @@ class DirectusProvider extends ServiceProvider
         // FIXME: DirectusProvider::bootRoutes() invoked with 1 parameter, 0 required.
         // $this->bootRoutes($router);
         $this->bootRoutes();
+        $this->bootMigrations();
     }
 
     /**
@@ -123,5 +123,13 @@ class DirectusProvider extends ServiceProvider
                 Route::get('{collection}/{id}', [CollectionController::class, 'show']);
             });
         });
+    }
+
+    /**
+     * Loads directus migrations.
+     */
+    private function bootMigrations(): void
+    {
+        $this->loadMigrationsFrom(__DIR__.'/../Database/Migrations');
     }
 }

@@ -2,18 +2,23 @@
 
 declare(strict_types=1);
 
-use Illuminate\Database\Migrations\Migration;
+use Directus\Laravel\Database\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
 class CreateCollectionPresetsTable extends Migration
 {
     /**
+     * Table name.
+     */
+    private const TABLE_NAME = 'collection_presets';
+
+    /**
      * Run the migrations.
      */
     public function up()
     {
-        Schema::create('collection_presets', function (Blueprint $table) {
+        Schema::connection($this->system())->create($this->table(self::TABLE_NAME), function (Blueprint $table) {
             // Identification
             $table->bigIncrements('id');
             $table->unsignedBigInteger('user_id')->nullable();
@@ -21,7 +26,7 @@ class CreateCollectionPresetsTable extends Migration
             $table->string('collection_id', 64);
 
             // Information
-            $table->string('title', 255)->charset('utf8mb4')->nullable();
+            $table->string('title', 255)->nullable();
             $table->string('search_query', 100)->nullable();
             $table->text('filters')->nullable();
 
@@ -46,6 +51,6 @@ class CreateCollectionPresetsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('collection_presets');
+        Schema::dropIfExists($this->table(self::TABLE_NAME));
     }
 }

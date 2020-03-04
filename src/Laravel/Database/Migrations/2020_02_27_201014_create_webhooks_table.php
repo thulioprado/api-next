@@ -2,18 +2,23 @@
 
 declare(strict_types=1);
 
-use Illuminate\Database\Migrations\Migration;
+use Directus\Laravel\Database\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
 class CreateWebhooksTable extends Migration
 {
     /**
+     * Table name.
+     */
+    private const TABLE_NAME = 'webhooks';
+
+    /**
      * Run the migrations.
      */
     public function up()
     {
-        Schema::create('webhooks', function (Blueprint $table) {
+        Schema::connection($this->system())->create($this->table(self::TABLE_NAME), function (Blueprint $table) {
             // Identification
             $table->bigIncrements('id');
             $table->string('collection_id', 64)->nullable();
@@ -34,6 +39,6 @@ class CreateWebhooksTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('webhooks');
+        Schema::dropIfExists($this->table(self::TABLE_NAME));
     }
 }

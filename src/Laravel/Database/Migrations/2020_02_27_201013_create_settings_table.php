@@ -2,18 +2,23 @@
 
 declare(strict_types=1);
 
-use Illuminate\Database\Migrations\Migration;
+use Directus\Laravel\Database\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
 class CreateSettingsTable extends Migration
 {
     /**
+     * Table name.
+     */
+    private const TABLE_NAME = 'settings';
+
+    /**
      * Run the migrations.
      */
     public function up()
     {
-        Schema::create('settings', function (Blueprint $table) {
+        Schema::connection($this->system())->create($this->table(self::TABLE_NAME), function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->string('key', 64)->unique();
             $table->text('value')->nullable();
@@ -25,6 +30,6 @@ class CreateSettingsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('settings');
+        Schema::dropIfExists($this->table(self::TABLE_NAME));
     }
 }

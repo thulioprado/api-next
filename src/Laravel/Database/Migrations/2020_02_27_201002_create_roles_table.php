@@ -2,18 +2,23 @@
 
 declare(strict_types=1);
 
-use Illuminate\Database\Migrations\Migration;
+use Directus\Laravel\Database\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
 class CreateRolesTable extends Migration
 {
     /**
+     * Table name.
+     */
+    private const TABLE_NAME = 'roles';
+
+    /**
      * Run the migrations.
      */
     public function up()
     {
-        Schema::create('roles', function (Blueprint $table) {
+        Schema::connection($this->system())->create($this->table(self::TABLE_NAME), function (Blueprint $table) {
             // Identification
             $table->bigIncrements('id');
             $table->string('external_id', 255)->unique()->nullable();
@@ -35,6 +40,6 @@ class CreateRolesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('roles');
+        Schema::dropIfExists($this->table(self::TABLE_NAME));
     }
 }
