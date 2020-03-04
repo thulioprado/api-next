@@ -2,12 +2,16 @@
 
 declare(strict_types=1);
 
-use Directus\Laravel\Database\Migration;
+use Directus\Laravel\Database\Traits\SystemBuilder;
+use Directus\Laravel\Database\Traits\TableName;
+use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
-use Illuminate\Support\Facades\Schema;
 
 class CreateDirectusWebhooksTable extends Migration
 {
+    use SystemBuilder;
+    use TableName;
+
     /**
      * Table name.
      */
@@ -18,7 +22,7 @@ class CreateDirectusWebhooksTable extends Migration
      */
     public function up()
     {
-        $this->system()->create($this->table(self::TABLE_NAME), function (Blueprint $table) {
+        $this->system()->create($this->tableName(self::TABLE_NAME), function (Blueprint $table) {
             // Identification
             $table->bigIncrements('id');
             $table->string('collection_id', 64)->nullable();
@@ -39,6 +43,6 @@ class CreateDirectusWebhooksTable extends Migration
      */
     public function down()
     {
-        $this->system()->dropIfExists($this->table(self::TABLE_NAME));
+        $this->system()->dropIfExists($this->tableName(self::TABLE_NAME));
     }
 }
