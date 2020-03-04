@@ -24,6 +24,11 @@ class Migration extends IlluminateMigration
      */
     public function system(): string
     {
-        return config('directus.databases.system', 'default');
+        $connection = config('directus.databases.system', 'default');
+        if ($connection === 'default') {
+            $connection = config('database.default');
+        }
+
+        return $connection;
     }
 }

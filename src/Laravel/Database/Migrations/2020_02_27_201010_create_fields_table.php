@@ -22,6 +22,7 @@ class CreateFieldsTable extends Migration
             // Identification
             $table->bigIncrements('id');
             $table->string('collection_id', 64);
+            $table->bigInteger('parent_id')->nullable();
 
             // Shape
             $table->string('field', 64);
@@ -35,8 +36,7 @@ class CreateFieldsTable extends Migration
             $table->boolean('readonly')->default(false);
             $table->boolean('hidden_detail')->default(false);
             $table->boolean('hidden_browse')->default(false);
-            $table->integer('sort')->unsigned()->nullable();
-            $table->integer('group')->unsigned()->nullable();
+            $table->unsignedInteger('index')->nullable();
             $table->string('width', 50)->default('full');
             $table->string('note', 1024)->nullable();
 

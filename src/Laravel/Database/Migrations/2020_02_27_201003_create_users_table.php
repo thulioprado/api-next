@@ -41,7 +41,7 @@ class CreateUsersTable extends Migration
             $table->string('theme', 100)->default('auto');
             $table->string('2fa_secret', 100)->nullable();
             $table->string('locale', 8)->nullable();
-            $table->text('locale_options')->nullable();
+            $table->json('locale_options')->nullable();
             $table->string('last_page', 200)->nullable();
             $table->dateTime('last_access_on')->nullable();
             $table->boolean('email_notifications')->default(true);

@@ -22,12 +22,12 @@ class CreateActivitiesTable extends Migration
             // Identification
             $table->bigIncrements('id');
             $table->string('collection_id', 64);
+            $table->string('item_id', 255);
 
             // Track information
             $table->string('action', 45);
             $table->integer('action_by')->unsigned()->default(0);
             $table->dateTime('action_on');
-            $table->string('item', 255);
             $table->dateTime('edited_on')->nullable();
 
             // Origin's information
