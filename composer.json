@@ -17,6 +17,7 @@
   ],
   "require": {
     "php": ">=7.3",
+    "ext-json": "*",
     "doctrine/dbal": "^2.10",
     "illuminate/config": "^7",
     "illuminate/console": "^7",
@@ -31,7 +32,7 @@
   "require-dev": {
     "cedx/coveralls": "^11.2",
     "friendsofphp/php-cs-fixer": "^2.16",
-    "nunomaduro/larastan": "^0.5.1",
+    "nunomaduro/larastan": "^0.5.4",
     "orchestra/testbench": "^5",
     "phpstan/extension-installer": "^1.0",
     "phpstan/phpstan": "^0.12",
@@ -64,6 +65,11 @@
       "@lint",
       "@test"
     ],
+    "check": [
+      "@format",
+      "@lint",
+      "@test"
+    ],
     "test": "phpunit --colors=always",
     "coverage:report": "coveralls dist/coverage.xml"
   },
@@ -75,7 +81,7 @@
   "extra": {
     "laravel": {
       "providers": [
-        "Directus\\Laravel\\Providers\\DirectusProvider"
+        "Directus\\Provider"
       ]
     }
   }
