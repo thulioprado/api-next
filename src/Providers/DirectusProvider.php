@@ -2,29 +2,26 @@
 
 declare(strict_types=1);
 
-namespace Directus;
+namespace Directus\Providers;
 
 use Directus\Contracts\Database\Collection as CollectionContract;
 use Directus\Contracts\Database\Database as DatabaseContract;
 use Directus\Contracts\Database\System\Database as SystemDatabaseContract;
 use Directus\Contracts\Database\System\Services\CollectionsService as CollectionsServiceContract;
 use Directus\Contracts\Database\System\Services\FieldsService as FieldsServiceContract;
-use Directus\Controllers\CollectionController;
-use Directus\Controllers\ServerController;
 use Directus\Database\Collection;
 use Directus\Database\Database;
 use Directus\Database\System\Database as SystemDatabase;
 use Directus\Database\System\Services\CollectionsService;
 use Directus\Database\System\Services\FieldsService;
-use Directus\Middlewares\CollectionMiddleware;
+use Directus\Directus;
 use Illuminate\Support\Facades\App;
-use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
 
 /**
  * Directus provider.
  */
-class Provider extends ServiceProvider
+class DirectusProvider extends ServiceProvider
 {
     /**
      * Service register.
@@ -50,16 +47,16 @@ class Provider extends ServiceProvider
      */
     private function registerConfigs(): void
     {
-        /** @var bool */
+        /** @var bool $debug */
         $debug = config('app.debug', false);
 
         // Do not load configs if it's cached.
-        if (App::configurationIsCached() && !$debug) {
+        if (!$debug && App::configurationIsCached()) {
             return;
         }
 
         $this->mergeConfigFrom(
-            __DIR__.'/../config/directus.php',
+            __DIR__.'/../../config/directus.php',
             'directus'
         );
     }
@@ -107,7 +104,7 @@ class Provider extends ServiceProvider
     private function bootConfigs(): void
     {
         $this->publishes([
-            __DIR__.'/../config/directus.php' => config_path('directus.php'),
+            __DIR__.'/../../config/directus.php' => config_path('directus.php'),
         ], ['config']);
     }
 
@@ -116,42 +113,17 @@ class Provider extends ServiceProvider
      */
     private function bootRoutes(): void
     {
-        /** @var bool */
+        /** @var bool $debug */
         $debug = config('app.debug', false);
 
         // Do not create routes if it's cached.
-        // TODO: check whenever `App::` can be replaced with `$this->app->` in https://github.com/nunomaduro/larastan/issues/483
-        if (App::routesAreCached() && !$debug) {
+        // TODO: check whenever `App::` can be replaced with `$this->app->`
+        // in https://github.com/nunomaduro/larastan/issues/483
+        if (!$debug && App::routesAreCached()) {
             return;
         }
 
-        $options = config('directus.routes.options', [
-            'prefix' => '/',
-        ]);
-
-        // Directus base
-        Route::group($options, function (): void {
-            // Server
-            // https://docs.directus.io/api/server.html#server
-            Route::group([
-                'prefix' => 'server',
-            ], function (): void {
-                Route::get('info', [ServerController::class, 'info']);
-                Route::get('ping', [ServerController::class, 'ping']);
-            });
-
-            // Items
-            Route::group([
-                'prefix' => 'items',
-                'middleware' => [
-                    CollectionMiddleware::class,
-                ],
-            ], function (): void {
-                // Collection
-                Route::get('{collection}', [CollectionController::class, 'index']);
-                Route::get('{collection}/{id}', [CollectionController::class, 'show']);
-            });
-        });
+        $this->loadRoutesFrom(__DIR__.'/../../routes/directus.php');
     }
 
     /**
@@ -159,6 +131,6 @@ class Provider extends ServiceProvider
      */
     private function bootMigrations(): void
     {
-        $this->loadMigrationsFrom(__DIR__.'/../database/migrations');
+        $this->loadMigrationsFrom(__DIR__.'/../../database/migrations');
     }
 }

@@ -19,6 +19,11 @@ class Collection extends Model
     use SystemModel;
 
     /**
+     * @var string
+     */
+    protected $keyType = 'uuid';
+
+    /**
      * Gets the related fields.
      */
     public function fields(): HasMany

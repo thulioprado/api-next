@@ -19,20 +19,20 @@ class Database implements DatabaseContract
     /**
      * @var string
      */
-    private $_connection;
+    private $connection;
 
     /**
      * @var string
      */
-    private $_prefix = '';
+    private $prefix;
 
     /**
      * Constructor.
      */
     public function __construct(string $connection, string $prefix = '')
     {
-        $this->_connection = $connection;
-        $this->_prefix = $prefix;
+        $this->connection = $connection;
+        $this->prefix = $prefix;
     }
 
     /**
@@ -40,7 +40,7 @@ class Database implements DatabaseContract
      */
     public function prefix(): string
     {
-        return $this->_prefix;
+        return $this->prefix;
     }
 
     /**
@@ -48,7 +48,7 @@ class Database implements DatabaseContract
      */
     public function connectionName(): string
     {
-        return $this->_connection;
+        return $this->connection;
     }
 
     /**
@@ -56,7 +56,7 @@ class Database implements DatabaseContract
      */
     public function connection(): ConnectionInterface
     {
-        return DB::connection($this->_connection);
+        return DB::connection($this->connection);
     }
 
     /**
@@ -64,7 +64,7 @@ class Database implements DatabaseContract
      */
     public function schema(): Builder
     {
-        return Schema::connection($this->_connection);
+        return Schema::connection($this->connection);
     }
 
     /**

@@ -7,6 +7,6 @@ namespace Directus\Utils\Options\Exception;
 /**
  * Options exception.
  */
-class OptionsException extends \Exception
+class Options extends \Exception
 {
 }

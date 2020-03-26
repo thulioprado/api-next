@@ -9,7 +9,7 @@ use Illuminate\Http\Response;
 /**
  * Not implemented exception.
  */
-final class NotImplemented extends Exception
+class NotImplemented extends Exception
 {
     /**
      * Not implemented exception constructor.
@@ -18,7 +18,7 @@ final class NotImplemented extends Exception
     {
         if ($method === null) {
             $trace = $this->getTrace()[0];
-            if (isset($trace['class']) && '' !== $trace['class']) {
+            if (isset($trace['class']) && $trace['class'] !== '') {
                 $method = $trace['class'].':'.$trace['function'];
             } else {
                 $method = $trace['function'];

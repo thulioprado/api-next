@@ -15,22 +15,19 @@ class Collection extends DatabaseCollection implements \Directus\Contracts\Datab
     /**
      * @var Database
      */
-    private $_system;
+    private $systemDatabase;
 
     /**
      * Constructor.
      */
     public function __construct(Database $database, string $name)
     {
-        $this->_system = $database;
+        $this->systemDatabase = $database;
         parent::__construct($database, $name);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function system(): Database
     {
-        return $this->_system;
+        return $this->systemDatabase;
     }
 }

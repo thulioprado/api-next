@@ -15,13 +15,10 @@ class Service implements ServiceContract
     /**
      * @var Database
      */
-    protected $_system;
+    protected $system;
 
-    /**
-     * {@inheritdoc}
-     */
     public function system(): Database
     {
-        return $this->_system = $this->_system ?? resolve(Database::class);
+        return $this->system = $this->system ?? resolve(Database::class);
     }
 }

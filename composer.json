@@ -1,7 +1,7 @@
 {
   "name": "directus/directus",
   "description": "Directus",
-  "license": "GPLv3",
+  "license": "GPL-3.0-only",
   "keywords": [
     "directus",
     "laravel"
@@ -33,7 +33,9 @@
     "cedx/coveralls": "^11.2",
     "friendsofphp/php-cs-fixer": "^2.16",
     "nunomaduro/larastan": "^0.5.4",
+    "nunomaduro/phpinsights": "^1.14",
     "orchestra/testbench": "^5",
+    "phpmetrics/phpmetrics": "^2.5",
     "phpstan/extension-installer": "^1.0",
     "phpstan/phpstan": "^0.12",
     "phpstan/phpstan-phpunit": "^0.12",
@@ -55,6 +57,8 @@
   "prefer-stable": true,
   "scripts": {
     "format": "php-cs-fixer --ansi fix",
+    "insights": "phpinsights -v",
+    "metrics": "phpmetrics --report-html=./dist/metrics ./src",
     "lint:php-cs-fixer": "php-cs-fixer --ansi fix --diff --dry-run",
     "lint:phpstan": "phpstan --ansi --memory-limit=2G analyse",
     "lint": [
@@ -81,7 +85,7 @@
   "extra": {
     "laravel": {
       "providers": [
-        "Directus\\Provider"
+        "Directus\\Providers\\DirectusProvider"
       ]
     }
   }

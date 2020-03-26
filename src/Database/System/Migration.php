@@ -18,12 +18,21 @@ class Migration extends IlluminateMigration
      *
      * @param mixed $props
      */
-    protected function registerField(string $id, string $collection_name, string $name, string $type, string $interface, $props = []): void
-    {
+    protected function registerField(
+        string $id,
+        string $collection_name,
+        string $name,
+        string $type,
+        string $interface,
+        $props = []
+    ): void {
         $collection_name = Directus::system()->collection($collection_name)->name();
 
         /** @var stdClass $collection */
-        $collection = Directus::system()->collection('collections')->query()->where('name', '=', $collection_name)->first();
+        $collection = Directus::system()->collection('collections')->query()
+            ->where('name', '=', $collection_name)
+            ->first()
+        ;
 
         $field = collect([
             'id' => $id,
@@ -46,7 +55,9 @@ class Migration extends IlluminateMigration
         }
 
         if (!isset($props['index'])) {
-            $props['index'] = Directus::system()->collection('fields')->query()->where('collection_id', '=', $collection->id)->count() + 1;
+            $props['index'] = Directus::system()->collection('fields')->query()
+                ->where('collection_id', '=', $collection->id)
+                ->count() + 1;
         }
 
         if (!isset($props['width'])) {

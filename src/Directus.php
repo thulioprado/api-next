@@ -12,7 +12,7 @@ use Directus\Contracts\Database\System\Services\FieldsService;
 /**
  * Directus.
  */
-final class Directus
+class Directus
 {
     /**
      * Gets the collections service.

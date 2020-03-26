@@ -4,9 +4,7 @@ declare(strict_types=1);
 
 namespace Directus\Database\System\Services;
 
-use Directus\Contracts\Database\System\Database;
 use Directus\Contracts\Database\System\Services\FieldsService as FieldsServiceContract;
-use Directus\Database\System\Collection;
 use Directus\Database\System\Models\Field;
 use Illuminate\Support\Traits\Macroable;
 
@@ -15,16 +13,16 @@ class FieldsService extends Service implements FieldsServiceContract
     use Macroable;
 
     /**
-     * @var FieldDefinition[]
+     * @var array<FieldDefinition>
      */
-    protected $_changes = [];
+    protected $changes = [];
 
     /**
      * Returns whether blueprint has defined fields.
      */
     public function modified(): bool
     {
-        return \count($this->_changes) > 0;
+        return \count($this->changes) > 0;
     }
 
     /**
@@ -60,11 +58,11 @@ class FieldsService extends Service implements FieldsServiceContract
             return;
         }
 
-        foreach ($this->_changes as $field) {
+        foreach ($this->changes as $field) {
             $this->applyFieldChanges($field);
         }
 
-        $this->_changes = [];
+        $this->changes = [];
     }
 
     /**
@@ -72,7 +70,7 @@ class FieldsService extends Service implements FieldsServiceContract
      */
     public function discard(): void
     {
-        $this->_changes = [];
+        $this->changes = [];
     }
 
     /**
@@ -87,10 +85,10 @@ class FieldsService extends Service implements FieldsServiceContract
                 $callback($this);
                 $this->save();
             });
-        } catch (\Throwable $e) {
+        } catch (\Throwable $err) {
             $this->discard();
 
-            throw $e;
+            throw $err;
         }
     }
 
@@ -151,7 +149,11 @@ class FieldsService extends Service implements FieldsServiceContract
         }
 
         if (!isset($field->index)) {
-            $field->index($this->system()->collection('fields')->query()->where('collection_id', '=', $field['collection_id'])->count() + 1);
+            $field->index(
+                $this->system()->collection('fields')->query()
+                    ->where('collection_id', '=', $field['collection_id'])
+                    ->count() + 1
+            );
         }
 
         if (!isset($field->width)) {
@@ -219,7 +221,7 @@ class FieldsService extends Service implements FieldsServiceContract
         if ($index !== null) {
             $field->index($index);
         }
-        $this->_changes[] = $field;
+        $this->changes[] = $field;
 
         return $field;
     }

@@ -7,7 +7,7 @@ namespace Directus\Utils\Options\Exception;
 /**
  * Empty schema exception.
  */
-class MissingOptions extends OptionsException
+class MissingOptions extends Options
 {
     /**
      * Constructs the exception.

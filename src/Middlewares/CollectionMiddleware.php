@@ -22,7 +22,7 @@ class CollectionMiddleware
      */
     public function handle(Request $request, Closure $next)
     {
-        /** @var Route */
+        /** @var Route $route */
         $route = $request->route();
 
         $parameters = $route->parameters();

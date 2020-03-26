@@ -24,23 +24,16 @@ class Options
     /**
      * Collection items.
      *
-     * @var array
+     * @var array<mixed>
      */
     private $values = [];
 
     /**
      * List of schema rules.
      *
-     * @var array
+     * @var array<mixed>
      */
     private $schema = [];
-
-    /**
-     * List of properties.
-     *
-     * @var array
-     */
-    private $props = [];
 
     /**
      * List of required props.
@@ -52,12 +45,10 @@ class Options
     /**
      * Collection constructor.
      *
-     * @param array $values
+     * @throws EmptySchema
      */
     public function __construct(array $schema, ?array $values = null)
     {
-        $this->values = [];
-
         if (\count($schema) === 0) {
             throw new EmptySchema();
         }
@@ -66,7 +57,7 @@ class Options
             if (\is_string($key)) {
                 if (!\is_array($value)) {
                     $value = [
-                        static::PROP_DEFAULT => $value,
+                        self::PROP_DEFAULT => $value,
                     ];
                 }
             } else {
@@ -79,28 +70,34 @@ class Options
             }
 
             return array_replace_recursive([], [
-                "{$key}" => [
-                    static::PROP_VALIDATE => function (): bool { return true; },
-                    static::PROP_CONVERT => function ($value) { return $value; },
+                $key => [
+                    self::PROP_VALIDATE => function (): bool {
+                        return true;
+                    },
+                    self::PROP_CONVERT => function ($value) {
+                        return $value;
+                    },
                 ],
             ], [
-                "{$key}" => $value,
+                $key => $value,
             ]);
         }, array_keys($schema), array_values($schema)));
 
-        $this->props = array_keys($this->schema);
+        $attributes = array_keys($this->schema);
 
-        $this->required = Arr::where($this->props, function ($prop): bool {
-            return !\array_key_exists(static::PROP_DEFAULT, $this->schema[$prop]);
+        $this->required = Arr::where($attributes, function ($prop): bool {
+            return !\array_key_exists(self::PROP_DEFAULT, $this->schema[$prop]);
         });
 
-        if (null !== $values) {
+        if ($values !== null) {
             $this->feed($values);
         }
     }
 
     /**
      * Feeds data to options class.
+     *
+     * @throws MissingOptions
      */
     public function feed(array $data): void
     {
@@ -118,14 +115,14 @@ class Options
             if (Arr::has($data, $key)) {
                 $value = Arr::get($data, $key);
             } else {
-                $value = $prop[static::PROP_DEFAULT];
+                $value = $prop[self::PROP_DEFAULT];
             }
 
-            if (!$prop[static::PROP_VALIDATE]($value)) {
+            if (!$prop[self::PROP_VALIDATE]($value)) {
                 throw new InvalidOption($key);
             }
 
-            Arr::set($this->values, $key, $prop[static::PROP_CONVERT]($value));
+            Arr::set($this->values, $key, $prop[self::PROP_CONVERT]($value));
         }
     }
 
@@ -140,7 +137,7 @@ class Options
     }
 
     /**
-     * Checks wheter an item exists in the collection with the given key.
+     * Checks whether an item exists in the collection with the given key.
      */
     public function has(string $key): bool
     {

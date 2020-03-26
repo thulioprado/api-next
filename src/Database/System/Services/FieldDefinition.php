@@ -264,7 +264,7 @@ class FieldDefinition extends Fluent
     /**
      * Set field to datetime_created type.
      */
-    public function datetime_created(): self
+    public function datetimeCreated(): self
     {
         return $this->type('datetime_created');
     }
@@ -272,7 +272,7 @@ class FieldDefinition extends Fluent
     /**
      * Set field to datetime_updated type.
      */
-    public function datetime_updated(): self
+    public function datetimeUpdated(): self
     {
         return $this->type('datetime_updated');
     }
@@ -288,7 +288,7 @@ class FieldDefinition extends Fluent
     /**
      * Set field to user_updated type.
      */
-    public function user_updated(): self
+    public function userUpdated(): self
     {
         return $this->type('user_updated');
     }

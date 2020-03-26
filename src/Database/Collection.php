@@ -18,82 +18,64 @@ class Collection implements CollectionContract
     /**
      * @var string
      */
-    private $_name;
+    private $name;
 
     /**
      * @var string
      */
-    private $_prefix;
+    private $prefix;
 
     /**
      * @var DatabaseContract
      */
-    private $_database;
+    private $database;
 
     /**
      * @var Connection
      */
-    private $_connection;
+    private $connection;
 
     /**
      * Constructor.
      */
     public function __construct(DatabaseContract $database, string $name)
     {
-        $this->_name = $name;
-        $this->_database = $database;
-        /** @var Connection */
-        $conn = $database->connection();
-        $this->_connection = $conn;
-        $this->_prefix = $database->prefix();
+        $this->name = $name;
+        $this->database = $database;
+        /** @var Connection $connection */
+        $connection = $database->connection();
+        $this->connection = $connection;
+        $this->prefix = $database->prefix();
     }
 
-    /**
-     *  {@inheritdoc}
-     */
     public function name(): string
     {
-        return $this->_prefix.$this->_name;
+        return $this->prefix.$this->name;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function prefix(): string
     {
-        return $this->_prefix;
+        return $this->prefix;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function fullName(): string
     {
-        return $this->_connection->getTablePrefix().$this->_prefix.$this->_name;
+        return $this->connection->getTablePrefix().$this->prefix.$this->name;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function query(): Builder
     {
-        return $this->_connection->table($this->name());
+        return $this->connection->table($this->name());
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function drop(): void
     {
-        $this->_connection->getSchemaBuilder()->drop($this->name());
+        $this->connection->getSchemaBuilder()->drop($this->name());
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function truncate(): void
     {
-        $this->_connection->table($this->name())->truncate();
+        $this->connection->table($this->name())->truncate();
     }
 
     /**
@@ -101,7 +83,7 @@ class Collection implements CollectionContract
      */
     protected function database(): DatabaseContract
     {
-        return $this->_database;
+        return $this->database;
     }
 
     /**
@@ -109,6 +91,6 @@ class Collection implements CollectionContract
      */
     protected function connection(): ConnectionInterface
     {
-        return $this->_connection;
+        return $this->connection;
     }
 }

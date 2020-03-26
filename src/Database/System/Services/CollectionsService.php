@@ -14,9 +14,6 @@ class CollectionsService extends Service implements CollectionsServiceContract
 {
     use Macroable;
 
-    /**
-     * {@inheritdoc}
-     */
     public function getByName(string $name): Collection
     {
         $collection = Collection::where('name', '=', $name)->first();
@@ -27,9 +24,6 @@ class CollectionsService extends Service implements CollectionsServiceContract
         return $collection;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function register(string $name, ?string $id = null): void
     {
         $collection = new Collection();
@@ -39,17 +33,11 @@ class CollectionsService extends Service implements CollectionsServiceContract
         $collection->save();
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function unregister(string $id): void
     {
         Collection::where('collection_id', '=', $id)->delete();
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function all(): EloquentCollection
     {
         return Collection::all();

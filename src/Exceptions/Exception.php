@@ -17,26 +17,26 @@ abstract class Exception extends \Exception
      *
      * @var string
      */
-    private $exceptionCode = '';
+    private $exceptionCode;
 
     /**
      * Exception status.
      *
      * @var int
      */
-    private $exceptionStatus = 500;
+    private $exceptionStatus;
 
     /**
      * Exception description.
      *
-     * @var array
+     * @var array<string>
      */
-    private $exceptionDetails = [];
+    private $exceptionDetails;
 
     /**
      * Not implemented exception constructor.
      */
-    public function __construct(string $code, int $status, array $details = [])
+    public function __construct(string $code, int $status = 500, array $details = [])
     {
         $this->exceptionCode = $code;
         $this->exceptionStatus = $status;
