@@ -12,6 +12,9 @@ use Illuminate\Support\ServiceProvider;
  */
 class CommandsProvider extends ServiceProvider
 {
+    /**
+     * @var array<string>
+     */
     private $commands = [
         InstallCommand::class,
     ];
