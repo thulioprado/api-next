@@ -11,8 +11,8 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 /**
  * Collection model.
  *
- * @property mixed $id
- * @property mixed $name
+ * @property string $id
+ * @property string $name
  */
 class Collection extends Model
 {
