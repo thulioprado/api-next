@@ -2,20 +2,23 @@
   <img src="https://user-images.githubusercontent.com/522079/43096167-3a1b1118-8e86-11e8-9fb2-7b4e3b1368bc.png" width="40" alt="Directus Logo"/>&nbsp;&nbsp;Directus
 </h1>
 
-<div align="center">
-    <a href="">
-        <img src="https://github.com/directus/api-next/workflows/Build/badge.svg?branch=master" />
-    </a>
-    <a href='https://coveralls.io/github/directus/api-next?branch=master'>
-        <img src='https://coveralls.io/repos/github/directus/api-next/badge.svg?branch=master' alt='Coverage Status' />
-    </a>
-</div>
+---
+
+[![Build Status](https://github.com/directus/api-next/workflows/Build/badge.svg?branch=master)](https://github.com/directus/api-next)
+[![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=api-next&metric=sqale_rating)](https://sonarcloud.io/dashboard?id=api-next)
+[![Reliability Rating](https://sonarcloud.io/api/project_badges/measure?project=api-next&metric=reliability_rating)](https://sonarcloud.io/dashboard?id=api-next)
+[![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=api-next&metric=security_rating)](https://sonarcloud.io/dashboard?id=api-next)
+[![Bugs](https://sonarcloud.io/api/project_badges/measure?project=api-next&metric=bugs)](https://sonarcloud.io/dashboard?id=api-next)
+[![Vulnerabilities](https://sonarcloud.io/api/project_badges/measure?project=api-next&metric=vulnerabilities)](https://sonarcloud.io/dashboard?id=api-next)
+[![Coverage](https://sonarcloud.io/api/project_badges/measure?project=api-next&metric=coverage)](https://sonarcloud.io/dashboard?id=api-next)
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=api-next&metric=alert_status)](https://sonarcloud.io/dashboard?id=api-next)
+[![Technical Debt](https://sonarcloud.io/api/project_badges/measure?project=api-next&metric=sqale_index)](https://sonarcloud.io/dashboard?id=api-next)
 
 ---
 
 # WIP
 
-This is a work-in-progress branch. Please **DO NOT** use this for any kind of environment besides development, testing and out of curiosity only.
+This is a work-in-progress project. Please **DO NOT** use this for any kind of environment besides development, testing and out of curiosity only.
 
 # Objectives
 
