@@ -13,10 +13,10 @@ Thumbs.db
 /.vscode
 /.ddev
 
-# Admin
+# Assets
 
-!/app/dist/.gitkeep
-/app/dist/**/*
+!/public/.gitkeep
+/public/**/*
 
 # Dependencies
 
@@ -32,3 +32,5 @@ tests/data/database.sqlite
 
 composer.lock
 composer.phar
+
+# Admin
