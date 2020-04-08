@@ -7,7 +7,6 @@ namespace Directus\Database;
 use Directus\Contracts\Database\Collection as CollectionContract;
 use Directus\Contracts\Database\Database as DatabaseContract;
 use Illuminate\Database\Connection;
-use Illuminate\Database\ConnectionInterface;
 use Illuminate\Database\Query\Builder;
 
 /**
@@ -26,11 +25,6 @@ class Collection implements CollectionContract
     private $prefix;
 
     /**
-     * @var DatabaseContract
-     */
-    private $database;
-
-    /**
      * @var Connection
      */
     private $connection;
@@ -41,11 +35,11 @@ class Collection implements CollectionContract
     public function __construct(DatabaseContract $database, string $name)
     {
         $this->name = $name;
-        $this->database = $database;
+        $this->prefix = $database->prefix();
+
         /** @var Connection $connection */
         $connection = $database->connection();
         $this->connection = $connection;
-        $this->prefix = $database->prefix();
     }
 
     public function name(): string
@@ -63,7 +57,7 @@ class Collection implements CollectionContract
         return $this->connection->getTablePrefix().$this->prefix.$this->name;
     }
 
-    public function query(): Builder
+    public function builder(): Builder
     {
         return $this->connection->table($this->name());
     }
@@ -76,21 +70,5 @@ class Collection implements CollectionContract
     public function truncate(): void
     {
         $this->connection->table($this->name())->truncate();
-    }
-
-    /**
-     * Gets the current database.
-     */
-    protected function database(): DatabaseContract
-    {
-        return $this->database;
-    }
-
-    /**
-     * Gets the current database.
-     */
-    protected function connection(): ConnectionInterface
-    {
-        return $this->connection;
     }
 }

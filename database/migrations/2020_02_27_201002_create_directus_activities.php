@@ -2,13 +2,18 @@
 
 declare(strict_types=1);
 
-use Directus\Contracts\Database\System\Services\FieldsService;
-use Directus\Database\System\Migration;
-use Directus\Facades\Directus as Directus;
+use Directus\Database\Migrations\Traits\MigrateCollections;
+use Directus\Database\Migrations\Traits\MigrateFields;
+use Directus\Facades\Directus;
+use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 
 class CreateDirectusActivities extends Migration
 {
+    use MigrateFields;
+    use
+        MigrateCollections;
+
     /**
      * @var string
      */
@@ -24,9 +29,11 @@ class CreateDirectusActivities extends Migration
      */
     public function up(): void
     {
-        Directus::system()->schema()->create(
-            Directus::system()->collection('activities')->name(),
-            function (Blueprint $collection): void {
+        $system = Directus::databases()->system();
+
+        $system->schema()->create(
+            $system->collection('activities')->name(),
+            function (Blueprint $collection) use ($system): void {
                 $collection->uuid('id')->primary();
                 $collection->uuid('collection_id');
                 $collection->string('action', 45);
@@ -39,18 +46,15 @@ class CreateDirectusActivities extends Migration
                 $collection->text('comment')->nullable();
                 $collection->dateTime('comment_deleted_on')->nullable();
                 $collection->foreign('collection_id')->references('id')->on(
-                    Directus::system()->collection('collections')->name()
+                    $system->collection('collections')->name()
                 );
             }
         );
 
-        Directus::collections()->register(
-            Directus::system()->collection('activities')->fullName(),
-            'c5e7edfd-f7e8-42b5-8da3-a433d3c7822b'
-        );
+        $this->registerCollection('c5e7edfd-f7e8-42b5-8da3-a433d3c7822b', 'activities');
 
-        Directus::fields()->batch(function (FieldsService $fields): void {
-            $fields->insert('9aa7a394-29ff-40b7-99a9-f28138749b9b', 0)
+        $this->registerField(
+            $this->createField('9aa7a394-29ff-40b7-99a9-f28138749b9b')
                 ->on('activities')
                 ->uuid()
                 ->name('id')
@@ -59,9 +63,10 @@ class CreateDirectusActivities extends Migration
                 ->textInputInterface([
                     'monospace' => true,
                 ])
-            ;
+        );
 
-            $fields->insert('da74ddda-1194-445d-8f0a-a5dbdd5b2943', 1)
+        $this->registerField(
+            $this->createField('da74ddda-1194-445d-8f0a-a5dbdd5b2943')
                 ->on('activities')
                 ->string()
                 ->name('collection_id')
@@ -71,9 +76,10 @@ class CreateDirectusActivities extends Migration
                     'iconRight' => 'list_alt',
                     'include_system' => true,
                 ])
-            ;
+        );
 
-            $fields->insert('763901c9-8f3e-4566-a7fc-a35dff82a244', 2)
+        $this->registerField(
+            $this->createField('763901c9-8f3e-4566-a7fc-a35dff82a244')
                 ->on('activities')
                 ->string()
                 ->name('action')
@@ -81,9 +87,10 @@ class CreateDirectusActivities extends Migration
                 ->textInputInterface([
                     'iconRight' => 'change_history',
                 ])
-            ;
+        );
 
-            $fields->insert('79a1e9b8-4c15-4ef7-b148-96cd9e82eafa', 3)
+        $this->registerField(
+            $this->createField('79a1e9b8-4c15-4ef7-b148-96cd9e82eafa')
                 ->on('activities')
                 ->string()
                 ->name('action_by')
@@ -92,9 +99,10 @@ class CreateDirectusActivities extends Migration
                 ->userInterface([
                     'iconRight' => 'account_circle',
                 ])
-            ;
+        );
 
-            $fields->insert('c171cd1e-f981-44e8-8845-1376f76e1b88', 4)
+        $this->registerField(
+            $this->createField('c171cd1e-f981-44e8-8845-1376f76e1b88')
                 ->on('activities')
                 ->string()
                 ->name('action_on')
@@ -104,9 +112,10 @@ class CreateDirectusActivities extends Migration
                     'showRelative' => true,
                     'iconRight' => 'calendar_today',
                 ])
-            ;
+        );
 
-            $fields->insert('598f1f7e-fb08-427f-9450-c5339f31de75', 5)
+        $this->registerField(
+            $this->createField('598f1f7e-fb08-427f-9450-c5339f31de75')
                 ->on('activities')
                 ->string()
                 ->name('ip')
@@ -115,9 +124,10 @@ class CreateDirectusActivities extends Migration
                 ->textInputInterface([
                     'iconRight' => 'my_location',
                 ])
-            ;
+        );
 
-            $fields->insert('2a3e626e-2a31-4624-b840-c844278ca686', 6)
+        $this->registerField(
+            $this->createField('2a3e626e-2a31-4624-b840-c844278ca686')
                 ->on('activities')
                 ->string()
                 ->name('user_agent')
@@ -126,9 +136,10 @@ class CreateDirectusActivities extends Migration
                 ->textInputInterface([
                     'iconRight' => 'devices_other',
                 ])
-            ;
+        );
 
-            $fields->insert('6989d278-7de6-4b2f-807c-b0eabbac9d75', 7)
+        $this->registerField(
+            $this->createField('6989d278-7de6-4b2f-807c-b0eabbac9d75')
                 ->on('activities')
                 ->string()
                 ->name('item')
@@ -137,9 +148,10 @@ class CreateDirectusActivities extends Migration
                 ->textInputInterface([
                     'iconRight' => 'link',
                 ])
-            ;
+        );
 
-            $fields->insert('02bd5739-02a7-490f-b6b9-edb49e386669', 8)
+        $this->registerField(
+            $this->createField('02bd5739-02a7-490f-b6b9-edb49e386669')
                 ->on('activities')
                 ->datetime()
                 ->name('edited_on')
@@ -149,16 +161,18 @@ class CreateDirectusActivities extends Migration
                     'showRelative' => true,
                     'iconRight' => 'edit',
                 ])
-            ;
+        );
 
-            $fields->insert('726aa859-05e9-4b3c-a8e7-5ebc07a7e04b', 9)
+        $this->registerField(
+            $this->createField('726aa859-05e9-4b3c-a8e7-5ebc07a7e04b')
                 ->on('activities')
                 ->string()
                 ->name('comment')
                 ->textInputInterface()
-            ;
+        );
 
-            $fields->insert('258fe35b-762f-442a-b67c-7978c461d60d', 10)
+        $this->registerField(
+            $this->createField('258fe35b-762f-442a-b67c-7978c461d60d')
                 ->on('activities')
                 ->datetime()
                 ->name('comment_deleted_on')
@@ -168,13 +182,15 @@ class CreateDirectusActivities extends Migration
                     'showRelative' => true,
                     'iconRight' => 'delete_outline',
                 ])
-            ;
-        });
+        );
     }
 
+    /**
+     * Rollback the migrations.
+     */
     public function down(): void
     {
-        Directus::fields()->from(Directus::system()->collection('activities')->fullName())->delete();
-        Directus::system()->collection('activities')->drop();
+        $this->unregisterFieldsFrom('activities');
+        Directus::databases()->system()->collection('activities')->drop();
     }
 }

@@ -7,11 +7,8 @@ namespace Directus\Controllers;
 use Illuminate\Routing\Controller;
 
 /**
- * Server controller.
+ * Base controller.
  */
 abstract class BaseController extends Controller
 {
-    public function __construct()
-    {
-    }
 }

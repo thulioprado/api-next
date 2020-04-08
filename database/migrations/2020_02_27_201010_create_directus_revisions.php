@@ -2,21 +2,28 @@
 
 declare(strict_types=1);
 
-use Directus\Contracts\Database\System\Services\FieldsService;
-use Directus\Database\System\Migration;
+use Directus\Database\Migrations\Traits\MigrateCollections;
+use Directus\Database\Migrations\Traits\MigrateFields;
 use Directus\Facades\Directus;
+use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 
 class CreateDirectusRevisions extends Migration
 {
+    use MigrateFields;
+    use
+        MigrateCollections;
+
     /**
      * Run the migrations.
      */
-    public function up()
+    public function up(): void
     {
-        Directus::system()->schema()->create(
-            Directus::system()->collection('revisions')->name(),
-            function (Blueprint $collection) {
+        $system = Directus::databases()->system();
+
+        $system->schema()->create(
+            $system->collection('revisions')->name(),
+            function (Blueprint $collection) use ($system) {
                 $collection->uuid('id')->primary();
                 $collection->uuid('activity_id');
                 $collection->uuid('collection_id');
@@ -28,68 +35,97 @@ class CreateDirectusRevisions extends Migration
                 $collection->boolean('parent_changed')->default(false);
 
                 $collection->foreign('activity_id')->references('id')->on(
-                    Directus::system()->collection('activities')->name()
+                    $system->collection('activities')->name()
                 );
                 $collection->foreign('collection_id')->references('id')->on(
-                    Directus::system()->collection('collections')->name()
+                    $system->collection('collections')->name()
                 );
             }
         );
 
-        Directus::fields()->batch(function (FieldsService $fields): void {
-            $fields->insert('e5caa751-7a79-4e22-a207-3c42a3add63d')
+        $this->registerCollection('2d9449e7-55be-4240-b17f-be598b0faac1', 'revisions');
+
+        $this->registerField(
+            $this->createField('e5caa751-7a79-4e22-a207-3c42a3add63d')
                 ->on('revisions')
                 ->name('id')
-                ->integer()
-            ;
-            $fields->insert('3099eac4-91eb-4064-b574-af3927047365')
+                ->uuid()
+                ->textInputInterface([
+                    'monospace' => true,
+                ])
+        );
+
+        $this->registerField(
+            $this->createField('3099eac4-91eb-4064-b574-af3927047365')
                 ->on('revisions')
                 ->name('activity')
                 ->m2o()
-            ;
-            $fields->insert('9f6c2786-02a5-4fff-8af0-0c52972c58c5')
+                ->manyToOneInterface()
+        );
+
+        $this->registerField(
+            $this->createField('9f6c2786-02a5-4fff-8af0-0c52972c58c5')
                 ->on('revisions')
                 ->name('collection')
                 ->m2o()
-            ;
-            $fields->insert('d15a7011-cbd4-48c8-92d4-81f7d72224dc')
+                ->manyToOneInterface()
+        );
+
+        $this->registerField(
+            $this->createField('d15a7011-cbd4-48c8-92d4-81f7d72224dc')
                 ->on('revisions')
                 ->name('item')
                 ->string()
-            ;
-            $fields->insert('215ce72b-54cd-439d-9cfe-e2788aad82a8')
+                ->textInputInterface()
+        );
+
+        $this->registerField(
+            $this->createField('215ce72b-54cd-439d-9cfe-e2788aad82a8')
                 ->on('revisions')
                 ->name('data')
                 ->json()
-            ;
-            $fields->insert('beca1b78-2275-4151-b1c1-9f1900e59d6e')
+                ->jsonInterface()
+        );
+
+        $this->registerField(
+            $this->createField('beca1b78-2275-4151-b1c1-9f1900e59d6e')
                 ->on('revisions')
                 ->name('delta')
                 ->json()
-            ;
-            $fields->insert('1e1d184f-e38c-4786-97b5-e4ffd914a329')
+                ->jsonInterface()
+        );
+
+        $this->registerField(
+            $this->createField('1e1d184f-e38c-4786-97b5-e4ffd914a329')
                 ->on('revisions')
                 ->name('parent_item')
                 ->string()
-            ;
-            $fields->insert('0cbee19f-b82b-4429-8efe-2362949fb657')
+                ->textInputInterface()
+        );
+
+        $this->registerField(
+            $this->createField('0cbee19f-b82b-4429-8efe-2362949fb657')
                 ->on('revisions')
                 ->name('parent_collection')
                 ->string()
-            ;
-            $fields->insert('6ccbc80d-ec03-44bb-84dc-2b4d2c054943')
+                ->collectionsInterface()
+        );
+
+        $this->registerField(
+            $this->createField('6ccbc80d-ec03-44bb-84dc-2b4d2c054943')
                 ->on('revisions')
                 ->name('parent_changed')
                 ->boolean()
-            ;
-        });
+                ->switchInterface()
+        );
     }
 
     /**
-     * Reverse the migrations.
+     * Rollback the migrations.
      */
-    public function down()
+    public function down(): void
     {
-        Directus::system()->collection('revisions')->drop();
+        $this->unregisterFieldsFrom('revisions');
+        Directus::databases()->system()->collection('revisions')->drop();
     }
 }

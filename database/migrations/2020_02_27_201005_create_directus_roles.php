@@ -2,20 +2,27 @@
 
 declare(strict_types=1);
 
-use Directus\Contracts\Database\System\Services\FieldsService;
-use Directus\Database\System\Migration;
+use Directus\Database\Migrations\Traits\MigrateCollections;
+use Directus\Database\Migrations\Traits\MigrateFields;
 use Directus\Facades\Directus;
+use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 
 class CreateDirectusRoles extends Migration
 {
+    use MigrateFields;
+    use
+        MigrateCollections;
+
     /**
      * Run the migrations.
      */
     public function up(): void
     {
-        Directus::system()->schema()->create(
-            Directus::system()->collection('roles')->name(),
+        $system = Directus::databases()->system();
+
+        $system->schema()->create(
+            $system->collection('roles')->name(),
             function (Blueprint $collection) {
                 $collection->uuid('id')->primary();
                 $collection->string('external_id', 255)->unique()->nullable();
@@ -28,24 +35,22 @@ class CreateDirectusRoles extends Migration
             }
         );
 
-        Directus::system()->collections()->register(
-            Directus::system()->collection('roles')->fullName(),
-            '04c67964-7f34-40be-8a9b-2396b8b38db1'
-        );
+        $this->registerCollection('04c67964-7f34-40be-8a9b-2396b8b38db1', 'roles');
 
-        Directus::fields()->batch(function (FieldsService $fields) {
-            $fields->insert('9a683768-36d3-44cb-9f4b-5620af5e161b', 0)
+        $this->registerField(
+            $this->createField('9a683768-36d3-44cb-9f4b-5620af5e161b')
                 ->on('roles')
-                ->string()
+                ->uuid()
                 ->name('id')
                 ->required()
                 ->hidden_detail()
                 ->textInputInterface([
                     'monospace' => true,
                 ])
-            ;
+        );
 
-            $fields->insert('08e4468f-d15c-4d3f-bdc0-c6e5c13ce6c9', 1)
+        $this->registerField(
+            $this->createField('08e4468f-d15c-4d3f-bdc0-c6e5c13ce6c9')
                 ->on('roles')
                 ->string()
                 ->name('external_id')
@@ -53,26 +58,29 @@ class CreateDirectusRoles extends Migration
                 ->hidden_detail()
                 ->hidden_browse()
                 ->textInputInterface()
-            ;
+        );
 
-            $fields->insert('b39fca37-221c-4eff-9bde-cfe721d0a301', 2)
+        $this->registerField(
+            $this->createField('b39fca37-221c-4eff-9bde-cfe721d0a301')
                 ->on('roles')
                 ->string()
                 ->name('name')
                 ->required()
                 ->width('half')
                 ->textInputInterface()
-            ;
+        );
 
-            $fields->insert('11783385-a838-488a-803f-be9f19099a61', 3)
+        $this->registerField(
+            $this->createField('11783385-a838-488a-803f-be9f19099a61')
                 ->on('roles')
                 ->string()
                 ->name('description')
                 ->width('half')
                 ->textareaInterface()
-            ;
+        );
 
-            $fields->insert('c95f0ddc-fa76-4117-8ff6-51cd29d39979', 4)
+        $this->registerField(
+            $this->createField('c95f0ddc-fa76-4117-8ff6-51cd29d39979')
                 ->on('roles')
                 ->json()
                 ->name('module_listing')
@@ -100,9 +108,10 @@ class CreateDirectusRoles extends Migration
                         ],
                     ],
                 ])
-            ;
+        );
 
-            $fields->insert('520906a5-4565-42df-8366-ff8d25acd3d0', 5)
+        $this->registerField(
+            $this->createField('520906a5-4565-42df-8366-ff8d25acd3d0')
                 ->on('roles')
                 ->json()
                 ->name('collection_listing')
@@ -134,39 +143,44 @@ class CreateDirectusRoles extends Migration
                         ],
                     ],
                 ])
-            ;
+        );
 
-            $fields->insert('3b36f33a-ad2b-4519-ab05-a6eaa9092139', 6)
+        $this->registerField(
+            $this->createField('3b36f33a-ad2b-4519-ab05-a6eaa9092139')
                 ->on('roles')
                 ->array()
                 ->name('ip_whitelist')
                 ->tagsInterface([
                     '' => 'Add an IP address...',
                 ])
-            ;
+        );
 
-            $fields->insert('aaa45485-31e8-4378-b80a-1e1c15138aef', 7)
+        $this->registerField(
+            $this->createField('aaa45485-31e8-4378-b80a-1e1c15138aef')
                 ->on('roles')
                 ->boolean()
                 ->name('enforce_2fa')
                 ->switchInterface()
-            ;
+        );
 
-            // Users
-            $fields->insert('3c6d1a07-908a-4b5f-9950-5e925549cfa1', 8)
+        // Users
+        $this->registerField(
+            $this->createField('3c6d1a07-908a-4b5f-9950-5e925549cfa1')
                 ->on('roles')
                 ->o2m()
                 ->name('users')
                 ->oneToManyInterface([
                     'fields' => 'first_name,last_name',
                 ])
-            ;
-        });
+        );
     }
 
-    public function down()
+    /**
+     * Rollback the migrations.
+     */
+    public function down(): void
     {
-        Directus::fields()->from(Directus::system()->collection('roles')->fullName())->delete();
-        Directus::system()->collection('roles')->drop();
+        $this->unregisterFieldsFrom('roles');
+        Directus::databases()->system()->collection('roles')->drop();
     }
 }

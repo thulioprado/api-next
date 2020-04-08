@@ -26,6 +26,7 @@ Thumbs.db
 
 .phpunit.result.cache
 .php_cs.cache
+tests/data/database.sqlite
 
 # Composer
 

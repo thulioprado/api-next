@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Directus\Middlewares;
 
 use Closure;
+use Directus\Directus;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Route;
 
@@ -33,7 +34,7 @@ class CollectionMiddleware
 
         $route->setParameter(
             self::COLLECTION_PARAMETER,
-            \Directus\Facades\Directus::database()->collection($parameters[self::COLLECTION_PARAMETER])
+            Directus::databases()->database()->collection($parameters[self::COLLECTION_PARAMETER])
         );
 
         return $next($request);

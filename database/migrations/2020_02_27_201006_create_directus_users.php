@@ -2,21 +2,28 @@
 
 declare(strict_types=1);
 
-use Directus\Contracts\Database\System\Services\FieldsService;
-use Directus\Database\System\Migration;
+use Directus\Database\Migrations\Traits\MigrateCollections;
+use Directus\Database\Migrations\Traits\MigrateFields;
 use Directus\Facades\Directus;
+use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 
 class CreateDirectusUsers extends Migration
 {
+    use MigrateFields;
+    use
+        MigrateCollections;
+
     /**
      * Run the migrations.
      */
     public function up(): void
     {
-        Directus::system()->schema()->create(
-            Directus::system()->collection('users')->name(),
-            function (Blueprint $collection): void {
+        $system = Directus::databases()->system();
+
+        $system->schema()->create(
+            $system->collection('users')->name(),
+            function (Blueprint $collection) use ($system): void {
                 $collection->uuid('id')->primary();
                 $collection->uuid('role_id')->nullable();
                 $collection->string('status', 32)->default('draft');
@@ -39,21 +46,18 @@ class CreateDirectusUsers extends Migration
                 $collection->string('2fa_secret', 100)->nullable();
                 $collection->string('password_reset_token', 520)->nullable();
                 $collection->foreign('role_id')->references('id')->on(
-                    Directus::system()->collection('roles')->name()
+                    $system->collection('roles')->name()
                 );
                 $collection->foreign('avatar_id')->references('id')->on(
-                    Directus::system()->collection('files')->name()
+                    $system->collection('files')->name()
                 );
             }
         );
 
-        Directus::collections()->register(
-            Directus::system()->collection('users')->fullName(),
-            '64d48fa7-9aff-4f87-a5d6-814a88b4d0d5'
-        );
+        $this->registerCollection('64d48fa7-9aff-4f87-a5d6-814a88b4d0d5', 'users');
 
-        Directus::fields()->batch(function (FieldsService $fields): void {
-            $fields->insert('1723a7af-72dc-43fd-918a-c882b9364075', 0)
+        $this->registerField(
+            $this->createField('1723a7af-72dc-43fd-918a-c882b9364075')
                 ->on('users')
                 ->uuid()
                 ->name('id')
@@ -62,18 +66,20 @@ class CreateDirectusUsers extends Migration
                 ->textInputInterface([
                     'monospace' => true,
                 ])
-            ;
+        );
 
-            $fields->insert('c508dafe-dec3-4185-bf5a-3713db9450a8', 1)
+        $this->registerField(
+            $this->createField('c508dafe-dec3-4185-bf5a-3713db9450a8')
                 ->on('users')
                 ->m2o()
                 ->name('role_id')
                 ->required()
                 ->width('half')
                 ->userRolesInterface()
-            ;
+        );
 
-            $fields->insert('750a25e3-f3fd-42b0-aeab-2bfc5c472b27', 2)
+        $this->registerField(
+            $this->createField('750a25e3-f3fd-42b0-aeab-2bfc5c472b27')
                 ->on('users')
                 ->status()
                 ->name('status')
@@ -122,9 +128,10 @@ class CreateDirectusUsers extends Migration
                         ],
                     ],
                 ])
-            ;
+        );
 
-            $fields->insert('ae6ab8e0-d3a2-465a-9f49-611c9999e03f', 3)
+        $this->registerField(
+            $this->createField('ae6ab8e0-d3a2-465a-9f49-611c9999e03f')
                 ->on('users')
                 ->string()
                 ->name('first_name')
@@ -133,9 +140,10 @@ class CreateDirectusUsers extends Migration
                 ->textInputInterface([
                     'iconRight' => 'account_circle',
                 ])
-            ;
+        );
 
-            $fields->insert('4b753eea-797e-4df0-b9f7-0542b0deab14', 4)
+        $this->registerField(
+            $this->createField('4b753eea-797e-4df0-b9f7-0542b0deab14')
                 ->on('users')
                 ->string()
                 ->name('last_name')
@@ -144,9 +152,10 @@ class CreateDirectusUsers extends Migration
                 ->textInputInterface([
                     'iconRight' => 'account_circle',
                 ])
-            ;
+        );
 
-            $fields->insert('437c7847-346c-48ae-90a5-0da7f4bcec78', 5)
+        $this->registerField(
+            $this->createField('437c7847-346c-48ae-90a5-0da7f4bcec78')
                 ->on('users')
                 ->string()
                 ->name('email')
@@ -156,27 +165,30 @@ class CreateDirectusUsers extends Migration
                 ->textInputInterface([
                     'iconRight' => 'alternate_email',
                 ])
-            ;
+        );
 
-            $fields->insert('b028454d-4c94-4748-b9b6-faee9ce6500e', 6)
+        $this->registerField(
+            $this->createField('b028454d-4c94-4748-b9b6-faee9ce6500e')
                 ->on('users')
                 ->hash()
                 ->name('password')
                 ->required()
                 ->width('half')
                 ->passwordInterface()
-            ;
+        );
 
-            $fields->insert('34dfcbc8-e622-4941-9528-80c8057b319e', 7)
+        $this->registerField(
+            $this->createField('34dfcbc8-e622-4941-9528-80c8057b319e')
                 ->on('users')
                 ->string()
                 ->name('token')
                 ->hidden_detail()
                 ->hidden_browse()
                 ->textInputInterface()
-            ;
+        );
 
-            $fields->insert('f834c2c1-92ff-43d4-8913-24b53ef2f408', 8)
+        $this->registerField(
+            $this->createField('f834c2c1-92ff-43d4-8913-24b53ef2f408')
                 ->on('users')
                 ->string()
                 ->name('timezone')
@@ -332,9 +344,10 @@ class CreateDirectusUsers extends Migration
                     ],
                     'placeholder' => 'Choose a timezone...',
                 ])
-            ;
+        );
 
-            $fields->insert('dc85c5b6-7995-4d8c-b904-df8133deec35', 9)
+        $this->registerField(
+            $this->createField('dc85c5b6-7995-4d8c-b904-df8133deec35')
                 ->on('users')
                 ->string()
                 ->name('language')
@@ -343,25 +356,28 @@ class CreateDirectusUsers extends Migration
                 ->languageInterface([
                     'limit' => true,
                 ])
-            ;
+        );
 
-            $fields->insert('0ace83b0-eb7e-496b-9ba2-9e093721a971', 10)
+        $this->registerField(
+            $this->createField('0ace83b0-eb7e-496b-9ba2-9e093721a971')
                 ->on('users')
                 ->json()
                 ->name('locale_options')
                 ->hidden_browse()
                 ->hidden_detail()
                 ->jsonInterface()
-            ;
+        );
 
-            $fields->insert('b9f62f91-99b8-40f0-a657-d7c23e34bba5', 11)
+        $this->registerField(
+            $this->createField('b9f62f91-99b8-40f0-a657-d7c23e34bba5')
                 ->on('users')
                 ->file()
                 ->name('avatar_id')
                 ->fileInterface()
-            ;
+        );
 
-            $fields->insert('276efc8f-01ab-4cb9-8302-c1db95976145', 12)
+        $this->registerField(
+            $this->createField('276efc8f-01ab-4cb9-8302-c1db95976145')
                 ->on('users')
                 ->string()
                 ->name('company')
@@ -369,9 +385,10 @@ class CreateDirectusUsers extends Migration
                 ->textInputInterface([
                     'iconRight' => 'location_city',
                 ])
-            ;
+        );
 
-            $fields->insert('c30992d2-97d0-4749-baf8-7dc69d981983', 13)
+        $this->registerField(
+            $this->createField('c30992d2-97d0-4749-baf8-7dc69d981983')
                 ->on('users')
                 ->string()
                 ->name('title')
@@ -379,35 +396,39 @@ class CreateDirectusUsers extends Migration
                 ->textInputInterface([
                     'iconRight' => 'text_fields',
                 ])
-            ;
+        );
 
-            $fields->insert('6040af16-3976-49c6-a280-8a1e2443a307', 14)
+        $this->registerField(
+            $this->createField('6040af16-3976-49c6-a280-8a1e2443a307')
                 ->on('users')
                 ->boolean()
                 ->name('email_notifications')
                 ->width('half')
                 ->switchInterface()
-            ;
+        );
 
-            $fields->insert('f6c81a4d-5b45-4bb9-ba7c-39dc5c4afa9b', 15)
+        $this->registerField(
+            $this->createField('f6c81a4d-5b45-4bb9-ba7c-39dc5c4afa9b')
                 ->on('users')
                 ->datetime()
                 ->name('last_access_on')
                 ->readonly()
                 ->hidden_detail()
                 ->datetimeInterface()
-            ;
+        );
 
-            $fields->insert('e3786b21-d235-4268-9567-fd597d61a385', 16)
+        $this->registerField(
+            $this->createField('e3786b21-d235-4268-9567-fd597d61a385')
                 ->on('users')
                 ->string()
                 ->name('last_page')
                 ->readonly()
                 ->hidden_detail()
                 ->textInputInterface()
-            ;
+        );
 
-            $fields->insert('145270cf-068f-4305-a339-257642752d8e', 17)
+        $this->registerField(
+            $this->createField('145270cf-068f-4305-a339-257642752d8e')
                 ->on('users')
                 ->string()
                 ->name('external_id')
@@ -415,9 +436,10 @@ class CreateDirectusUsers extends Migration
                 ->hidden_detail()
                 ->hidden_browse()
                 ->textInputInterface()
-            ;
+        );
 
-            $fields->insert('bc9703de-de88-46e1-b661-824b0770fe18', 18)
+        $this->registerField(
+            $this->createField('bc9703de-de88-46e1-b661-824b0770fe18')
                 ->on('users')
                 ->string()
                 ->name('theme')
@@ -429,26 +451,36 @@ class CreateDirectusUsers extends Migration
                         'dark' => 'Dark',
                     ],
                 ])
-            ;
+        );
 
-            $fields->insert('bc80eea0-1eef-48aa-809d-5436f67567e4', 19)
+        $this->registerField(
+            $this->createField('bc80eea0-1eef-48aa-809d-5436f67567e4')
                 ->on('users')
                 ->string()
                 ->name('2fa_secret')
                 ->readonly()
                 ->twoFactorSecretInterface()
-            ;
+        );
 
-            $fields->insert('cee1f872-9542-4b8d-a01a-e4f83e65a8a0', 20)
+        $this->registerField(
+            $this->createField('cee1f872-9542-4b8d-a01a-e4f83e65a8a0')
                 ->on('users')
                 ->string()
                 ->name('password_reset_token')
                 ->readonly()
                 ->hidden_detail()
                 ->textInputInterface()
-            ;
+        );
 
-            // TODO: Enable after roles and files
-        });
+        // TODO: Enable after roles and files
+    }
+
+    /**
+     * Rollback the migrations.
+     */
+    public function down(): void
+    {
+        $this->unregisterFieldsFrom('users');
+        Directus::databases()->system()->collection('users')->drop();
     }
 }

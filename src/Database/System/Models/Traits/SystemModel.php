@@ -4,10 +4,13 @@ declare(strict_types=1);
 
 namespace Directus\Database\System\Models\Traits;
 
-use Directus\Contracts\Database\System\Database as SystemDatabase;
+use Directus\Contracts\Database\Database;
+use Illuminate\Database\Eloquent\Model;
 
 /**
  * System model.
+ *
+ * @mixin Model
  */
 trait SystemModel
 {
@@ -22,7 +25,6 @@ trait SystemModel
 
         $this->setConnection($system->connectionName());
         $this->setTable($system->collection($this->getTable())->name());
-        $this->setKeyType('uuid');
         $this->setIncrementing(false);
         $this->timestamps = false;
     }
@@ -30,8 +32,10 @@ trait SystemModel
     /**
      * Gets the system database.
      */
-    protected function system(): SystemDatabase
+    protected function system(): Database
     {
-        return resolve(SystemDatabase::class);
+        return resolve(Database::class, [
+            'name' => 'system',
+        ]);
     }
 }

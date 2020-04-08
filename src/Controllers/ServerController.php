@@ -16,20 +16,30 @@ class ServerController extends BaseController
      */
     public function info(): JsonResponse
     {
-        $data = [
+        return directus()->respond()->with([
             'directus' => [
-                'version' => 'TODO: fetch current version.',
+                'version' => 'TODO: automatically fetch current version.',
+                // TODO: fill with plugins/extensions
+                'plugins' => [
+                    /*
+                    [
+                        'name' => 'directus/extension',
+                        'version' => '1.4.6',
+                    ]
+                    */
+                ],
             ],
             'env' => [
+                'name' => config('directus.env.name'),
+                'server' => @$_SERVER['SERVER_SOFTWARE'] ?? 'Unknown',
+                'container' => (bool) config('directus.env.container'),
                 'os' => php_uname(),
-                'type' => $_SERVER['SERVER_SOFTWARE'],
-                'container' => getenv('DIRECTUS_CONTAINER') === '1',
             ],
             'php' => [
-                'arch' => PHP_INT_SIZE > 4 ? 'x64' : 'x86',
+                'architecture' => PHP_INT_SIZE > 4 ? 'x64' : 'x86',
                 'version' => PHP_VERSION,
                 'settings' => [
-                    'upload_size' => ini_get('upload_max_filesize'),
+                    'upload_max_filesize' => ini_get('upload_max_filesize'),
                 ],
                 'extensions' => [
                     'pdo' => \extension_loaded('pdo'),
@@ -44,16 +54,26 @@ class ServerController extends BaseController
                 'version' => app()->version(),
                 'locale' => app()->getLocale(),
             ],
-        ];
-
-        return response()->json($data);
+        ]);
     }
 
     /**
      * Server ping.
      */
-    public function ping(): string
+    public function ping(): JsonResponse
     {
-        return 'pong';
+        return directus()->respond()->with([
+            'pong' => true,
+        ]);
+    }
+
+    /**
+     * Gets the server list.
+     */
+    public function projects(): JsonResponse
+    {
+        return directus()->respond()->public()->with([
+            config('directus.project.id'),
+        ]);
     }
 }

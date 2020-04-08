@@ -2,9 +2,13 @@
 
 <phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:noNamespaceSchemaLocation="./vendor/phpunit/phpunit/phpunit.xsd"
-         bootstrap="./vendor/autoload.php"
+         bootstrap="./tests/bootstrap.php"
          testdox="true"
          colors="true">
+
+    <extensions>
+        <extension class="Directus\Testing\Hooks\DatabaseInitializer" />
+    </extensions>
 
     <testsuites>
         <testsuite name="default">
@@ -14,7 +18,7 @@
 
     <logging>
         <log type="coverage-clover" target="./dist/coverage.xml"/>
-        <log type="coverage-html" target="./dist/html"/>
+        <log type="coverage-html" target="./dist/coverage"/>
         <log type="junit" target="./dist/report.xml"/>
     </logging>
 
@@ -24,4 +28,13 @@
             <directory suffix=".php">src</directory>
         </whitelist>
     </filter>
+
+    <php>
+        <env name="APP_ENV" value="test"/>
+        <env name="CACHE_DRIVER" value="array"/>
+        <env name="SESSION_DRIVER" value="array"/>
+        <env name="QUEUE_DRIVER" value="sync"/>
+        <env name="DB_CONNECTION" value="sqlite"/>
+        <env name="DB_DATABASE" value="tests/data/database.sqlite"/>
+    </php>
 </phpunit>

@@ -2,22 +2,29 @@
 
 declare(strict_types=1);
 
-use Directus\Contracts\Database\System\Services\FieldsService;
-use Directus\Database\System\Migration;
+use Directus\Database\Migrations\Traits\MigrateCollections;
+use Directus\Database\Migrations\Traits\MigrateFields;
 use Directus\Facades\Directus;
+use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 
 class CreateDirectusWebhooks extends Migration
 {
+    use MigrateFields;
+    use
+        MigrateCollections;
+
     /**
      * Run the migrations.
      */
-    public function up()
+    public function up(): void
     {
-        Directus::system()->schema()->create(
-            Directus::system()->collection('webhooks')->name(),
-            function (Blueprint $collection) {
-                $collection->bigIncrements('id');
+        $system = Directus::databases()->system();
+
+        $system->schema()->create(
+            $system->collection('webhooks')->name(),
+            function (Blueprint $collection) use ($system) {
+                $collection->uuid('id')->primary();
                 $collection->string('status', 16)->default('inactive');
                 $collection->string('http_action', 255)->nullable();
                 $collection->string('url', 510)->nullable();
@@ -25,24 +32,30 @@ class CreateDirectusWebhooks extends Migration
                 $collection->string('directus_action', 255)->nullable();
 
                 $collection->foreign('collection_id')->references('id')->on(
-                    Directus::system()->collection('collections')->name()
+                    $system->collection('collections')->name()
                 );
             }
         );
 
-        Directus::fields()->batch(function (FieldsService $fields): void {
-            $fields->insert('8b5f0a59-6fcf-45fc-9a71-203bc6ddda7d')
+        $this->registerCollection('e6327ed5-8983-4a01-a7d9-8ecb0ee7ce60', 'webhooks');
+
+        $this->registerField(
+            $this->createField('8b5f0a59-6fcf-45fc-9a71-203bc6ddda7d')
                 ->on('webhooks')
                 ->name('id')
-                ->integer()
+                ->uuid()
                 ->hidden_detail()
-            ;
+                ->textInputInterface([
+                    'monospace' => true,
+                ])
+        );
 
-            $fields->insert('bca9d609-ac5a-482a-9bdd-d84282a102f5')
+        $this->registerField(
+            $this->createField('bca9d609-ac5a-482a-9bdd-d84282a102f5')
                 ->on('webhooks')
                 ->name('status')
                 ->status()
-                ->options([
+                ->statusInterface([
                     'status_mapping' => [
                         'active' => [
                             'name' => 'Active',
@@ -66,59 +79,65 @@ class CreateDirectusWebhooks extends Migration
                         ],
                     ],
                 ])
-            ;
+        );
 
-            $fields->insert('a43bed03-0ce8-44c1-b66b-ed91f1854050')
+        $this->registerField(
+            $this->createField('a43bed03-0ce8-44c1-b66b-ed91f1854050')
                 ->on('webhooks')
                 ->name('http_action')
                 ->string()
                 ->required()
-                ->options([
+                ->dropdownInterface([
                     'choices' => [
                         'get' => 'GET',
                         'post' => 'POST',
                     ],
                 ])
                 ->width('half-space')
-            ;
+        );
 
-            $fields->insert('ac071d90-0ce0-47a4-b82e-b0f438d0ed60')
+        $this->registerField(
+            $this->createField('ac071d90-0ce0-47a4-b82e-b0f438d0ed60')
                 ->on('webhooks')
                 ->name('url')
                 ->string()
-                ->options([
+                ->textInputInterface([
                     'placeholder' => 'https://example.com',
                     'iconRight' => 'link',
                 ])
                 ->required()
-            ;
+        );
 
-            $fields->insert('e4fc8565-3ffa-457e-8d5d-e618b9d546c2')
+        $this->registerField(
+            $this->createField('e4fc8565-3ffa-457e-8d5d-e618b9d546c2')
                 ->on('webhooks')
                 ->name('collection_id')
                 ->string()
                 ->required()
-            ;
+                ->collectionsInterface()
+        );
 
-            $fields->insert('26e870bf-2748-4f0b-8484-59499922eeb0')
+        $this->registerField(
+            $this->createField('26e870bf-2748-4f0b-8484-59499922eeb0')
                 ->on('webhooks')
                 ->name('directus_action')
                 ->string()
                 ->required()
-                ->options([
+                ->dropdownInterface([
                     'choices' => [
                         'item.create:after' => 'Create',
                         'item.update:after' => 'Update',
                         'item.delete:after' => 'Delete',
                     ],
                 ])
-            ;
+        );
 
-            $fields->insert('c8d08500-0ea6-4a20-8ee7-774aa4c2ce08')
+        $this->registerField(
+            $this->createField('c8d08500-0ea6-4a20-8ee7-774aa4c2ce08')
                 ->on('webhooks')
                 ->name('info')
                 ->alias()
-                ->options([
+                ->dividerInterface([
                     'style' => 'medium',
                     'title' => 'How Webhooks Work',
                     'hr' => true,
@@ -126,15 +145,15 @@ class CreateDirectusWebhooks extends Migration
                     'description' => 'When the selected action occurs for the selected collection, Directus will send an HTTP request to the above URL.',
                 ])
                 ->hidden_browse()
-            ;
-        });
+        );
     }
 
     /**
-     * Reverse the migrations.
+     * Rollback the migrations.
      */
-    public function down()
+    public function down(): void
     {
-        Directus::system()->collection('webhooks')->drop();
+        $this->unregisterFieldsFrom('webhooks');
+        Directus::databases()->system()->collection('webhooks')->drop();
     }
 }

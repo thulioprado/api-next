@@ -2,21 +2,27 @@
 
 declare(strict_types=1);
 
-use Directus\Database\System\Migration;
+use Directus\Database\Migrations\Traits\MigrateCollections;
+use Directus\Database\Migrations\Traits\MigrateFields;
 use Directus\Facades\Directus;
+use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 
 class CreateDirectusCollectionsAndFields extends Migration
 {
+    use MigrateCollections;
+    use
+        MigrateFields;
+
     /**
      * Migration.
      */
     public function up(): void
     {
-        // CollectionsService
+        $system = Directus::databases()->system();
 
-        Directus::system()->schema()->create(
-            Directus::system()->collection('collections')->name(),
+        $system->schema()->create(
+            $system->collection('collections')->name(),
             function (Blueprint $collection): void {
                 $collection->uuid('id')->primary();
                 $collection->string('name', 128)->unique();
@@ -30,17 +36,12 @@ class CreateDirectusCollectionsAndFields extends Migration
             }
         );
 
-        Directus::collections()->register(
-            Directus::system()->collection('collections')->fullName(),
-            'b0b202dd-3cdc-480d-8deb-1db2c543f973'
-        );
+        $this->registerCollection('b0b202dd-3cdc-480d-8deb-1db2c543f973', 'collections');
 
-        // Fields
-
-        Directus::system()->schema()->create(
-            Directus::system()->collection('fields')->name(),
-            function (Blueprint $collection): void {
-                $collection->uuid('id');
+        $system->schema()->create(
+            $system->collection('fields')->name(),
+            function (Blueprint $collection) use ($system): void {
+                $collection->uuid('id')->primary();
                 $collection->uuid('collection_id');
                 $collection->string('name', 128);
                 $collection->string('type', 64);
@@ -59,125 +60,275 @@ class CreateDirectusCollectionsAndFields extends Migration
                 $collection->json('translation')->nullable();
                 $collection->unique(['collection_id', 'name']);
                 $collection->foreign('collection_id')->references('id')->on(
-                    Directus::system()->collection('collections')->name()
+                    $system->collection('collections')->name()
                 );
             }
         );
 
-        Directus::collections()->register(
-            Directus::system()->collection('fields')->fullName(),
-            'b03b7c91-3aa9-473c-b677-e8ab6f19b7d3'
+        $this->registerCollection('b03b7c91-3aa9-473c-b677-e8ab6f19b7d3', 'fields');
+
+        $this->registerField(
+            $this->createField('f6ce0656-2237-4128-8ab8-5c8c0ee74d71')->on('collections')
+                ->name('fields')
+                ->o2m()
+                ->oneToManyInterface()
+                ->hidden_browse()
+                ->hidden_detail()
         );
 
-        // Collection fields
+        $this->registerField(
+            $this->createField('a05e6938-be1e-4d34-8c94-a6c7649a9f05')
+                ->on('collections')
+                ->name('collection')
+                ->string()
+                ->textInputInterface([
+                    'monospace' => true,
+                ])
+                ->readonly()
+                ->width('half')
+        );
 
-        $this->registerField('f6ce0656-2237-4128-8ab8-5c8c0ee74d71', 'collections', 'fields', 'o2m', 'one-to-many', [
-            'hidden_detail' => true,
-            'hidden_browse' => true,
-        ]);
+        $this->registerField(
+            $this->createField('d09911f2-8d0e-44df-8d17-8a4268925adb')
+                ->on('collections')
+                ->name('note')
+                ->string()
+                ->textInputInterface()
+                ->width('half')
+                ->note('An internal description.')
+        );
 
-        $this->registerField('a05e6938-be1e-4d34-8c94-a6c7649a9f05', 'collections', 'collection', 'string', 'primary-key', [
-            'readonly' => true,
-            'width' => 'half',
-        ]);
+        $this->registerField(
+            $this->createField('c4a9e06a-29ce-49aa-9b09-d31354a460d2')
+                ->on('collections')
+                ->name('managed')
+                ->boolean()
+                ->switchInterface()
+                ->width('half')
+                ->hidden_detail()
+                ->note('[Learn More](https://docs.directus.io/guides/collections.html#managing-collections).')
+        );
 
-        $this->registerField('d09911f2-8d0e-44df-8d17-8a4268925adb', 'collections', 'note', 'string', 'text-input', [
-            'width' => 'half',
-            'note' => 'An internal description.',
-        ]);
+        $this->registerField(
+            $this->createField('72d5f7c0-a49e-4b2e-8af7-57e26b64d981')
+                ->on('collections')
+                ->name('hidden')
+                ->boolean()
+                ->switchInterface()
+                ->width('half')
+                ->note('[Learn More](https://docs.directus.io/guides/collections.html#hidden).')
+        );
 
-        $this->registerField('c4a9e06a-29ce-49aa-9b09-d31354a460d2', 'collections', 'managed', 'boolean', 'switch', [
-            'width' => 'half',
-            'hidden_detail' => true,
-            'note' => '[Learn More](https://docs.directus.io/guides/collections.html#managing-collections).',
-        ]);
+        $this->registerField(
+            $this->createField('505e9879-ae54-493e-ac97-404e52711676')
+                ->on('collections')
+                ->name('single')
+                ->boolean()
+                ->switchInterface()
+                ->width('half')
+                ->note('[Learn More](https://docs.directus.io/guides/collections.html#single).')
+        );
 
-        $this->registerField('72d5f7c0-a49e-4b2e-8af7-57e26b64d981', 'collections', 'hidden', 'boolean', 'switch', [
-            'width' => 'half',
-            'note' => '[Learn More](https://docs.directus.io/guides/collections.html#hidden).',
-        ]);
-
-        $this->registerField('505e9879-ae54-493e-ac97-404e52711676', 'collections', 'single', 'boolean', 'switch', [
-            'width' => 'half',
-            'note' => '[Learn More](https://docs.directus.io/guides/collections.html#single).',
-        ]);
-
-        $this->registerField('de4915a4-c03a-4c09-8d1b-12aa76c8c446', 'collections', 'translation', 'json', 'repeater', [
-            'hidden_detail' => false,
-            'options' => [
-                'fields' => [
-                    [
-                        'field' => 'locale',
-                        'type' => 'string',
-                        'interface' => 'language',
-                        'options' => [
-                            'limit' => true,
+        $this->registerField(
+            $this->createField('de4915a4-c03a-4c09-8d1b-12aa76c8c446')
+                ->on('collections')
+                ->name('translation')
+                ->json()
+                ->repeaterInterface([
+                    'fields' => [
+                        [
+                            'field' => 'locale',
+                            'type' => 'string',
+                            'interface' => 'language',
+                            'options' => [
+                                'limit' => true,
+                            ],
+                            'width' => 'half',
                         ],
-                        'width' => 'half',
-                    ],
-                    [
-                        'field' => 'translation',
-                        'type' => 'string',
-                        'interface' => 'text-input',
-                        'width' => 'half',
-                    ],
-                ],
-            ],
-        ]);
-
-        $this->registerField('d4021a6c-7613-4538-b300-3808a6e14f0d', 'collections', 'icon', 'string', 'icon', [
-            'note' => 'The icon shown in the App\'s navigation sidebar.',
-        ]);
-
-        // Fields fields
-
-        $this->registerField('26541248-4c2f-4eaa-9cad-4c0ec609142a', 'fields', 'id', 'integer', 'primary-key', [
-            'hidden_detail' => true,
-        ]);
-        $this->registerField('43633dfd-3a0e-4c7f-ab30-f9e2cb9bda87', 'fields', 'collection', 'm2o', 'many-to-one');
-        $this->registerField('e65cd5a3-7611-4384-8a34-8ced421751d8', 'fields', 'field', 'string', 'text-input');
-        $this->registerField('537af3cf-9bce-4f10-a125-b89b86e5a0c7', 'fields', 'type', 'string', 'primary-key');
-        $this->registerField('f080582f-32db-4838-92d1-6534ea51a8ed', 'fields', 'interface', 'string', 'primary-key');
-        $this->registerField('2ec2c060-000f-4282-a1af-d6d5e939b3d1', 'fields', 'options', 'json', 'json');
-        $this->registerField('ef2458f2-b668-4d41-9d05-f8e659bbc94f', 'fields', 'locked', 'boolean', 'switch');
-        $this->registerField('0084c526-0d50-4da1-8089-90003c178e46', 'fields', 'translation', 'json', 'repeater', [
-            'options' => [
-                'fields' => [
-                    [
-                        'field' => 'locale',
-                        'type' => 'string',
-                        'interface' => 'language',
-                        'options' => [
-                            'limit' => true,
+                        [
+                            'field' => 'translation',
+                            'type' => 'string',
+                            'interface' => 'text-input',
+                            'width' => 'half',
                         ],
-                        'width' => 'half',
                     ],
-                    [
-                        'field' => 'translation',
-                        'type' => 'string',
-                        'interface' => 'text-input',
-                        'width' => 'half',
+                ])
+        );
+
+        $this->registerField(
+            $this->createField('d4021a6c-7613-4538-b300-3808a6e14f0d')
+                ->on('collections')
+                ->name('icon')
+                ->string()
+                ->iconInterface()
+                ->note('The icon shown in the App\'s navigation sidebar.')
+        );
+
+        $this->registerField(
+            $this->createField('26541248-4c2f-4eaa-9cad-4c0ec609142a')
+                ->on('fields')
+                ->name('id')
+                ->uuid()
+                ->textInputInterface([
+                    'monospace' => true,
+                ])
+                ->hidden_detail()
+        );
+
+        $this->registerField(
+            $this->createField('43633dfd-3a0e-4c7f-ab30-f9e2cb9bda87')
+                ->on('fields')
+                ->name('collection')
+                ->m2o()
+                ->manyToOneInterface()
+        );
+
+        $this->registerField(
+            $this->createField('e65cd5a3-7611-4384-8a34-8ced421751d8')
+                ->on('fields')
+                ->name('field')
+                ->string()
+                ->textInputInterface()
+        );
+
+        $this->registerField(
+            $this->createField('537af3cf-9bce-4f10-a125-b89b86e5a0c7')
+                ->on('fields')
+                ->name('type')
+                ->string()
+                ->textInputInterface()
+        );
+
+        $this->registerField(
+            $this->createField('f080582f-32db-4838-92d1-6534ea51a8ed')
+                ->on('fields')
+                ->name('interface')
+                ->string()
+                ->textInputInterface()
+        );
+
+        $this->registerField(
+            $this->createField('2ec2c060-000f-4282-a1af-d6d5e939b3d1')
+                ->on('fields')
+                ->name('options')
+                ->json()
+                ->jsonInterface()
+        );
+
+        $this->registerField(
+            $this->createField('ef2458f2-b668-4d41-9d05-f8e659bbc94f')
+                ->on('fields')
+                ->name('locked')
+                ->boolean()
+                ->switchInterface()
+        );
+
+        $this->registerField(
+            $this->createField('0084c526-0d50-4da1-8089-90003c178e46')
+                ->on('fields')
+                ->name('translation')
+                ->json()
+                ->repeaterInterface([
+                    'fields' => [
+                        [
+                            'field' => 'locale',
+                            'type' => 'string',
+                            'interface' => 'language',
+                            'options' => [
+                                'limit' => true,
+                            ],
+                            'width' => 'half',
+                        ],
+                        [
+                            'field' => 'translation',
+                            'type' => 'string',
+                            'interface' => 'text-input',
+                            'width' => 'half',
+                        ],
                     ],
-                ],
-            ],
-        ]);
-        $this->registerField('35cb0f4d-981f-450d-99a4-238bb4f9f1dc', 'fields', 'readonly', 'boolean', 'switch');
-        $this->registerField('1713a965-d35d-4ae3-826f-78d05a1368de', 'fields', 'validation', 'string', 'text-input');
-        $this->registerField('46485994-bd3d-4a4e-85e3-ac7d40059a1a', 'fields', 'required', 'boolean', 'switch');
-        $this->registerField('89671575-bbe6-4c9d-b981-268e6bbf222a', 'fields', 'index', 'integer', 'sort');
-        $this->registerField('b13451b5-7b00-44cf-b70c-d718fad476fb', 'fields', 'note', 'string', 'text-input');
-        $this->registerField('9c900a82-c483-4f13-ba44-fde93a573123', 'fields', 'hidden_detail', 'boolean', 'switch');
-        $this->registerField('26454925-3be8-461f-8844-0f753a243beb', 'fields', 'hidden_browse', 'boolean', 'switch');
-        $this->registerField('542927eb-92dc-47f9-ae3c-7b2b368da794', 'fields', 'width', 'integer', 'numeric');
-        $this->registerField('b63f2d9a-3342-4be4-84df-e134b5736171', 'fields', 'group', 'm2o', 'many-to-one');
+                ])
+        );
+
+        $this->registerField(
+            $this->createField('35cb0f4d-981f-450d-99a4-238bb4f9f1dc')
+                ->on('fields')
+                ->name('readonly')
+                ->boolean()
+                ->switchInterface()
+        );
+
+        $this->registerField(
+            $this->createField('1713a965-d35d-4ae3-826f-78d05a1368de')
+                ->on('fields')
+                ->name('validation')
+                ->string()
+                ->textInputInterface()
+        );
+
+        $this->registerField(
+            $this->createField('46485994-bd3d-4a4e-85e3-ac7d40059a1a')
+                ->on('fields')
+                ->name('required')
+                ->boolean()
+                ->switchInterface()
+        );
+
+        $this->registerField(
+            $this->createField('89671575-bbe6-4c9d-b981-268e6bbf222a')
+                ->on('fields')
+                ->name('index')
+                ->integer()
+                ->sortInterface()
+        );
+
+        $this->registerField(
+            $this->createField('b13451b5-7b00-44cf-b70c-d718fad476fb')
+                ->on('fields')
+                ->name('note')
+                ->string()
+                ->textInputInterface()
+        );
+
+        $this->registerField(
+            $this->createField('9c900a82-c483-4f13-ba44-fde93a573123')
+                ->on('fields')
+                ->name('hidden_detail')
+                ->boolean()
+                ->switchInterface()
+        );
+
+        $this->registerField(
+            $this->createField('26454925-3be8-461f-8844-0f753a243beb')
+                ->on('fields')
+                ->name('hidden_browse')
+                ->boolean()
+                ->switchInterface()
+        );
+
+        $this->registerField(
+            $this->createField('542927eb-92dc-47f9-ae3c-7b2b368da794')
+                ->on('fields')
+                ->name('width')
+                ->integer()
+                ->numericInterface()
+        );
+
+        $this->registerField(
+            $this->createField('b63f2d9a-3342-4be4-84df-e134b5736171')
+                ->on('fields')
+                ->name('group')
+                ->m2o()
+                ->manyToOneInterface()
+        );
     }
 
     /**
-     * Drop the migration.
+     * Rollback the migrations.
      */
     public function down(): void
     {
-        Directus::system()->collection('fields')->drop();
-        Directus::system()->collection('collections')->drop();
+        $system = Directus::databases()->system();
+        $system->collection('fields')->drop();
+        $system->collection('collections')->drop();
     }
 }

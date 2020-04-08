@@ -8,7 +8,7 @@ use Directus\Contracts\Database\Collection;
 use Illuminate\Http\JsonResponse;
 
 /**
- * Server controller.
+ * Collection controller.
  */
 class CollectionController extends BaseController
 {
@@ -17,7 +17,7 @@ class CollectionController extends BaseController
      */
     public function index(Collection $collection): JsonResponse
     {
-        return response()->json($collection->query()->get());
+        return response()->json($collection->builder()->get());
     }
 
     /**
@@ -25,6 +25,6 @@ class CollectionController extends BaseController
      */
     public function show(Collection $collection, string $id): JsonResponse
     {
-        return response()->json($collection->query()->find($id));
+        return response()->json($collection->builder()->find($id));
     }
 }

@@ -3,24 +3,28 @@
 declare(strict_types=1);
 
 return [
-    'debug' => true,
+    'env' => [
+        'name' => env('DIRECTUS_ENVIRONMENT', 'production'),
+        'container' => env('DIRECTUS_CONTAINER', false),
+    ],
     'routes' => [
-        'options' => [
-            'prefix' => '/directus',
-        ],
+        'base' => env('DIRECTUS_ROUTE_BASE', '/'),
     ],
     'databases' => [
         'data' => [
-            'connection' => 'default',
+            'connection' => env('DIRECTUS_DATABASE_CONNECTION', 'default'),
+            'options' => [
+                'prefix' => env('DIRECTUS_DATABASE_PREFIX', ''),
+            ],
         ],
         'system' => [
-            'connection' => 'default',
+            'connection' => env('DIRECTUS_SYSTEM_CONNECTION', 'default'),
             'options' => [
-                'prefix' => 'directus_',
+                'prefix' => env('DIRECTUS_SYSTEM_PREFIX', 'directus_'),
             ],
         ],
     ],
-    'collections' => [
-        'prefix' => 'directus_',
+    'project' => [
+        'id' => env('DIRECTUS_PROJECT_ID', 'directus'),
     ],
 ];

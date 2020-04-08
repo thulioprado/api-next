@@ -4,15 +4,15 @@ declare(strict_types=1);
 
 namespace Directus\Exceptions;
 
-use Illuminate\Http\Response;
+use Directus\Responses\Errors;
 
 /**
- * Not implemented exception.
+ * DirectusException.
  */
-class NotImplemented extends Exception
+class NotImplemented extends DirectusException
 {
     /**
-     * Not implemented exception constructor.
+     * DirectusException constructor.
      */
     public function __construct(?string $method = null)
     {
@@ -25,8 +25,8 @@ class NotImplemented extends Exception
             }
         }
 
-        parent::__construct('not_implemented', Response::HTTP_NOT_IMPLEMENTED, [
-            'message' => 'Method not implemented: '.$method,
+        parent::__construct(Errors::NOT_IMPLEMENTED, [
+            'method' => $method,
         ]);
     }
 }

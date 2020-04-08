@@ -12,9 +12,6 @@
       "email": "wolfulus@gmail.com"
     }
   ],
-  "bin": [
-    "./bin/directus"
-  ],
   "require": {
     "php": ">=7.3",
     "ext-json": "*",
@@ -27,7 +24,8 @@
     "illuminate/http": "^7",
     "illuminate/routing": "^7",
     "illuminate/support": "^7",
-    "webmozart/path-util": "^2.3"
+    "webmozart/path-util": "^2.3",
+    "wolfulus/extras": "^0.0"
   },
   "require-dev": {
     "cedx/coveralls": "^11.2",
@@ -45,12 +43,14 @@
   "autoload": {
     "psr-4": {
       "Directus\\": "src/"
-    }
+    },
+    "files": [
+      "src/helpers.php"
+    ]
   },
   "autoload-dev": {
     "psr-4": {
-      "Directus\\Tests\\": "tests/src/",
-      "Directus\\Tests\\Helpers\\": "tests/helpers/"
+      "Directus\\Tests\\": "tests/src/"
     }
   },
   "minimum-stability": "dev",
@@ -86,6 +86,17 @@
     "laravel": {
       "providers": [
         "Directus\\Providers\\DirectusProvider"
+      ]
+    },
+    "use-extras": [
+      {
+        "pattern": "directus",
+        "class": "Directus\\Plugins\\Repository"
+      }
+    ],
+    "directus": {
+      "plugins": [
+        "Directus\\Plugins\\Builtin\\Types"
       ]
     }
   }

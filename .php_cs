@@ -4,9 +4,8 @@ declare(strict_types=1);
 
 $finder = PhpCsFixer\Finder::create()
     ->in(__DIR__)
-    ->append([
-        __DIR__.'/bin/directus',
-    ])
+    ->exclude(['src/Testing/Providers'])
+    ->notName(['autocomplete.php'])
 ;
 
 return PhpCsFixer\Config::create()

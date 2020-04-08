@@ -29,7 +29,7 @@ interface Collection
     /**
      * Gets items in the current collection.
      */
-    public function query(): Builder;
+    public function builder(): Builder;
 
     /**
      * Drops the collection.

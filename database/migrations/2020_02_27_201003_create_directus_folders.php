@@ -2,22 +2,28 @@
 
 declare(strict_types=1);
 
-use Directus\Contracts\Database\System\Services\FieldsService;
-use Directus\Database\System\Migration;
+use Directus\Database\Migrations\Traits\MigrateCollections;
+use Directus\Database\Migrations\Traits\MigrateFields;
 use Directus\Facades\Directus;
+use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 
 class CreateDirectusFolders extends Migration
 {
+    use MigrateCollections;
+    use
+        MigrateFields;
+
     /**
      * Run the migrations.
      */
-    public function up()
+    public function up(): void
     {
-        Directus::system()->schema()->create(
-            Directus::system()->collection('folders')->name(),
+        $system = Directus::databases()->system();
+
+        $system->schema()->create(
+            $system->collection('folders')->name(),
             function (Blueprint $collection) {
-                // Identification
                 $collection->uuid('id')->primary();
                 $collection->uuid('parent_id')->nullable();
                 $collection->string('name', 200);
@@ -25,47 +31,52 @@ class CreateDirectusFolders extends Migration
             }
         );
 
-        Directus::system()->schema()->table(
-            Directus::system()->collection('folders')->name(),
-            function (Blueprint $collection) {
+        $system->schema()->table(
+            $system->collection('folders')->name(),
+            function (Blueprint $collection) use ($system) {
                 $collection->foreign('parent_id')->references('id')->on(
-                    Directus::system()->collection('folders')->name()
+                    $system->collection('folders')->name()
                 );
             }
         );
 
-        Directus::system()->collections()->register(
-            Directus::system()->collection('folders')->fullName(),
-            '02fe3baa-3c82-4ae1-afdd-0638e3edb9c6'
-        );
+        $this->registerCollection('02fe3baa-3c82-4ae1-afdd-0638e3edb9c6', 'folders');
 
-        // Create fields.
-        Directus::fields()->batch(function (FieldsService $fields): void {
-            $fields->insert('506850a7-59ce-43a4-b748-512d5a0d35d0')
+        $this->registerField(
+            $this->createField('506850a7-59ce-43a4-b748-512d5a0d35d0')
                 ->on('folders')
                 ->name('id')
-                ->integer()
+                ->uuid()
                 ->required()
+                ->textInputInterface([
+                    'monospace' => true,
+                ])
                 ->hidden_detail()
-            ;
-            $fields->insert('c064366d-efd1-4c5a-9d77-b2dbe036e810')
+        );
+
+        $this->registerField(
+            $this->createField('c064366d-efd1-4c5a-9d77-b2dbe036e810')
                 ->on('folders')
                 ->name('name')
                 ->string()
-            ;
-            $fields->insert('b3ee98d6-18dd-45e0-891c-347117fa78c6')
+                ->textInputInterface()
+        );
+
+        $this->registerField(
+            $this->createField('b3ee98d6-18dd-45e0-891c-347117fa78c6')
                 ->on('folders')
                 ->name('parent_folder')
                 ->m2o()
-            ;
-        });
+                ->manyToOneInterface()
+        );
     }
 
     /**
-     * Reverse the migrations.
+     * Rollback the migrations.
      */
-    public function down()
+    public function down(): void
     {
-        Directus::system()->collection('folders')->drop();
+        $this->unregisterFieldsFrom('folders');
+        Directus::databases()->system()->collection('folders')->drop();
     }
 }
