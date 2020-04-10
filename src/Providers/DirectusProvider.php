@@ -20,6 +20,7 @@ class DirectusProvider extends ServiceProvider
         $this->app->register(TranslationProvider::class);
         $this->app->register(DependenciesProvider::class);
         $this->app->register(ServicesProvider::class);
+        $this->app->register(EventsProvider::class);
         $this->app->register(RoutesProvider::class);
         $this->app->register(MigrationsProvider::class);
         $this->app->register(CommandsProvider::class);

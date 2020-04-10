@@ -7,8 +7,9 @@ namespace Directus\Tests\Feature\Controllers;
 use Directus\Testing\TestCase;
 
 /**
- * @internal
  * @covers \Directus\Controllers\ServerController
+ *
+ * @internal
  */
 final class ServerControllerTest extends TestCase
 {

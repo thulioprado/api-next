@@ -8,8 +8,9 @@ use Directus\Responses\Errors;
 use Directus\Testing\TestCase;
 
 /**
- * @internal
  * @covers \Directus\Responses\Errors
+ *
+ * @internal
  */
 final class ErrorsTest extends TestCase
 {

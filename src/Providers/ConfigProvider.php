@@ -38,6 +38,9 @@ class ConfigProvider extends ServiceProvider
     {
         $this->publishes([
             __DIR__.'/../../config/directus.php' => config_path('directus.php'),
-        ], ['directus-config']);
+        ], [
+            'directus',
+            'directus-config',
+        ]);
     }
 }

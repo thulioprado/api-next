@@ -16,9 +16,12 @@ class TranslationProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        $this->loadTranslationsFrom(__DIR__.'/../../resources/translations', 'directus');
+        $this->loadTranslationsFrom(__DIR__.'/../../resources/lang', 'directus');
         $this->publishes([
-            __DIR__.'/../../resources/translations' => resource_path('translations/vendor/directus'),
+            __DIR__.'/../../resources/lang' => resource_path('lang/vendor/directus'),
+        ], [
+            'directus',
+            'directus-lang',
         ]);
     }
 }

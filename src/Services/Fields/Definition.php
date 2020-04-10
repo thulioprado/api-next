@@ -189,11 +189,11 @@ class Definition extends Fluent
     }
 
     /**
-     * Set field to translations type.
+     * Set field to lang type.
      */
     public function lang(): self
     {
-        return $this->type('translations');
+        return $this->type('lang');
     }
 
     /**

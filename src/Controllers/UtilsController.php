@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 
 /**
- * Server controller.
+ * Utils controller.
  */
 class UtilsController extends BaseController
 {

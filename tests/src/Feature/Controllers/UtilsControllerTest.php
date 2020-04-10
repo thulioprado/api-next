@@ -8,8 +8,9 @@ use Directus\Testing\TestCase;
 use Illuminate\Support\Facades\Hash;
 
 /**
- * @internal
  * @covers \Directus\Controllers\UtilsController
+ *
+ * @internal
  */
 final class UtilsControllerTest extends TestCase
 {

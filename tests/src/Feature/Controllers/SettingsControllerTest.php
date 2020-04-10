@@ -8,8 +8,9 @@ use Directus\Responses\Errors;
 use Directus\Testing\TestCase;
 
 /**
- * @internal
  * @covers \Directus\Controllers\SettingsController
+ *
+ * @internal
  */
 final class SettingsControllerTest extends TestCase
 {
