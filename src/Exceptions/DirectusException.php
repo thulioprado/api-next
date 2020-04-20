@@ -21,7 +21,7 @@ class DirectusException extends \Exception
     /**
      * DirectusException description.
      *
-     * @var array<string>
+     * @var array
      */
     protected $context;
 

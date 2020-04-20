@@ -2,7 +2,9 @@
 
 declare(strict_types=1);
 
+use Directus\Controllers\ActivityController;
 use Directus\Controllers\CollectionController;
+use Directus\Controllers\PresetController;
 use Directus\Controllers\ProjectController;
 use Directus\Controllers\ServerController;
 use Directus\Controllers\SettingsController;
@@ -23,7 +25,7 @@ Route::group([
     Route::group([
         'prefix' => 'server',
         'as' => 'server.',
-    ], function (): void {
+    ], static function (): void {
         Route::get('info', [ServerController::class, 'info'])->name('info');
         Route::get('ping', [ServerController::class, 'ping'])->name('ping');
         Route::get('projects', [ServerController::class, 'projects'])->name('projects');
@@ -32,7 +34,7 @@ Route::group([
     Route::group([
         'prefix' => config('directus.project.id', 'api'),
         'as' => 'project.',
-    ], function (): void {
+    ], static function (): void {
         // Project
         Route::get('', [ProjectController::class, 'info'])->name('info');
 
@@ -41,11 +43,37 @@ Route::group([
         Route::group([
             'prefix' => 'utils',
             'as' => 'utils.',
-        ], function (): void {
+        ], static function (): void {
             Route::get('random/string', [UtilsController::class, 'randomString'])->name('string');
             Route::post('hash/match', [UtilsController::class, 'hashVerify'])->name('hash.match');
             Route::post('hash/verify', [UtilsController::class, 'hashVerify'])->name('hash.verify');
             Route::post('hash', [UtilsController::class, 'hashCreate'])->name('hash.create');
+        });
+
+        // Activities
+        // https://docs.directus.io/api/activity.html
+        Route::group([
+            'prefix' => 'activity',
+            'as' => 'activity.',
+        ], static function (): void {
+            Route::get('', [ActivityController::class, 'all'])->name('all');
+            Route::post('comment', [ActivityController::class, 'createComment'])->name('comment.create');
+            Route::patch('comment/{key}', [ActivityController::class, 'updateComment'])->name('comment.update');
+            Route::delete('comment/{key}', [ActivityController::class, 'deleteComment'])->name('comment.delete');
+            Route::get('{key}', [ActivityController::class, 'fetch'])->name('fetch');
+        });
+
+        // Presets
+        // https://docs.directus.io/api/collection-presets.html
+        Route::group([
+            'prefix' => 'collection_presets',
+            'as' => 'presets.',
+        ], static function (): void {
+            Route::get('', [PresetController::class, 'all'])->name('all');
+            Route::get('{key}', [PresetController::class, 'fetch'])->name('fetch');
+            Route::post('', [PresetController::class, 'create'])->name('create');
+            Route::patch('{key}', [PresetController::class, 'update'])->name('update');
+            Route::delete('{key}', [PresetController::class, 'delete'])->name('delete');
         });
 
         // Setting
@@ -53,12 +81,25 @@ Route::group([
         Route::group([
             'prefix' => 'settings',
             'as' => 'settings.',
-        ], function (): void {
+        ], static function (): void {
             Route::get('', [SettingsController::class, 'all'])->name('all');
-            Route::get('{key}', [SettingsController::class, 'one'])->name('one');
+            Route::get('{key}', [SettingsController::class, 'fetch'])->name('fetch');
             Route::post('', [SettingsController::class, 'create'])->name('create');
             Route::patch('{key}', [SettingsController::class, 'update'])->name('update');
             Route::delete('{key}', [SettingsController::class, 'delete'])->name('delete');
+        });
+
+        // Collections
+        // https://docs.directus.io/api/collections.html
+        Route::group([
+            'prefix' => 'collections',
+            'as' => 'collections.',
+        ], static function (): void {
+            Route::get('', [CollectionController::class, 'all'])->name('all');
+            Route::get('{key}', [CollectionController::class, 'fetch'])->name('fetch');
+            Route::post('', [CollectionController::class, 'create'])->name('create');
+            Route::patch('{key}', [CollectionController::class, 'update'])->name('update');
+            Route::delete('{key}', [CollectionController::class, 'delete'])->name('delete');
         });
 
         // Items
@@ -68,10 +109,9 @@ Route::group([
             'middleware' => [
                 CollectionMiddleware::class,
             ],
-        ], function (): void {
-            // Collection
-            Route::get('{collection}', [CollectionController::class, 'index'])->name('all');
-            Route::get('{collection}/{id}', [CollectionController::class, 'show'])->name('one');
+        ], static function (): void {
+            Route::get('{collection}', [CollectionController::class, 'all'])->name('all');
+            Route::get('{collection}/{id}', [CollectionController::class, 'fetch'])->name('fetch');
         });
     });
 });

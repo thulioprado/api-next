@@ -4,7 +4,8 @@ declare(strict_types=1);
 
 namespace Directus\Database\System\Models;
 
-use Directus\Database\System\Models\Traits\SystemModel;
+use Directus\Database\Traits\FromSystemDatabase;
+use Directus\Database\Traits\UsesUuidPrimaryKey;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Query\Builder;
@@ -14,19 +15,43 @@ use Illuminate\Database\Query\Builder;
  *
  * @property string $id
  * @property string $name
+ * @property bool   $hidden
+ * @property bool   $single
  * @property bool   $system
+ * @property string $icon
+ * @property string $note
+ * @property array  $translation
  *
  * @mixin Model
  * @mixin Builder
  */
 class Collection extends Model
 {
-    use SystemModel;
+    use FromSystemDatabase;
+    use UsesUuidPrimaryKey;
 
     /**
-     * @var string
+     * @var array
      */
-    protected $keyType = 'uuid';
+    protected $casts = [
+        'hidden' => 'bool',
+        'single' => 'bool',
+        'system' => 'bool',
+        'translation' => 'json',
+    ];
+
+    /**
+     * @var array<string>
+     */
+    protected $fillable = [
+        'name',
+        'hidden',
+        'single',
+        'system',
+        'icon',
+        'note',
+        'translation',
+    ];
 
     /**
      * Gets the related fields.

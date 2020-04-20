@@ -15,6 +15,11 @@ interface Database
     public function prefix(): string;
 
     /**
+     * Gets the connection driver.
+     */
+    public function driver(): string;
+
+    /**
      * Gets the connection name.
      */
     public function connectionName(): string;

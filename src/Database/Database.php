@@ -35,41 +35,31 @@ class Database implements DatabaseContract
         $this->prefix = $prefix;
     }
 
-    /**
-     * Prefix.
-     */
     public function prefix(): string
     {
         return $this->prefix;
     }
 
-    /**
-     * Gets the connection name.
-     */
+    public function driver(): string
+    {
+        return (string) config("database.connections.{$this->connection}.driver");
+    }
+
     public function connectionName(): string
     {
         return $this->connection;
     }
 
-    /**
-     * Gets the connection.
-     */
     public function connection(): ConnectionInterface
     {
         return DB::connection($this->connection);
     }
 
-    /**
-     * Gets the schema builder.
-     */
     public function schema(): Builder
     {
         return Schema::connection($this->connection);
     }
 
-    /**
-     * Gets a database collection.
-     */
     public function collection(string $name, ?string $class = null): CollectionContract
     {
         $class = $class ?? Collection::class;

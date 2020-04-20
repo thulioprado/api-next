@@ -39,7 +39,8 @@ class CreateDirectusRelations extends Migration
             $this->createField('0f8a5ea5-3e7b-400f-be63-664709fe11c9')
                 ->on('relations')
                 ->name('id')
-                ->uuid()
+                ->uuidType()
+                ->required()
                 ->textInputInterface([
                     'monospace' => true,
                 ])
@@ -48,35 +49,35 @@ class CreateDirectusRelations extends Migration
             $this->createField('89d6b61d-b192-4c14-8be5-94de3fcfa150')
                 ->on('relations')
                 ->name('collection_many_id')
-                ->string()
+                ->stringType()
                 ->collectionsInterface()
         );
         $this->registerField(
             $this->createField('4a585602-83ff-4e5a-9d93-e7ec1b4e87bb')
                 ->on('relations')
                 ->name('field_many_id')
-                ->string()
+                ->stringType()
                 ->fieldsInterface()
         );
         $this->registerField(
             $this->createField('6dd896a3-7dc1-4b64-85c7-b38e29d43f57')
                 ->on('relations')
                 ->name('collection_one_id')
-                ->string()
+                ->stringType()
                 ->collectionsInterface()
         );
         $this->registerField(
             $this->createField('d93f3554-d7b3-47d4-be1e-8983ddeca68b')
                 ->on('relations')
                 ->name('field_one_id')
-                ->string()
+                ->stringType()
                 ->fieldsInterface()
         );
         $this->registerField(
             $this->createField('8cb866d0-8cc1-4cb8-af46-1be8109fbac7')
                 ->on('relations')
                 ->name('junction_field_id')
-                ->string()
+                ->stringType()
                 ->fieldsInterface()
         );
     }

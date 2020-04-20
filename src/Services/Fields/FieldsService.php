@@ -10,11 +10,13 @@ use Directus\Contracts\Services\Service;
 use Directus\Database\System\Models\Field;
 use Directus\Services\Collections\CollectionsService;
 use Directus\Services\Databases\DatabasesService;
+use JsonException;
+use Throwable;
 
 class FieldsService implements Service
 {
     /**
-     * @var array<Definition>
+     * @var array
      */
     protected $changes = [];
 
@@ -83,10 +85,12 @@ class FieldsService implements Service
 
     /**
      * Applies changes to the database.
+     *
+     * @throws JsonException
      */
     public function save(): void
     {
-        if ($this->modified()) {
+        if (!$this->modified()) {
             return;
         }
 
@@ -106,9 +110,7 @@ class FieldsService implements Service
     }
 
     /**
-     * {@inheritdoc}
-     *
-     * @throws \Throwable
+     * @throws Throwable
      */
     public function batch(\Closure $callback): void
     {
@@ -117,7 +119,7 @@ class FieldsService implements Service
                 $callback($this);
                 $this->save();
             });
-        } catch (\Throwable $err) {
+        } catch (Throwable $err) {
             $this->discard();
 
             throw $err;
@@ -126,6 +128,8 @@ class FieldsService implements Service
 
     /**
      * Applies a field action into the database.
+     *
+     * @throws JsonException
      */
     protected function applyFieldChanges(Definition $field): void
     {
@@ -142,14 +146,14 @@ class FieldsService implements Service
     {
         if (isset($field->on)) {
             $field->collection_id(
-                (string) $this->collections->getByName($field->on)->id
+                (string) $this->collections->find($field->on)['id']
             );
             unset($field['on']);
         }
 
         if (isset($field->collection)) {
             $field->collection_id(
-                (string) $this->collections->getByName($field->collection)->id
+                (string) $this->collections->find($field->collection)['id']
             );
             unset($field['collection']);
         }
@@ -200,7 +204,7 @@ class FieldsService implements Service
             'hidden_detail' => false,
             'hidden_browse' => false,
             'width' => 'full',
-            'group' => null,
+            'group_id' => null,
             'note' => null,
             'translation' => null,
         ];

@@ -6,37 +6,68 @@ namespace Directus\Services\Collections;
 
 use Directus\Contracts\Services\Service;
 use Directus\Database\System\Models\Collection;
-use Illuminate\Database\Eloquent\Collection as EloquentCollection;
-use Illuminate\Support\Str;
+use Directus\Exceptions\CollectionNotFound;
 
 class CollectionsService implements Service
 {
-    public function getByName(string $name): Collection
+    public function all(): array
     {
-        $collection = Collection::where('name', '=', $name)->first();
+        return Collection::with('fields')->get()->toArray();
+    }
+
+    /**
+     * @param string $key the `id` or `name` of the collection
+     *
+     * @throws CollectionNotFound
+     */
+    public function find(string $key): array
+    {
+        return $this->findModel($key)->toArray();
+    }
+
+    public function create(array $options): array
+    {
+        // TODO: validate options
+        $collection = new Collection($options);
+        $collection->save();
+
+        return $collection->load('fields')->toArray();
+    }
+
+    /**
+     * @throws CollectionNotFound
+     */
+    public function update(string $key, array $options): array
+    {
+        $collection = $this->findModel($key);
+        $collection->update($options);
+
+        return $collection->load('fields')->toArray();
+    }
+
+    /**
+     * @throws CollectionNotFound
+     */
+    public function delete(string $key): void
+    {
+        $this->findModel($key)->delete();
+    }
+
+    /**
+     * @throws CollectionNotFound
+     */
+    private function findModel(string $key): Collection
+    {
+        $collection = Collection::with('fields')
+            ->orWhere('id', '=', $key)
+            ->orWhere('name', '=', $key)
+            ->first()
+        ;
+
         if ($collection === null) {
-            throw new \RuntimeException("Collection not found: {$name}");
+            throw new CollectionNotFound($key);
         }
 
         return $collection;
-    }
-
-    public function register(string $name, ?string $id = null): void
-    {
-        $collection = new Collection();
-        $collection->id = $id ?? (string) Str::uuid();
-        $collection->name = $name;
-        $collection->system = true;
-        $collection->save();
-    }
-
-    public function unregister(string $id): void
-    {
-        Collection::where('collection_id', '=', $id)->delete();
-    }
-
-    public function all(): EloquentCollection
-    {
-        return Collection::all();
     }
 }

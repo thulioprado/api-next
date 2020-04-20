@@ -16,12 +16,16 @@ class SeedDirectusSettings extends Migration
 
         $system->collection('settings')->builder()->insert([
             [
+                'key' => 'project_name',
+                'value' => json_encode('Directus'),
+            ],
+            [
                 'key' => 'project_url',
-                'value' => json_encode(''),
+                'value' => json_encode(null),
             ],
             [
                 'key' => 'project_logo',
-                'value' => json_encode(''),
+                'value' => json_encode(null),
             ],
             [
                 'key' => 'project_color',
@@ -29,11 +33,11 @@ class SeedDirectusSettings extends Migration
             ],
             [
                 'key' => 'project_foreground',
-                'value' => json_encode(''),
+                'value' => json_encode(null),
             ],
             [
                 'key' => 'project_background',
-                'value' => json_encode(''),
+                'value' => json_encode(null),
             ],
             [
                 'key' => 'project_public_note',
@@ -73,11 +77,11 @@ class SeedDirectusSettings extends Migration
             ],
             [
                 'key' => 'trusted_proxies',
-                'value' => json_encode(''),
+                'value' => json_encode([]),
             ],
             [
                 'key' => 'file_mimetype_whitelist',
-                'value' => json_encode(''),
+                'value' => json_encode([]),
             ],
             [
                 'key' => 'file_naming',
@@ -89,7 +93,7 @@ class SeedDirectusSettings extends Migration
             ],
             [
                 'key' => 'youtube_api_key',
-                'value' => json_encode(''),
+                'value' => json_encode(null),
             ],
             [
                 'key' => 'asset_whitelist',

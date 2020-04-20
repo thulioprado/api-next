@@ -28,6 +28,14 @@ final class DirectusResponseTest extends TestCase
         ], $response->getData(true));
     }
 
+    public function testSuccessfulResponseWithNothing(): void
+    {
+        $response = new DirectusResponse();
+        $response->withNothing();
+        static::assertSame($response->status(), 204);
+        static::assertNull($response->getData());
+    }
+
     public function testSuccessfulResponseStatus(): void
     {
         $response = new DirectusResponse();

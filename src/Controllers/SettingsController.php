@@ -30,7 +30,7 @@ class SettingsController extends BaseController
     /**
      * @throws SettingNotFound
      */
-    public function one(SettingsService $settings, string $key): JsonResponse
+    public function fetch(SettingsService $settings, string $key): JsonResponse
     {
         // TODO: validate parameters
 

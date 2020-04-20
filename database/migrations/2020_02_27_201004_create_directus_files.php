@@ -63,7 +63,7 @@ class CreateDirectusFiles extends Migration
             $this->createField('5d8bbe64-b9be-4a47-905d-4c4e583a98f4')
                 ->on('files')
                 ->name('preview')
-                ->alias()
+                ->aliasType()
                 ->filePreviewInterface()
         );
 
@@ -71,7 +71,7 @@ class CreateDirectusFiles extends Migration
             $this->createField('4b052061-b0d3-4e52-8043-989dbbc9f6a3')
                 ->on('files')
                 ->name('title')
-                ->string()
+                ->stringType()
                 ->textInputInterface([
                     'placeholder' => 'Enter a descriptive title...',
                     'iconRight' => 'title',
@@ -82,7 +82,7 @@ class CreateDirectusFiles extends Migration
             $this->createField('927ba058-fef8-44ab-aeb8-fa8e9531ba0b')
                 ->on('files')
                 ->name('tags')
-                ->array()
+                ->arrayType()
                 ->tagsInterface([
                     'placeholder' => 'Enter a keyword then hit enter...',
                 ])
@@ -93,7 +93,7 @@ class CreateDirectusFiles extends Migration
             $this->createField('c7d6ea04-c7d9-47fa-a34d-73cceabecbf9')
                 ->on('files')
                 ->name('location')
-                ->string()
+                ->stringType()
                 ->textInputInterface([
                     'placeholder' => 'Enter a location...',
                     'iconRight' => 'place',
@@ -105,7 +105,7 @@ class CreateDirectusFiles extends Migration
             $this->createField('49a42490-a6ed-47dd-b4a2-dc40b1a151fb')
                 ->on('files')
                 ->name('description')
-                ->string()
+                ->stringType()
                 ->wysiwygInterface([
                     'toolbar' => [
                         'bold',
@@ -121,7 +121,7 @@ class CreateDirectusFiles extends Migration
             $this->createField('9dbf2b88-9522-45d7-9040-865316847abf')
                 ->on('files')
                 ->name('filename_download')
-                ->string()
+                ->stringType()
                 ->textInputInterface([
                     'monospace' => true,
                     'iconRight' => 'get_app',
@@ -132,7 +132,7 @@ class CreateDirectusFiles extends Migration
             $this->createField('aebe748c-3c56-4a6a-b7fb-a17c8c029023')
                 ->on('files')
                 ->name('filename_disk')
-                ->string()
+                ->stringType()
                 ->textInputInterface([
                     'placeholder' => 'Enter a unique file name...',
                     'iconRight' => 'insert_drive_file',
@@ -143,7 +143,7 @@ class CreateDirectusFiles extends Migration
             $this->createField('dc817b60-26a9-4c82-8770-8fb47f427cd7')
                 ->on('files')
                 ->name('private_hash')
-                ->string()
+                ->stringType()
                 ->width('half')
                 ->slugInterface([
                     'iconRight' => 'lock',
@@ -154,7 +154,7 @@ class CreateDirectusFiles extends Migration
             $this->createField('6d44d7e6-a943-4299-be14-a389afe05838')
                 ->on('files')
                 ->name('checksum')
-                ->string()
+                ->stringType()
                 ->readonly()
                 ->width('half')
                 ->textInputInterface([
@@ -167,7 +167,7 @@ class CreateDirectusFiles extends Migration
             $this->createField('94ed71e0-9129-493a-96b9-447784b0f465')
                 ->on('files')
                 ->name('uploaded_on')
-                ->datetime()
+                ->datetimeType()
                 ->datetimeInterface([
                     'iconRight' => 'today',
                 ])
@@ -180,7 +180,7 @@ class CreateDirectusFiles extends Migration
             $this->createField('227e1a29-91c6-46ca-8867-93803ac4bcc2')
                 ->on('files')
                 ->name('uploaded_by')
-                ->owner()
+                ->ownerType()
                 ->required()
                 ->readonly()
                 ->width('half')
@@ -191,7 +191,7 @@ class CreateDirectusFiles extends Migration
             $this->createField('b5a876e2-5f9d-46d8-8107-2f8f67423134')
                 ->on('files')
                 ->name('width')
-                ->integer()
+                ->integerType()
                 ->numericInterface([
                     'iconRight' => 'straighten',
                 ])
@@ -203,7 +203,7 @@ class CreateDirectusFiles extends Migration
             $this->createField('98fd63a5-8e8c-4bd2-a6a0-3706da08fedf')
                 ->on('files')
                 ->name('height')
-                ->integer()
+                ->integerType()
                 ->numericInterface([
                     'iconRight' => 'straighten',
                 ])
@@ -215,7 +215,7 @@ class CreateDirectusFiles extends Migration
             $this->createField('ee7da3bf-d11e-4651-b09a-10fe90a7b950')
                 ->on('files')
                 ->name('duration')
-                ->integer()
+                ->integerType()
                 ->numericInterface([
                     'iconRight' => 'timer',
                 ])
@@ -227,7 +227,7 @@ class CreateDirectusFiles extends Migration
             $this->createField('79c9ec54-6504-4030-8276-dc928f8aca07')
                 ->on('files')
                 ->name('filesize')
-                ->integer()
+                ->integerType()
                 ->fileSizeInterface([
                     'iconRight' => 'storage',
                 ])
@@ -239,7 +239,7 @@ class CreateDirectusFiles extends Migration
             $this->createField('4276a353-3a70-4d72-81b5-6ac4d0328d8b')
                 ->on('files')
                 ->name('metadata')
-                ->json()
+                ->jsonType()
                 ->keyValueInterface([
                     'keyInterface' => 'text-input',
                     'keyDataType' => 'string',
@@ -260,7 +260,7 @@ class CreateDirectusFiles extends Migration
             $this->createField('21980180-a867-4e9a-9d5d-97bfe305c0ac')
                 ->on('files')
                 ->name('data')
-                ->alias()
+                ->aliasType()
                 ->hidden_detail()
                 ->fileInterface()
         );
@@ -269,7 +269,7 @@ class CreateDirectusFiles extends Migration
             $this->createField('325f3699-e999-420f-9a43-654ff8f1b15e')
                 ->on('files')
                 ->name('id')
-                ->uuid()
+                ->uuidType()
                 ->required()
                 ->hidden_detail()
                 ->textInputInterface([
@@ -281,7 +281,7 @@ class CreateDirectusFiles extends Migration
             $this->createField('2fc3aecc-ebc4-4d1e-b331-df27566f5935')
                 ->on('files')
                 ->name('type')
-                ->string()
+                ->stringType()
                 ->readonly()
                 ->hidden_detail()
                 ->textInputInterface()
@@ -291,7 +291,7 @@ class CreateDirectusFiles extends Migration
             $this->createField('c967bf30-e50e-4d7a-bac9-6088770cc3d5')
                 ->on('files')
                 ->name('charset')
-                ->string()
+                ->stringType()
                 ->readonly()
                 ->hidden_detail()
                 ->hidden_browse()
@@ -302,7 +302,7 @@ class CreateDirectusFiles extends Migration
             $this->createField('ff58fcfe-5f7e-4da8-999c-3a9b96f5a799')
                 ->on('files')
                 ->name('embed')
-                ->string()
+                ->stringType()
                 ->readonly()
                 ->hidden_detail()
                 ->textInputInterface()
@@ -312,7 +312,7 @@ class CreateDirectusFiles extends Migration
             $this->createField('28481575-7d8a-4067-a418-ee5c0822e7b4')
                 ->on('files')
                 ->name('folder')
-                ->m2o()
+                ->m2oType()
                 ->hidden_detail()
                 ->manyToOneInterface()
         );
@@ -321,7 +321,7 @@ class CreateDirectusFiles extends Migration
             $this->createField('a3e1953a-ac72-45a3-aa68-8b22fa4aa20e')
                 ->on('files')
                 ->name('storage')
-                ->string()
+                ->stringType()
                 ->hidden_detail()
                 ->hidden_browse()
                 ->textInputInterface()

@@ -42,6 +42,9 @@ class DirectusResponse extends JsonResponse
         $this->set('data', $data);
         $this->setStatusCode($status);
 
+        // TODO: dispatch event for plugins to transform the response and
+        //       leverage request()->route()->getName() for identification
+
         return $this;
     }
 
@@ -52,6 +55,9 @@ class DirectusResponse extends JsonResponse
     {
         $this->setStatusCode($status);
         $this->data = '';
+
+        // TODO: dispatch event for plugins to transform the response and
+        //       leverage request()->route()->getName() for identification
 
         return $this;
     }
@@ -65,6 +71,9 @@ class DirectusResponse extends JsonResponse
         $this->setStatusCode($error['status']);
         unset($error['status']);
         $this->set('error', $error);
+
+        // TODO: dispatch event for plugins to transform the response and
+        //       leverage request()->route()->getName() for identification
 
         return $this;
     }

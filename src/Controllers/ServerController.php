@@ -57,6 +57,9 @@ class ServerController extends BaseController
         ]);
     }
 
+    // TODO: implement a "compatibility check", to check server settings, extensions, php version,
+    //       upload size (if project config is lower or qual the php ini value, etc)
+
     /**
      * Server ping.
      */
@@ -72,6 +75,7 @@ class ServerController extends BaseController
      */
     public function projects(): JsonResponse
     {
+        // TODO: dynamic load of projects
         return directus()->respond()->public()->with([
             config('directus.project.id'),
         ]);

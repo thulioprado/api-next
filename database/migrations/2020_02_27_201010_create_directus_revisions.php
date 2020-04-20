@@ -49,7 +49,8 @@ class CreateDirectusRevisions extends Migration
             $this->createField('e5caa751-7a79-4e22-a207-3c42a3add63d')
                 ->on('revisions')
                 ->name('id')
-                ->uuid()
+                ->uuidType()
+                ->required()
                 ->textInputInterface([
                     'monospace' => true,
                 ])
@@ -59,7 +60,7 @@ class CreateDirectusRevisions extends Migration
             $this->createField('3099eac4-91eb-4064-b574-af3927047365')
                 ->on('revisions')
                 ->name('activity')
-                ->m2o()
+                ->m2oType()
                 ->manyToOneInterface()
         );
 
@@ -67,7 +68,7 @@ class CreateDirectusRevisions extends Migration
             $this->createField('9f6c2786-02a5-4fff-8af0-0c52972c58c5')
                 ->on('revisions')
                 ->name('collection')
-                ->m2o()
+                ->m2oType()
                 ->manyToOneInterface()
         );
 
@@ -75,7 +76,7 @@ class CreateDirectusRevisions extends Migration
             $this->createField('d15a7011-cbd4-48c8-92d4-81f7d72224dc')
                 ->on('revisions')
                 ->name('item')
-                ->string()
+                ->stringType()
                 ->textInputInterface()
         );
 
@@ -83,7 +84,7 @@ class CreateDirectusRevisions extends Migration
             $this->createField('215ce72b-54cd-439d-9cfe-e2788aad82a8')
                 ->on('revisions')
                 ->name('data')
-                ->json()
+                ->jsonType()
                 ->jsonInterface()
         );
 
@@ -91,7 +92,7 @@ class CreateDirectusRevisions extends Migration
             $this->createField('beca1b78-2275-4151-b1c1-9f1900e59d6e')
                 ->on('revisions')
                 ->name('delta')
-                ->json()
+                ->jsonType()
                 ->jsonInterface()
         );
 
@@ -99,7 +100,7 @@ class CreateDirectusRevisions extends Migration
             $this->createField('1e1d184f-e38c-4786-97b5-e4ffd914a329')
                 ->on('revisions')
                 ->name('parent_item')
-                ->string()
+                ->stringType()
                 ->textInputInterface()
         );
 
@@ -107,7 +108,7 @@ class CreateDirectusRevisions extends Migration
             $this->createField('0cbee19f-b82b-4429-8efe-2362949fb657')
                 ->on('revisions')
                 ->name('parent_collection')
-                ->string()
+                ->stringType()
                 ->collectionsInterface()
         );
 
@@ -115,7 +116,7 @@ class CreateDirectusRevisions extends Migration
             $this->createField('6ccbc80d-ec03-44bb-84dc-2b4d2c054943')
                 ->on('revisions')
                 ->name('parent_changed')
-                ->boolean()
+                ->booleanType()
                 ->switchInterface()
         );
     }

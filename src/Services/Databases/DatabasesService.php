@@ -6,6 +6,7 @@ namespace Directus\Services\Databases;
 
 use Directus\Contracts\Database\Database;
 use Directus\Contracts\Services\Service;
+use Throwable;
 
 /**
  * Class DatabasesService.
@@ -30,5 +31,24 @@ class DatabasesService implements Service
         return resolve(Database::class, [
             'name' => 'system',
         ]);
+    }
+
+    /**
+     * Runs a transaction over the two databases.
+     *
+     * @throws Throwable
+     *
+     * @return mixed
+     */
+    public function transaction(callable $callback)
+    {
+        $value = null;
+        $this->system()->connection()->transaction(function () use (&$value, $callback): void {
+            $this->database()->connection()->transaction(static function () use (&$value, $callback): void {
+                $value = $callback();
+            });
+        });
+
+        return $value;
     }
 }

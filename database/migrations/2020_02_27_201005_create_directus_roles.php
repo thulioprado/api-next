@@ -40,7 +40,7 @@ class CreateDirectusRoles extends Migration
         $this->registerField(
             $this->createField('9a683768-36d3-44cb-9f4b-5620af5e161b')
                 ->on('roles')
-                ->uuid()
+                ->uuidType()
                 ->name('id')
                 ->required()
                 ->hidden_detail()
@@ -52,7 +52,7 @@ class CreateDirectusRoles extends Migration
         $this->registerField(
             $this->createField('08e4468f-d15c-4d3f-bdc0-c6e5c13ce6c9')
                 ->on('roles')
-                ->string()
+                ->stringType()
                 ->name('external_id')
                 ->readonly()
                 ->hidden_detail()
@@ -63,7 +63,7 @@ class CreateDirectusRoles extends Migration
         $this->registerField(
             $this->createField('b39fca37-221c-4eff-9bde-cfe721d0a301')
                 ->on('roles')
-                ->string()
+                ->stringType()
                 ->name('name')
                 ->required()
                 ->width('half')
@@ -73,7 +73,7 @@ class CreateDirectusRoles extends Migration
         $this->registerField(
             $this->createField('11783385-a838-488a-803f-be9f19099a61')
                 ->on('roles')
-                ->string()
+                ->stringType()
                 ->name('description')
                 ->width('half')
                 ->textareaInterface()
@@ -82,7 +82,7 @@ class CreateDirectusRoles extends Migration
         $this->registerField(
             $this->createField('c95f0ddc-fa76-4117-8ff6-51cd29d39979')
                 ->on('roles')
-                ->json()
+                ->jsonType()
                 ->name('module_listing')
                 ->repeaterInterface([
                     'template' => '{{ name }}',
@@ -113,7 +113,7 @@ class CreateDirectusRoles extends Migration
         $this->registerField(
             $this->createField('520906a5-4565-42df-8366-ff8d25acd3d0')
                 ->on('roles')
-                ->json()
+                ->jsonType()
                 ->name('collection_listing')
                 ->repeaterInterface([
                     'template' => '{{ group_name }}',
@@ -148,7 +148,7 @@ class CreateDirectusRoles extends Migration
         $this->registerField(
             $this->createField('3b36f33a-ad2b-4519-ab05-a6eaa9092139')
                 ->on('roles')
-                ->array()
+                ->arrayType()
                 ->name('ip_whitelist')
                 ->tagsInterface([
                     '' => 'Add an IP address...',
@@ -158,7 +158,7 @@ class CreateDirectusRoles extends Migration
         $this->registerField(
             $this->createField('aaa45485-31e8-4378-b80a-1e1c15138aef')
                 ->on('roles')
-                ->boolean()
+                ->booleanType()
                 ->name('enforce_2fa')
                 ->switchInterface()
         );
@@ -167,7 +167,7 @@ class CreateDirectusRoles extends Migration
         $this->registerField(
             $this->createField('3c6d1a07-908a-4b5f-9950-5e925549cfa1')
                 ->on('roles')
-                ->o2m()
+                ->o2mType()
                 ->name('users')
                 ->oneToManyInterface([
                     'fields' => 'first_name,last_name',

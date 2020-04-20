@@ -19,15 +19,16 @@ use Illuminate\Support\Traits\Macroable;
  * @method Definition type(string $type)                   Sets the type of the field
  * @method Definition interface(string $interface)         Sets the interface of the field
  * @method Definition options(array|string $options)       Sets the field interface options
- * @method Definition locked()                             Sets the field as locked
+ * @method Definition locked(bool $locked = true)          Sets the field as locked or not
  * @method Definition validation(string $validation)       Sets the field validation
- * @method Definition required()                           Sets the field as required
- * @method Definition hidden_detail()                      Sets the field as hidden_detail
- * @method Definition hidden_browse()                      Sets the field as hidden_browse
- * @method Definition index(int $index)                    Sets the field sort index
+ * @method Definition required(bool $required = true)      Sets the field as required
+ * @method Definition hidden_detail(bool $hidden = true)   Sets the field as hidden_detail
+ * @method Definition hidden_browse(bool $hidden = true)   Sets the field as hidden_browse
+ * @method Definition index(null|int $index)               Sets the field sort index
  * @method Definition width(string $width)                 Sets the field width
  * @method Definition note(string $note)                   Sets the field note
- * @method Definition readonly()                           Sets the field as readonly
+ * @method Definition readonly(bool $readonly = true)      Sets the field as readonly
+ * @method Definition group_id(string $id)                 Sets the field group id
  */
 class Definition extends Fluent
 {
@@ -77,7 +78,7 @@ class Definition extends Fluent
     /**
      * Sets the field translation properties.
      */
-    public function translate(array $options): self
+    public function translate(?array $options): self
     {
         $this->attributes['translation'] = $options;
 
@@ -87,7 +88,7 @@ class Definition extends Fluent
     /**
      * Set field to alias type.
      */
-    public function alias(): self
+    public function aliasType(): self
     {
         return $this->type('alias');
     }
@@ -95,7 +96,7 @@ class Definition extends Fluent
     /**
      * Set field to array type.
      */
-    public function array(): self
+    public function arrayType(): self
     {
         return $this->type('array');
     }
@@ -103,7 +104,7 @@ class Definition extends Fluent
     /**
      * Set field to boolean type.
      */
-    public function boolean(): self
+    public function booleanType(): self
     {
         return $this->type('boolean');
     }
@@ -111,7 +112,7 @@ class Definition extends Fluent
     /**
      * Set field to binary type.
      */
-    public function binary(): self
+    public function binaryType(): self
     {
         return $this->type('binary');
     }
@@ -119,7 +120,7 @@ class Definition extends Fluent
     /**
      * Set field to datetime type.
      */
-    public function datetime(): self
+    public function datetimeType(): self
     {
         return $this->type('datetime');
     }
@@ -127,7 +128,7 @@ class Definition extends Fluent
     /**
      * Set field to date type.
      */
-    public function date(): self
+    public function dateType(): self
     {
         return $this->type('date');
     }
@@ -135,7 +136,7 @@ class Definition extends Fluent
     /**
      * Set field to time type.
      */
-    public function time(): self
+    public function timeType(): self
     {
         return $this->type('time');
     }
@@ -143,7 +144,7 @@ class Definition extends Fluent
     /**
      * Set field to file type.
      */
-    public function file(): self
+    public function fileType(): self
     {
         return $this->type('file');
     }
@@ -151,7 +152,7 @@ class Definition extends Fluent
     /**
      * Set field to hash type.
      */
-    public function hash(): self
+    public function hashType(): self
     {
         return $this->type('hash');
     }
@@ -159,7 +160,7 @@ class Definition extends Fluent
     /**
      * Set field to group type.
      */
-    public function group(): self
+    public function groupType(): self
     {
         return $this->type('group');
     }
@@ -167,7 +168,7 @@ class Definition extends Fluent
     /**
      * Set field to integer type.
      */
-    public function integer(): self
+    public function integerType(): self
     {
         return $this->type('integer');
     }
@@ -175,7 +176,7 @@ class Definition extends Fluent
     /**
      * Set field to decimal type.
      */
-    public function decimal(): self
+    public function decimalType(): self
     {
         return $this->type('decimal');
     }
@@ -183,7 +184,7 @@ class Definition extends Fluent
     /**
      * Set field to json type.
      */
-    public function json(): self
+    public function jsonType(): self
     {
         return $this->type('json');
     }
@@ -191,7 +192,7 @@ class Definition extends Fluent
     /**
      * Set field to lang type.
      */
-    public function lang(): self
+    public function langType(): self
     {
         return $this->type('lang');
     }
@@ -199,7 +200,7 @@ class Definition extends Fluent
     /**
      * Set field to m2o type.
      */
-    public function m2o(): self
+    public function m2oType(): self
     {
         return $this->type('m2o');
     }
@@ -207,7 +208,7 @@ class Definition extends Fluent
     /**
      * Set field to o2m type.
      */
-    public function o2m(): self
+    public function o2mType(): self
     {
         return $this->type('o2m');
     }
@@ -215,7 +216,7 @@ class Definition extends Fluent
     /**
      * Set field to slug type.
      */
-    public function slug(): self
+    public function slugType(): self
     {
         return $this->type('slug');
     }
@@ -223,7 +224,7 @@ class Definition extends Fluent
     /**
      * Set field to sort type.
      */
-    public function sort(): self
+    public function sortType(): self
     {
         return $this->type('sort');
     }
@@ -231,7 +232,7 @@ class Definition extends Fluent
     /**
      * Set field to status type.
      */
-    public function status(): self
+    public function statusType(): self
     {
         return $this->type('status');
     }
@@ -239,7 +240,7 @@ class Definition extends Fluent
     /**
      * Set field to string type.
      */
-    public function string(): self
+    public function stringType(): self
     {
         return $this->type('string');
     }
@@ -247,7 +248,7 @@ class Definition extends Fluent
     /**
      * Set field to translation type.
      */
-    public function translation(): self
+    public function translationType(): self
     {
         return $this->type('translation');
     }
@@ -255,7 +256,7 @@ class Definition extends Fluent
     /**
      * Set field to uuid type.
      */
-    public function uuid(): self
+    public function uuidType(): self
     {
         return $this->type('uuid');
     }
@@ -279,7 +280,7 @@ class Definition extends Fluent
     /**
      * Set field to owner type.
      */
-    public function owner(): self
+    public function ownerType(): self
     {
         return $this->type('owner');
     }
@@ -295,7 +296,7 @@ class Definition extends Fluent
     /**
      * Set field to user type.
      */
-    public function user(): self
+    public function userType(): self
     {
         return $this->type('user');
     }

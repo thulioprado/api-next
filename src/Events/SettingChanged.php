@@ -16,7 +16,7 @@ class SettingChanged
     /**
      * @var Setting
      */
-    private $setting;
+    public $setting;
 
     /**
      * SettingChangedEvent constructor.
@@ -24,13 +24,5 @@ class SettingChanged
     public function __construct(Setting $setting)
     {
         $this->setting = $setting;
-    }
-
-    /**
-     * Related setting.
-     */
-    public function setting(): Setting
-    {
-        return $this->setting;
     }
 }

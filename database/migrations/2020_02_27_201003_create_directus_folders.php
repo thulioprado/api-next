@@ -46,7 +46,7 @@ class CreateDirectusFolders extends Migration
             $this->createField('506850a7-59ce-43a4-b748-512d5a0d35d0')
                 ->on('folders')
                 ->name('id')
-                ->uuid()
+                ->uuidType()
                 ->required()
                 ->textInputInterface([
                     'monospace' => true,
@@ -58,7 +58,7 @@ class CreateDirectusFolders extends Migration
             $this->createField('c064366d-efd1-4c5a-9d77-b2dbe036e810')
                 ->on('folders')
                 ->name('name')
-                ->string()
+                ->stringType()
                 ->textInputInterface()
         );
 
@@ -66,7 +66,7 @@ class CreateDirectusFolders extends Migration
             $this->createField('b3ee98d6-18dd-45e0-891c-347117fa78c6')
                 ->on('folders')
                 ->name('parent_folder')
-                ->m2o()
+                ->m2oType()
                 ->manyToOneInterface()
         );
     }

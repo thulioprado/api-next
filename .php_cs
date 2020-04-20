@@ -12,7 +12,7 @@ return PhpCsFixer\Config::create()
     ->setRiskyAllowed(true)
     ->setRules([
         '@PhpCsFixer' => true,
-        '@PhpCsFixer:risky' => true,
+        // '@PhpCsFixer:risky' => true,
         'declare_strict_types' => true,
         'yoda_style' => false,
     ])

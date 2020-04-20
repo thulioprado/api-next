@@ -26,7 +26,6 @@ class CreateDirectusCollectionsAndFields extends Migration
             function (Blueprint $collection): void {
                 $collection->uuid('id')->primary();
                 $collection->string('name', 128)->unique();
-                $collection->boolean('managed')->default(true);
                 $collection->boolean('hidden')->default(false);
                 $collection->boolean('single')->default(false);
                 $collection->boolean('system')->default(false);
@@ -55,12 +54,15 @@ class CreateDirectusCollectionsAndFields extends Migration
                 $collection->boolean('hidden_browse')->default(false);
                 $collection->unsignedInteger('index')->nullable();
                 $collection->string('width', 50)->nullable()->default('full');
-                $collection->bigInteger('group')->nullable();
+                $collection->uuid('group_id')->nullable();
                 $collection->string('note', 1024)->nullable();
                 $collection->json('translation')->nullable();
                 $collection->unique(['collection_id', 'name']);
                 $collection->foreign('collection_id')->references('id')->on(
                     $system->collection('collections')->name()
+                );
+                $collection->foreign('group_id')->references('id')->on(
+                    $system->collection('fields')->name()
                 );
             }
         );
@@ -70,7 +72,7 @@ class CreateDirectusCollectionsAndFields extends Migration
         $this->registerField(
             $this->createField('f6ce0656-2237-4128-8ab8-5c8c0ee74d71')->on('collections')
                 ->name('fields')
-                ->o2m()
+                ->o2mType()
                 ->oneToManyInterface()
                 ->hidden_browse()
                 ->hidden_detail()
@@ -79,8 +81,9 @@ class CreateDirectusCollectionsAndFields extends Migration
         $this->registerField(
             $this->createField('a05e6938-be1e-4d34-8c94-a6c7649a9f05')
                 ->on('collections')
-                ->name('collection')
-                ->string()
+                ->name('name')
+                ->uuidType()
+                ->required()
                 ->textInputInterface([
                     'monospace' => true,
                 ])
@@ -92,28 +95,30 @@ class CreateDirectusCollectionsAndFields extends Migration
             $this->createField('d09911f2-8d0e-44df-8d17-8a4268925adb')
                 ->on('collections')
                 ->name('note')
-                ->string()
+                ->stringType()
                 ->textInputInterface()
                 ->width('half')
                 ->note('An internal description.')
         );
 
+        /*
         $this->registerField(
             $this->createField('c4a9e06a-29ce-49aa-9b09-d31354a460d2')
                 ->on('collections')
                 ->name('managed')
-                ->boolean()
+                ->booleanType()
                 ->switchInterface()
                 ->width('half')
                 ->hidden_detail()
                 ->note('[Learn More](https://docs.directus.io/guides/collections.html#managing-collections).')
         );
+        */
 
         $this->registerField(
             $this->createField('72d5f7c0-a49e-4b2e-8af7-57e26b64d981')
                 ->on('collections')
                 ->name('hidden')
-                ->boolean()
+                ->booleanType()
                 ->switchInterface()
                 ->width('half')
                 ->note('[Learn More](https://docs.directus.io/guides/collections.html#hidden).')
@@ -123,7 +128,7 @@ class CreateDirectusCollectionsAndFields extends Migration
             $this->createField('505e9879-ae54-493e-ac97-404e52711676')
                 ->on('collections')
                 ->name('single')
-                ->boolean()
+                ->booleanType()
                 ->switchInterface()
                 ->width('half')
                 ->note('[Learn More](https://docs.directus.io/guides/collections.html#single).')
@@ -133,7 +138,7 @@ class CreateDirectusCollectionsAndFields extends Migration
             $this->createField('de4915a4-c03a-4c09-8d1b-12aa76c8c446')
                 ->on('collections')
                 ->name('translation')
-                ->json()
+                ->jsonType()
                 ->repeaterInterface([
                     'fields' => [
                         [
@@ -159,7 +164,7 @@ class CreateDirectusCollectionsAndFields extends Migration
             $this->createField('d4021a6c-7613-4538-b300-3808a6e14f0d')
                 ->on('collections')
                 ->name('icon')
-                ->string()
+                ->stringType()
                 ->iconInterface()
                 ->note('The icon shown in the App\'s navigation sidebar.')
         );
@@ -168,7 +173,8 @@ class CreateDirectusCollectionsAndFields extends Migration
             $this->createField('26541248-4c2f-4eaa-9cad-4c0ec609142a')
                 ->on('fields')
                 ->name('id')
-                ->uuid()
+                ->uuidType()
+                ->required()
                 ->textInputInterface([
                     'monospace' => true,
                 ])
@@ -179,7 +185,7 @@ class CreateDirectusCollectionsAndFields extends Migration
             $this->createField('43633dfd-3a0e-4c7f-ab30-f9e2cb9bda87')
                 ->on('fields')
                 ->name('collection')
-                ->m2o()
+                ->m2oType()
                 ->manyToOneInterface()
         );
 
@@ -187,7 +193,7 @@ class CreateDirectusCollectionsAndFields extends Migration
             $this->createField('e65cd5a3-7611-4384-8a34-8ced421751d8')
                 ->on('fields')
                 ->name('field')
-                ->string()
+                ->stringType()
                 ->textInputInterface()
         );
 
@@ -195,7 +201,7 @@ class CreateDirectusCollectionsAndFields extends Migration
             $this->createField('537af3cf-9bce-4f10-a125-b89b86e5a0c7')
                 ->on('fields')
                 ->name('type')
-                ->string()
+                ->stringType()
                 ->textInputInterface()
         );
 
@@ -203,7 +209,7 @@ class CreateDirectusCollectionsAndFields extends Migration
             $this->createField('f080582f-32db-4838-92d1-6534ea51a8ed')
                 ->on('fields')
                 ->name('interface')
-                ->string()
+                ->stringType()
                 ->textInputInterface()
         );
 
@@ -211,7 +217,7 @@ class CreateDirectusCollectionsAndFields extends Migration
             $this->createField('2ec2c060-000f-4282-a1af-d6d5e939b3d1')
                 ->on('fields')
                 ->name('options')
-                ->json()
+                ->jsonType()
                 ->jsonInterface()
         );
 
@@ -219,7 +225,7 @@ class CreateDirectusCollectionsAndFields extends Migration
             $this->createField('ef2458f2-b668-4d41-9d05-f8e659bbc94f')
                 ->on('fields')
                 ->name('locked')
-                ->boolean()
+                ->booleanType()
                 ->switchInterface()
         );
 
@@ -227,7 +233,7 @@ class CreateDirectusCollectionsAndFields extends Migration
             $this->createField('0084c526-0d50-4da1-8089-90003c178e46')
                 ->on('fields')
                 ->name('translation')
-                ->json()
+                ->jsonType()
                 ->repeaterInterface([
                     'fields' => [
                         [
@@ -253,7 +259,7 @@ class CreateDirectusCollectionsAndFields extends Migration
             $this->createField('35cb0f4d-981f-450d-99a4-238bb4f9f1dc')
                 ->on('fields')
                 ->name('readonly')
-                ->boolean()
+                ->booleanType()
                 ->switchInterface()
         );
 
@@ -261,7 +267,7 @@ class CreateDirectusCollectionsAndFields extends Migration
             $this->createField('1713a965-d35d-4ae3-826f-78d05a1368de')
                 ->on('fields')
                 ->name('validation')
-                ->string()
+                ->stringType()
                 ->textInputInterface()
         );
 
@@ -269,7 +275,7 @@ class CreateDirectusCollectionsAndFields extends Migration
             $this->createField('46485994-bd3d-4a4e-85e3-ac7d40059a1a')
                 ->on('fields')
                 ->name('required')
-                ->boolean()
+                ->booleanType()
                 ->switchInterface()
         );
 
@@ -277,7 +283,7 @@ class CreateDirectusCollectionsAndFields extends Migration
             $this->createField('89671575-bbe6-4c9d-b981-268e6bbf222a')
                 ->on('fields')
                 ->name('index')
-                ->integer()
+                ->integerType()
                 ->sortInterface()
         );
 
@@ -285,7 +291,7 @@ class CreateDirectusCollectionsAndFields extends Migration
             $this->createField('b13451b5-7b00-44cf-b70c-d718fad476fb')
                 ->on('fields')
                 ->name('note')
-                ->string()
+                ->stringType()
                 ->textInputInterface()
         );
 
@@ -293,7 +299,7 @@ class CreateDirectusCollectionsAndFields extends Migration
             $this->createField('9c900a82-c483-4f13-ba44-fde93a573123')
                 ->on('fields')
                 ->name('hidden_detail')
-                ->boolean()
+                ->booleanType()
                 ->switchInterface()
         );
 
@@ -301,7 +307,7 @@ class CreateDirectusCollectionsAndFields extends Migration
             $this->createField('26454925-3be8-461f-8844-0f753a243beb')
                 ->on('fields')
                 ->name('hidden_browse')
-                ->boolean()
+                ->booleanType()
                 ->switchInterface()
         );
 
@@ -309,15 +315,15 @@ class CreateDirectusCollectionsAndFields extends Migration
             $this->createField('542927eb-92dc-47f9-ae3c-7b2b368da794')
                 ->on('fields')
                 ->name('width')
-                ->integer()
+                ->integerType()
                 ->numericInterface()
         );
 
         $this->registerField(
             $this->createField('b63f2d9a-3342-4be4-84df-e134b5736171')
                 ->on('fields')
-                ->name('group')
-                ->m2o()
+                ->name('group_id')
+                ->m2oType()
                 ->manyToOneInterface()
         );
     }

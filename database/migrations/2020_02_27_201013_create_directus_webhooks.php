@@ -43,8 +43,9 @@ class CreateDirectusWebhooks extends Migration
             $this->createField('8b5f0a59-6fcf-45fc-9a71-203bc6ddda7d')
                 ->on('webhooks')
                 ->name('id')
-                ->uuid()
+                ->uuidType()
                 ->hidden_detail()
+                ->required()
                 ->textInputInterface([
                     'monospace' => true,
                 ])
@@ -54,7 +55,7 @@ class CreateDirectusWebhooks extends Migration
             $this->createField('bca9d609-ac5a-482a-9bdd-d84282a102f5')
                 ->on('webhooks')
                 ->name('status')
-                ->status()
+                ->statusType()
                 ->statusInterface([
                     'status_mapping' => [
                         'active' => [
@@ -85,7 +86,7 @@ class CreateDirectusWebhooks extends Migration
             $this->createField('a43bed03-0ce8-44c1-b66b-ed91f1854050')
                 ->on('webhooks')
                 ->name('http_action')
-                ->string()
+                ->stringType()
                 ->required()
                 ->dropdownInterface([
                     'choices' => [
@@ -100,7 +101,7 @@ class CreateDirectusWebhooks extends Migration
             $this->createField('ac071d90-0ce0-47a4-b82e-b0f438d0ed60')
                 ->on('webhooks')
                 ->name('url')
-                ->string()
+                ->stringType()
                 ->textInputInterface([
                     'placeholder' => 'https://example.com',
                     'iconRight' => 'link',
@@ -112,7 +113,7 @@ class CreateDirectusWebhooks extends Migration
             $this->createField('e4fc8565-3ffa-457e-8d5d-e618b9d546c2')
                 ->on('webhooks')
                 ->name('collection_id')
-                ->string()
+                ->stringType()
                 ->required()
                 ->collectionsInterface()
         );
@@ -121,7 +122,7 @@ class CreateDirectusWebhooks extends Migration
             $this->createField('26e870bf-2748-4f0b-8484-59499922eeb0')
                 ->on('webhooks')
                 ->name('directus_action')
-                ->string()
+                ->stringType()
                 ->required()
                 ->dropdownInterface([
                     'choices' => [
@@ -136,7 +137,7 @@ class CreateDirectusWebhooks extends Migration
             $this->createField('c8d08500-0ea6-4a20-8ee7-774aa4c2ce08')
                 ->on('webhooks')
                 ->name('info')
-                ->alias()
+                ->aliasType()
                 ->dividerInterface([
                     'style' => 'medium',
                     'title' => 'How Webhooks Work',

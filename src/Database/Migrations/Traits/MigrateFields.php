@@ -81,7 +81,7 @@ trait MigrateFields
             'hidden_detail' => false,
             'hidden_browse' => false,
             'width' => 'full',
-            'group' => null,
+            'group_id' => null,
             'note' => null,
             'translation' => null,
         ];

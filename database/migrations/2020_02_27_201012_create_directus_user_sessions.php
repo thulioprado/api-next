@@ -45,8 +45,9 @@ class CreateDirectusUserSessions extends Migration
             $this->createField('1644a555-6b80-42b3-8cf5-2c74ac83c353')
                 ->on('user_sessions')
                 ->name('id')
-                ->uuid()
+                ->uuidType()
                 ->hidden_detail()
+                ->required()
                 ->textInputInterface([
                     'monospace' => true,
                 ])
@@ -56,7 +57,7 @@ class CreateDirectusUserSessions extends Migration
             $this->createField('d732b460-4c14-482b-89a7-4d8eddea2fe9')
                 ->on('user_sessions')
                 ->name('user')
-                ->user()
+                ->userType()
                 ->unlocked()
                 ->required()
                 ->userInterface()
@@ -66,7 +67,7 @@ class CreateDirectusUserSessions extends Migration
             $this->createField('66e27952-5a21-4c5c-ae50-1c4e351fd8db')
                 ->on('user_sessions')
                 ->name('token_type')
-                ->string()
+                ->stringType()
                 ->unlocked()
                 ->textInputInterface()
         );
@@ -75,7 +76,7 @@ class CreateDirectusUserSessions extends Migration
             $this->createField('059ee58c-34cc-4237-bb41-3837d2c2c6c5')
                 ->on('user_sessions')
                 ->name('token')
-                ->string()
+                ->stringType()
                 ->unlocked()
                 ->textInputInterface()
         );
@@ -84,7 +85,7 @@ class CreateDirectusUserSessions extends Migration
             $this->createField('f404fe26-e41c-4abb-a80f-15e0955399ef')
                 ->on('user_sessions')
                 ->name('ip_address')
-                ->string()
+                ->stringType()
                 ->unlocked()
                 ->textInputInterface()
         );
@@ -93,7 +94,7 @@ class CreateDirectusUserSessions extends Migration
             $this->createField('0c5d9507-d49d-4ffe-834a-bcaacbee24d4')
                 ->on('user_sessions')
                 ->name('user_agent')
-                ->string()
+                ->stringType()
                 ->unlocked()
                 ->textInputInterface()
         );
@@ -102,7 +103,7 @@ class CreateDirectusUserSessions extends Migration
             $this->createField('9a263038-c0ce-4a78-af6c-072dd79be29a')
                 ->on('user_sessions')
                 ->name('created_on')
-                ->datetime()
+                ->datetimeType()
                 ->unlocked()
                 ->datetimeInterface()
         );
@@ -111,7 +112,7 @@ class CreateDirectusUserSessions extends Migration
             $this->createField('1b880d8d-3aed-4467-aa1d-5e6b01f33e9b')
                 ->on('user_sessions')
                 ->name('token_expired_at')
-                ->datetime()
+                ->datetimeType()
                 ->unlocked()
                 ->datetimeInterface()
         );

@@ -18,7 +18,7 @@ final class SettingsControllerTest extends TestCase
     {
         $data = $this->getJson('/directus/settings')->data();
         static::assertIsArray($data);
-        static::assertCount(21, $data);
+        static::assertCount(22, $data);
     }
 
     public function testFindOne(): void

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Directus\Database\System\Models;
 
-use Directus\Database\System\Models\Traits\SystemModel;
+use Directus\Database\Traits\FromSystemDatabase;
 use Directus\Events\SettingChanged;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Query\Builder;
@@ -20,7 +20,12 @@ use Illuminate\Database\Query\Builder;
  */
 class Setting extends Model
 {
-    use SystemModel;
+    use FromSystemDatabase;
+
+    /**
+     * @var bool
+     */
+    public $incrementing = false;
 
     /**
      * @var string
@@ -40,14 +45,14 @@ class Setting extends Model
     ];
 
     /**
-     * Events.
+     * Boot the model.
      */
     protected static function boot(): void
     {
         parent::boot();
 
-        static::saved(function ($setting): void {
-            event(new SettingChanged($setting));
+        static::saved(static function (Setting $instance): void {
+            event(new SettingChanged($instance));
         });
     }
 }

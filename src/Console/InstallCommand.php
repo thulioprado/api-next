@@ -15,7 +15,9 @@ class InstallCommand extends Command
      * @var string
      */
     protected $signature = 'directus:install
-                            {--composer : Perform the composer project creation flow.}';
+                            {--composer : Perform the composer project creation flow.}
+                            {--force : Forces the installation even if its already installed.}
+                            ';
 
     /**
      * The console command description.

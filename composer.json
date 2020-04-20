@@ -24,11 +24,13 @@
     "illuminate/http": "^7",
     "illuminate/routing": "^7",
     "illuminate/support": "^7",
+    "nesbot/carbon": "^2",
     "webmozart/path-util": "^2.3",
     "wolfulus/extras": "^0.0"
   },
   "require-dev": {
     "cedx/coveralls": "^11.2",
+    "dms/phpunit-arraysubset-asserts": "^0.2.0",
     "friendsofphp/php-cs-fixer": "^2.16",
     "nunomaduro/larastan": "^0.5",
     "nunomaduro/phpinsights": "^1.14",
@@ -60,7 +62,7 @@
     "insights": "phpinsights -v",
     "metrics": "phpmetrics --report-html=./dist/metrics ./src",
     "lint:php-cs-fixer": "php-cs-fixer --ansi fix --diff --dry-run",
-    "lint:phpstan": "phpstan --ansi --memory-limit=2G analyse",
+    "lint:phpstan": "phpstan --ansi --memory-limit=4G analyse",
     "lint": [
       "@lint:php-cs-fixer",
       "@lint:phpstan"

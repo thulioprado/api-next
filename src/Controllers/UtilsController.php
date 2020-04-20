@@ -23,10 +23,8 @@ class UtilsController extends BaseController
             'length' => 'integer|min:1|max:128',
         ]);
 
-        return response()->json([
-            'data' => [
-                'random' => Str::random($request->input('length', 32)),
-            ],
+        return directus()->respond()->with([
+            'random' => Str::random($request->input('length', 32)),
         ]);
     }
 
@@ -39,10 +37,8 @@ class UtilsController extends BaseController
             'string' => 'required|string',
         ]);
 
-        return response()->json([
-            'data' => [
-                'hash' => Hash::make($request->input('string')),
-            ],
+        return directus()->respond()->with([
+            'hash' => Hash::make($request->input('string')),
         ]);
     }
 
@@ -56,13 +52,11 @@ class UtilsController extends BaseController
             'hash' => 'required|string',
         ]);
 
-        return response()->json([
-            'data' => [
-                'valid' => Hash::check(
-                    $request->input('string'),
-                    $request->input('hash'),
-                ),
-            ],
+        return directus()->respond()->with([
+            'valid' => Hash::check(
+                $request->input('string'),
+                $request->input('hash'),
+            ),
         ]);
     }
 }

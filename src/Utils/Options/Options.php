@@ -24,14 +24,14 @@ class Options
     /**
      * Collection items.
      *
-     * @var array<mixed>
+     * @var array
      */
     private $values = [];
 
     /**
      * List of schema rules.
      *
-     * @var array<mixed>
+     * @var array
      */
     private $schema = [];
 
@@ -45,7 +45,7 @@ class Options
     /**
      * Collection constructor.
      *
-     * @throws EmptySchema
+     * @throws EmptySchema|MissingOptions
      */
     public function __construct(array $schema, ?array $values = null)
     {

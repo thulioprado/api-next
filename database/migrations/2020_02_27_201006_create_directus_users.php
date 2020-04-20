@@ -59,7 +59,7 @@ class CreateDirectusUsers extends Migration
         $this->registerField(
             $this->createField('1723a7af-72dc-43fd-918a-c882b9364075')
                 ->on('users')
-                ->uuid()
+                ->uuidType()
                 ->name('id')
                 ->required()
                 ->hidden_detail()
@@ -71,7 +71,7 @@ class CreateDirectusUsers extends Migration
         $this->registerField(
             $this->createField('c508dafe-dec3-4185-bf5a-3713db9450a8')
                 ->on('users')
-                ->m2o()
+                ->m2oType()
                 ->name('role_id')
                 ->required()
                 ->width('half')
@@ -81,7 +81,7 @@ class CreateDirectusUsers extends Migration
         $this->registerField(
             $this->createField('750a25e3-f3fd-42b0-aeab-2bfc5c472b27')
                 ->on('users')
-                ->status()
+                ->statusType()
                 ->name('status')
                 ->required()
                 ->statusInterface([
@@ -133,7 +133,7 @@ class CreateDirectusUsers extends Migration
         $this->registerField(
             $this->createField('ae6ab8e0-d3a2-465a-9f49-611c9999e03f')
                 ->on('users')
-                ->string()
+                ->stringType()
                 ->name('first_name')
                 ->required()
                 ->width('half')
@@ -145,7 +145,7 @@ class CreateDirectusUsers extends Migration
         $this->registerField(
             $this->createField('4b753eea-797e-4df0-b9f7-0542b0deab14')
                 ->on('users')
-                ->string()
+                ->stringType()
                 ->name('last_name')
                 ->required()
                 ->width('half')
@@ -157,7 +157,7 @@ class CreateDirectusUsers extends Migration
         $this->registerField(
             $this->createField('437c7847-346c-48ae-90a5-0da7f4bcec78')
                 ->on('users')
-                ->string()
+                ->stringType()
                 ->name('email')
                 ->required()
                 ->width('half')
@@ -170,7 +170,7 @@ class CreateDirectusUsers extends Migration
         $this->registerField(
             $this->createField('b028454d-4c94-4748-b9b6-faee9ce6500e')
                 ->on('users')
-                ->hash()
+                ->hashType()
                 ->name('password')
                 ->required()
                 ->width('half')
@@ -180,7 +180,7 @@ class CreateDirectusUsers extends Migration
         $this->registerField(
             $this->createField('34dfcbc8-e622-4941-9528-80c8057b319e')
                 ->on('users')
-                ->string()
+                ->stringType()
                 ->name('token')
                 ->hidden_detail()
                 ->hidden_browse()
@@ -190,7 +190,7 @@ class CreateDirectusUsers extends Migration
         $this->registerField(
             $this->createField('f834c2c1-92ff-43d4-8913-24b53ef2f408')
                 ->on('users')
-                ->string()
+                ->stringType()
                 ->name('timezone')
                 ->required()
                 ->width('half')
@@ -349,7 +349,7 @@ class CreateDirectusUsers extends Migration
         $this->registerField(
             $this->createField('dc85c5b6-7995-4d8c-b904-df8133deec35')
                 ->on('users')
-                ->string()
+                ->stringType()
                 ->name('language')
                 ->required()
                 ->width('half')
@@ -361,7 +361,7 @@ class CreateDirectusUsers extends Migration
         $this->registerField(
             $this->createField('0ace83b0-eb7e-496b-9ba2-9e093721a971')
                 ->on('users')
-                ->json()
+                ->jsonType()
                 ->name('locale_options')
                 ->hidden_browse()
                 ->hidden_detail()
@@ -371,7 +371,7 @@ class CreateDirectusUsers extends Migration
         $this->registerField(
             $this->createField('b9f62f91-99b8-40f0-a657-d7c23e34bba5')
                 ->on('users')
-                ->file()
+                ->fileType()
                 ->name('avatar_id')
                 ->fileInterface()
         );
@@ -379,7 +379,7 @@ class CreateDirectusUsers extends Migration
         $this->registerField(
             $this->createField('276efc8f-01ab-4cb9-8302-c1db95976145')
                 ->on('users')
-                ->string()
+                ->stringType()
                 ->name('company')
                 ->width('half')
                 ->textInputInterface([
@@ -390,7 +390,7 @@ class CreateDirectusUsers extends Migration
         $this->registerField(
             $this->createField('c30992d2-97d0-4749-baf8-7dc69d981983')
                 ->on('users')
-                ->string()
+                ->stringType()
                 ->name('title')
                 ->width('half')
                 ->textInputInterface([
@@ -401,7 +401,7 @@ class CreateDirectusUsers extends Migration
         $this->registerField(
             $this->createField('6040af16-3976-49c6-a280-8a1e2443a307')
                 ->on('users')
-                ->boolean()
+                ->booleanType()
                 ->name('email_notifications')
                 ->width('half')
                 ->switchInterface()
@@ -410,7 +410,7 @@ class CreateDirectusUsers extends Migration
         $this->registerField(
             $this->createField('f6c81a4d-5b45-4bb9-ba7c-39dc5c4afa9b')
                 ->on('users')
-                ->datetime()
+                ->datetimeType()
                 ->name('last_access_on')
                 ->readonly()
                 ->hidden_detail()
@@ -420,7 +420,7 @@ class CreateDirectusUsers extends Migration
         $this->registerField(
             $this->createField('e3786b21-d235-4268-9567-fd597d61a385')
                 ->on('users')
-                ->string()
+                ->stringType()
                 ->name('last_page')
                 ->readonly()
                 ->hidden_detail()
@@ -430,7 +430,7 @@ class CreateDirectusUsers extends Migration
         $this->registerField(
             $this->createField('145270cf-068f-4305-a339-257642752d8e')
                 ->on('users')
-                ->string()
+                ->stringType()
                 ->name('external_id')
                 ->readonly()
                 ->hidden_detail()
@@ -441,7 +441,7 @@ class CreateDirectusUsers extends Migration
         $this->registerField(
             $this->createField('bc9703de-de88-46e1-b661-824b0770fe18')
                 ->on('users')
-                ->string()
+                ->stringType()
                 ->name('theme')
                 ->radioButtonsInterface([
                     'format' => true,
@@ -456,7 +456,7 @@ class CreateDirectusUsers extends Migration
         $this->registerField(
             $this->createField('bc80eea0-1eef-48aa-809d-5436f67567e4')
                 ->on('users')
-                ->string()
+                ->stringType()
                 ->name('2fa_secret')
                 ->readonly()
                 ->twoFactorSecretInterface()
@@ -465,7 +465,7 @@ class CreateDirectusUsers extends Migration
         $this->registerField(
             $this->createField('cee1f872-9542-4b8d-a01a-e4f83e65a8a0')
                 ->on('users')
-                ->string()
+                ->stringType()
                 ->name('password_reset_token')
                 ->readonly()
                 ->hidden_detail()

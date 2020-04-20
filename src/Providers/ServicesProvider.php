@@ -6,9 +6,11 @@ namespace Directus\Providers;
 
 use Directus\Directus;
 use Directus\Responses\DirectusResponse;
+use Directus\Services\Activities\ActivitiesService;
 use Directus\Services\Collections\CollectionsService;
 use Directus\Services\Databases\DatabasesService;
 use Directus\Services\Fields\FieldsService;
+use Directus\Services\Presets\PresetsService;
 use Directus\Services\Settings\SettingsService;
 use Illuminate\Support\ServiceProvider;
 
@@ -45,6 +47,16 @@ class ServicesProvider extends ServiceProvider
         $this->app->bindIf(SettingsService::class, SettingsService::class);
         Directus::macro('settings', function (): SettingsService {
             return resolve(SettingsService::class);
+        });
+
+        $this->app->bindIf(ActivitiesService::class, ActivitiesService::class);
+        Directus::macro('activities', function (): ActivitiesService {
+            return resolve(ActivitiesService::class);
+        });
+
+        $this->app->bindIf(PresetsService::class, PresetsService::class);
+        Directus::macro('presets', function (): PresetsService {
+            return resolve(PresetsService::class);
         });
     }
 }
