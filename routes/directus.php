@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 use Directus\Controllers\ActivityController;
 use Directus\Controllers\CollectionController;
+use Directus\Controllers\FolderController;
 use Directus\Controllers\PresetController;
 use Directus\Controllers\ProjectController;
 use Directus\Controllers\RoleController;
@@ -102,6 +103,19 @@ Route::group([
             Route::post('', [RoleController::class, 'create'])->name('create');
             Route::patch('{key}', [RoleController::class, 'update'])->name('update');
             Route::delete('{key}', [RoleController::class, 'delete'])->name('delete');
+        });
+
+        // Folders
+        // https://docs.directus.io/api/folders.html
+        Route::group([
+            'prefix' => 'folders',
+            'as' => 'presets.',
+        ], static function (): void {
+            Route::get('', [FolderController::class, 'all'])->name('all');
+            Route::get('{key}', [FolderController::class, 'fetch'])->name('fetch');
+            Route::post('', [FolderController::class, 'create'])->name('create');
+            Route::patch('{key}', [FolderController::class, 'update'])->name('update');
+            Route::delete('{key}', [FolderController::class, 'delete'])->name('delete');
         });
 
         // Setting

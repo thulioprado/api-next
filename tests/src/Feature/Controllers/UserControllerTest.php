@@ -10,7 +10,7 @@ use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Support\Facades\Hash;
 
 /**
- * @covers \Directus\Controllers\ActivityController
+ * @covers \Directus\Controllers\UserController
  *
  * @internal
  */

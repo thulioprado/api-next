@@ -9,7 +9,7 @@ use DMS\PHPUnitExtensions\ArraySubset\ArraySubsetAsserts;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 
 /**
- * @covers \Directus\Controllers\ActivityController
+ * @covers \Directus\Controllers\PresetController
  *
  * @internal
  */
