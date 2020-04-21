@@ -26,6 +26,7 @@ class Errors
     public const ACTIVITY_NOT_FOUND = 'activity_not_found';
     public const PRESET_NOT_FOUND = 'preset_not_found';
     public const USER_NOT_FOUND = 'user_not_found';
+    public const ROLE_NOT_FOUND = 'role_not_found';
 
     /**
      * @var array
@@ -77,6 +78,13 @@ class Errors
         // User
 
         self::USER_NOT_FOUND => [
+            'status' => Response::HTTP_NOT_FOUND,
+            'context' => ['id'],
+        ],
+
+        // Role
+
+        self::ROLE_NOT_FOUND => [
             'status' => Response::HTTP_NOT_FOUND,
             'context' => ['id'],
         ],

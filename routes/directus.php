@@ -6,6 +6,7 @@ use Directus\Controllers\ActivityController;
 use Directus\Controllers\CollectionController;
 use Directus\Controllers\PresetController;
 use Directus\Controllers\ProjectController;
+use Directus\Controllers\RoleController;
 use Directus\Controllers\ServerController;
 use Directus\Controllers\SettingsController;
 use Directus\Controllers\UserController;
@@ -88,6 +89,19 @@ Route::group([
             Route::post('', [UserController::class, 'create'])->name('create');
             Route::patch('{key}', [UserController::class, 'update'])->name('update');
             Route::delete('{key}', [UserController::class, 'delete'])->name('delete');
+        });
+
+        // Roles
+        // https://docs.directus.io/api/roles.html
+        Route::group([
+            'prefix' => 'roles',
+            'as' => 'presets.',
+        ], static function (): void {
+            Route::get('', [RoleController::class, 'all'])->name('all');
+            Route::get('{key}', [RoleController::class, 'fetch'])->name('fetch');
+            Route::post('', [RoleController::class, 'create'])->name('create');
+            Route::patch('{key}', [RoleController::class, 'update'])->name('update');
+            Route::delete('{key}', [RoleController::class, 'delete'])->name('delete');
         });
 
         // Setting
