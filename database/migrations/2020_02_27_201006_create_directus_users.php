@@ -11,8 +11,7 @@ use Illuminate\Database\Schema\Blueprint;
 class CreateDirectusUsers extends Migration
 {
     use MigrateFields;
-    use
-        MigrateCollections;
+    use MigrateCollections;
 
     /**
      * Run the migrations.
@@ -43,7 +42,7 @@ class CreateDirectusUsers extends Migration
                 $collection->string('last_page', 200)->nullable();
                 $collection->string('external_id')->unique()->nullable();
                 $collection->string('theme', 100)->default('auto');
-                $collection->string('2fa_secret', 100)->nullable();
+                $collection->string('twofactor_secret', 100)->nullable();
                 $collection->string('password_reset_token', 520)->nullable();
                 $collection->foreign('role_id')->references('id')->on(
                     $system->collection('roles')->name()
@@ -457,7 +456,7 @@ class CreateDirectusUsers extends Migration
             $this->createField('bc80eea0-1eef-48aa-809d-5436f67567e4')
                 ->on('users')
                 ->stringType()
-                ->name('2fa_secret')
+                ->name('twofactor_secret')
                 ->readonly()
                 ->twoFactorSecretInterface()
         );

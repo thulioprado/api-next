@@ -8,6 +8,7 @@ use Directus\Controllers\PresetController;
 use Directus\Controllers\ProjectController;
 use Directus\Controllers\ServerController;
 use Directus\Controllers\SettingsController;
+use Directus\Controllers\UserController;
 use Directus\Controllers\UtilsController;
 use Directus\Middlewares\CollectionMiddleware;
 use Directus\Middlewares\DirectusMiddleware;
@@ -74,6 +75,19 @@ Route::group([
             Route::post('', [PresetController::class, 'create'])->name('create');
             Route::patch('{key}', [PresetController::class, 'update'])->name('update');
             Route::delete('{key}', [PresetController::class, 'delete'])->name('delete');
+        });
+
+        // Users
+        // https://docs.directus.io/api/users.html
+        Route::group([
+            'prefix' => 'users',
+            'as' => 'presets.',
+        ], static function (): void {
+            Route::get('', [UserController::class, 'all'])->name('all');
+            Route::get('{key}', [UserController::class, 'fetch'])->name('fetch');
+            Route::post('', [UserController::class, 'create'])->name('create');
+            Route::patch('{key}', [UserController::class, 'update'])->name('update');
+            Route::delete('{key}', [UserController::class, 'delete'])->name('delete');
         });
 
         // Setting

@@ -12,6 +12,7 @@ use Directus\Services\Databases\DatabasesService;
 use Directus\Services\Fields\FieldsService;
 use Directus\Services\Presets\PresetsService;
 use Directus\Services\Settings\SettingsService;
+use Directus\Services\Users\UsersService;
 use Illuminate\Support\ServiceProvider;
 
 /**
@@ -57,6 +58,11 @@ class ServicesProvider extends ServiceProvider
         $this->app->bindIf(PresetsService::class, PresetsService::class);
         Directus::macro('presets', function (): PresetsService {
             return resolve(PresetsService::class);
+        });
+
+        $this->app->bindIf(UsersService::class, UsersService::class);
+        Directus::macro('users', function (): UsersService {
+            return resolve(UsersService::class);
         });
     }
 }
