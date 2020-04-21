@@ -74,10 +74,32 @@ class User extends Model
     ];
 
     /**
+     * @var array<string>
+     */
+    protected $hidden = [
+        'twofactor_secret',
+    ];
+
+    /**
+     * @var array<string>
+     */
+    protected $appends = [
+        '2fa_secret',
+    ];
+
+    /**
      * Set the user password.
      */
     public function setPasswordAttribute(string $value): void
     {
         $this->attributes['password'] = bcrypt($value);
+    }
+
+    /**
+     * Get the 2fa_secret.
+     */
+    public function get2faSecretAttribute(): ?string
+    {
+        return $this->twofactor_secret;
     }
 }
