@@ -16,7 +16,7 @@ class TestingProvider extends ServiceProvider
 {
     public function register(): void
     {
-        Initializer::configureApplication(app('config'));
+        Initializer::setupApplication(app('config'));
 
         TestResponse::macro('data', function () {
             /** @var TestResponse $response */

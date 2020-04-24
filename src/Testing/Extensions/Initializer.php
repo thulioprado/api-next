@@ -21,7 +21,7 @@ class Initializer implements BeforeFirstTestHook, AfterLastTestHook
 
     public static function database(): string
     {
-        return env('TEST_DATABASE', 'sqlite');
+        return env('TEST_DATABASE', 'memory');
     }
 
     public function executeBeforeFirstTest(): void
@@ -45,7 +45,7 @@ class Initializer implements BeforeFirstTestHook, AfterLastTestHook
         }
     }
 
-    public static function configureApplication(Repository $config): void
+    public static function setupApplication(Repository $config): void
     {
         $config->set('app.env', env('APP_ENV', 'testing'));
         $config->set('cache.default', env('CACHE_DRIVER', 'array'));
@@ -108,7 +108,9 @@ class Initializer implements BeforeFirstTestHook, AfterLastTestHook
         ];
 
         $database = static::database();
-        $config->set('database.connections.testing', $databases[$database]);
+        if (isset($databases[$database])) {
+            $config->set('database.connections.testing', $databases[$database]);
+        }
     }
 
     /**
@@ -124,7 +126,7 @@ class Initializer implements BeforeFirstTestHook, AfterLastTestHook
              */
             protected function getEnvironmentSetUp($app): void
             {
-                Initializer::configureApplication(app('config'));
+                Initializer::setupApplication(app('config'));
             }
 
             /**

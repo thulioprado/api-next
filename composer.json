@@ -77,17 +77,17 @@
       "@lint",
       "@test"
     ],
-    "test": "phpunit --colors=always",
+    "test": "cross-env TEST_DATABASE=sqlite phpunit --colors=always",
     "test:all": [
       "@test:sqlite",
       "@test:mysql",
       "@test:postgres",
       "@test:sqlsrv"
     ],
-    "test:sqlite": "cross-env TEST_DATABASE=sqlite composer test",
-    "test:mysql": "cross-env TEST_DATABASE=mysql composer test",
-    "test:postgres": "cross-env TEST_DATABASE=postgres composer test",
-    "test:sqlsrv": "cross-env TEST_DATABASE=sqlsrv composer test",
+    "test:sqlite": "cross-env TEST_DATABASE=sqlite phpunit --colors=always",
+    "test:mysql": "cross-env TEST_DATABASE=mysql phpunit --colors=always",
+    "test:postgres": "cross-env TEST_DATABASE=postgres phpunit --colors=always",
+    "test:sqlsrv": "cross-env TEST_DATABASE=sqlsrv phpunit --colors=always",
     "coverage:report": "coveralls dist/coverage.xml"
   },
   "config": {
