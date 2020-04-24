@@ -23,6 +23,9 @@ class FoldersService implements Service
         return $this->findModel($key)->toArray();
     }
 
+    /**
+     * @throws FolderNotFound
+     */
     public function create(array $attributes): array
     {
         $folder = new Folder();

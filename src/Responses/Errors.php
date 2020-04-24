@@ -28,9 +28,9 @@ class Errors
     public const USER_NOT_FOUND = 'user_not_found';
     public const ROLE_NOT_FOUND = 'role_not_found';
     public const FOLDER_NOT_FOUND = 'folder_not_found';
-
     public const TABLE_NOT_FOUND = 'table_not_found';
     public const COLUMN_NOT_FOUND = 'column_not_found';
+    public const PERMISSION_NOT_FOUND = 'permission_not_found';
 
     /**
      * @var array
@@ -93,7 +93,7 @@ class Errors
             'context' => ['id'],
         ],
 
-        // Role
+        // Folder
 
         self::FOLDER_NOT_FOUND => [
             'status' => Response::HTTP_NOT_FOUND,
@@ -110,6 +110,13 @@ class Errors
         self::COLUMN_NOT_FOUND => [
             'status' => Response::HTTP_INTERNAL_SERVER_ERROR,
             'context' => ['name'],
+        ],
+
+        // Permission
+
+        self::PERMISSION_NOT_FOUND => [
+            'status' => Response::HTTP_NOT_FOUND,
+            'context' => ['id'],
         ],
     ];
 

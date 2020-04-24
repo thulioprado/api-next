@@ -11,6 +11,7 @@ use Directus\Services\Collections\CollectionsService;
 use Directus\Services\Databases\DatabasesService;
 use Directus\Services\Fields\FieldsService;
 use Directus\Services\Folders\FoldersService;
+use Directus\Services\Permissions\PermissionsService;
 use Directus\Services\Presets\PresetsService;
 use Directus\Services\Roles\RolesService;
 use Directus\Services\Settings\SettingsService;
@@ -75,6 +76,11 @@ class ServicesProvider extends ServiceProvider
         $this->app->bindIf(FoldersService::class, FoldersService::class);
         Directus::macro('folders', function (): FoldersService {
             return resolve(FoldersService::class);
+        });
+
+        $this->app->bindIf(PermissionsService::class, PermissionsService::class);
+        Directus::macro('permissions', function (): PermissionsService {
+            return resolve(PermissionsService::class);
         });
     }
 }

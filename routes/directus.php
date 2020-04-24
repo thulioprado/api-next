@@ -5,6 +5,7 @@ declare(strict_types=1);
 use Directus\Controllers\ActivityController;
 use Directus\Controllers\CollectionController;
 use Directus\Controllers\FolderController;
+use Directus\Controllers\PermissionController;
 use Directus\Controllers\PresetController;
 use Directus\Controllers\ProjectController;
 use Directus\Controllers\RoleController;
@@ -120,6 +121,19 @@ Route::group([
             Route::post('', [FolderController::class, 'create'])->name('create');
             Route::patch('{key}', [FolderController::class, 'update'])->name('update');
             Route::delete('{key}', [FolderController::class, 'delete'])->name('delete');
+        });
+
+        // Permissions
+        // https://docs.directus.io/api/permissions.html
+        Route::group([
+            'prefix' => 'permissions',
+            'as' => 'presets.',
+        ], static function (): void {
+            Route::get('', [PermissionController::class, 'all'])->name('all');
+            Route::get('{key}', [PermissionController::class, 'fetch'])->name('fetch');
+            Route::post('', [PermissionController::class, 'create'])->name('create');
+            Route::patch('{key}', [PermissionController::class, 'update'])->name('update');
+            Route::delete('{key}', [PermissionController::class, 'delete'])->name('delete');
         });
 
         // Setting

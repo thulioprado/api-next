@@ -64,7 +64,7 @@ class Folder extends Model
     }
 
     /**
-     * Get the parent folder.
+     * Get the parent folder attribute.
      */
     public function getParentFolderAttribute(): ?string
     {
