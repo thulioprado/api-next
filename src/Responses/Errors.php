@@ -31,6 +31,7 @@ class Errors
     public const TABLE_NOT_FOUND = 'table_not_found';
     public const COLUMN_NOT_FOUND = 'column_not_found';
     public const PERMISSION_NOT_FOUND = 'permission_not_found';
+    public const REVISION_NOT_FOUND = 'revision_not_found';
 
     /**
      * @var array
@@ -115,6 +116,13 @@ class Errors
         // Permission
 
         self::PERMISSION_NOT_FOUND => [
+            'status' => Response::HTTP_NOT_FOUND,
+            'context' => ['id'],
+        ],
+
+        // Revision
+
+        self::REVISION_NOT_FOUND => [
             'status' => Response::HTTP_NOT_FOUND,
             'context' => ['id'],
         ],

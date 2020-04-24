@@ -8,6 +8,7 @@ use Directus\Controllers\FolderController;
 use Directus\Controllers\PermissionController;
 use Directus\Controllers\PresetController;
 use Directus\Controllers\ProjectController;
+use Directus\Controllers\RevisionController;
 use Directus\Controllers\RoleController;
 use Directus\Controllers\ServerController;
 use Directus\Controllers\SettingsController;
@@ -134,6 +135,16 @@ Route::group([
             Route::post('', [PermissionController::class, 'create'])->name('create');
             Route::patch('{key}', [PermissionController::class, 'update'])->name('update');
             Route::delete('{key}', [PermissionController::class, 'delete'])->name('delete');
+        });
+
+        // Revisions
+        // https://docs.directus.io/api/revisions.html
+        Route::group([
+            'prefix' => 'revisions',
+            'as' => 'presets.',
+        ], static function (): void {
+            Route::get('', [RevisionController::class, 'all'])->name('all');
+            Route::get('{key}', [RevisionController::class, 'fetch'])->name('fetch');
         });
 
         // Setting

@@ -11,8 +11,7 @@ use Illuminate\Database\Schema\Blueprint;
 class CreateDirectusRevisions extends Migration
 {
     use MigrateFields;
-    use
-        MigrateCollections;
+    use MigrateCollections;
 
     /**
      * Run the migrations.
