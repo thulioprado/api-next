@@ -12,36 +12,35 @@ on:
       - created
 
 jobs:
-  services:
-    redis:
-      image: redis
-      ports:
-        - 6379:6379
-    memcached:
-      image: memcached
-      ports:
-        - 11211:11211
-    mysql:
-      image: mysql:5.7
-      ports:
-        - 3306:3306
-      environment:
-        MYSQL_ROOT_PASSWORD: "directus"
-        MYSQL_DATABASE: "directus"
-        MYSQL_USER: "directus"
-        MYSQL_PASSWORD: "directus"
-    postgres:
-      image: postgres:9.6
-      ports:
-        - 5432:5432
-      environment:
-        POSTGRES_DB: "directus"
-        POSTGRES_USER: "directus"
-        POSTGRES_PASSWORD: "directus"
-
   build:
     name: PHP ${{ matrix.php }} on ${{ matrix.os }} using '${{ matrix.database }}'
     runs-on: ${{ matrix.os }}
+    services:
+      redis:
+        image: redis
+        ports:
+          - 6379:6379
+      memcached:
+        image: memcached
+        ports:
+          - 11211:11211
+      mysql:
+        image: mysql:5.7
+        ports:
+          - 3306:3306
+        environment:
+          MYSQL_ROOT_PASSWORD: "directus"
+          MYSQL_DATABASE: "directus"
+          MYSQL_USER: "directus"
+          MYSQL_PASSWORD: "directus"
+      postgres:
+        image: postgres:9.6
+        ports:
+          - 5432:5432
+        environment:
+          POSTGRES_DB: "directus"
+          POSTGRES_USER: "directus"
+          POSTGRES_PASSWORD: "directus"
 
     strategy:
       fail-fast: false
