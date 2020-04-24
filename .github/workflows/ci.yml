@@ -86,9 +86,9 @@ jobs:
           restore-keys: ${{ runner.os }}-composer-
 
       - name: Install dependencies
-        run:
-          - npm install -g cross-env
-          - composer install --no-interaction --no-progress --no-suggest
+        run: |
+          npm install -g cross-env
+          composer install --no-interaction --no-progress --no-suggest
 
       - name: Lint, static analysis, tests + coverage
         run: composer run ci
