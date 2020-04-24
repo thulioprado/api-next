@@ -90,6 +90,10 @@ Route::group([
             Route::post('', [UserController::class, 'create'])->name('create');
             Route::patch('{key}', [UserController::class, 'update'])->name('update');
             Route::delete('{key}', [UserController::class, 'delete'])->name('delete');
+            Route::post('invite', [UserController::class, 'invite'])->name('invite');
+            Route::post('{token}', [UserController::class, 'acceptInvite'])->name('invite.accept');
+            Route::patch('{key}/tracking/page', [UserController::class, 'updateLastPage'])->name('update.lastPage');
+            Route::get('{key}/revisions/{offset?}', [UserController::class, 'revision'])->name('revision');
         });
 
         // Roles

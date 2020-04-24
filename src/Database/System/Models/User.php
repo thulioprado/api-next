@@ -8,6 +8,7 @@ use DateTime;
 use Directus\Database\Traits\FromSystemDatabase;
 use Directus\Database\Traits\UsesUuidPrimaryKey;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Query\Builder;
 
 /**
@@ -77,29 +78,24 @@ class User extends Model
      * @var array<string>
      */
     protected $hidden = [
-        'twofactor_secret',
+        'role_id',
     ];
 
     /**
-     * @var array<string>
+     * Get the role.
      */
-    protected $appends = [
-        '2fa_secret',
-    ];
-
-    /**
-     * Set the user password.
-     */
-    public function setPasswordAttribute(string $value): void
+    public function role(): BelongsTo
     {
-        $this->attributes['password'] = bcrypt($value);
+        return $this->belongsTo(Role::class, 'role_id');
     }
 
     /**
-     * Get the 2fa_secret.
+     * Set the user password attribute.
      */
-    public function get2faSecretAttribute(): ?string
+    public function setPasswordAttribute(?string $value): void
     {
-        return $this->twofactor_secret;
+        if ($value !== null) {
+            $this->attributes['password'] = bcrypt($value);
+        }
     }
 }

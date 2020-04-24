@@ -25,14 +25,24 @@ final class UserControllerTest extends TestCase
     private $user;
 
     /**
+     * @var array
+     */
+    private $role;
+
+    /**
      * Set up.
      */
     protected function setUp(): void
     {
         parent::setUp();
 
+        $this->role = directus()->roles()->create([
+            'name' => 'Developer',
+        ]);
+
         $this->user = directus()->users()->create([
             'status' => 'active',
+            'role_id' => $this->role['id'],
             'first_name' => 'thulio',
             'last_name' => 'prado',
             'email' => 'thulioprado@gmail.com',
@@ -44,15 +54,16 @@ final class UserControllerTest extends TestCase
     {
         $users = $this->getJson('/directus/users')->assertResponse()->data();
 
-        static::assertCount(1, $users);
-        static::assertArraySubset($this->user, $users[0]);
+        $this->assertCount(1, $users);
+        $this->assertArraySubset($this->user, $users[0]);
     }
 
     public function testFetch(): void
     {
         $user = $this->getJson("/directus/users/{$this->user['id']}")->assertResponse()->data();
-        static::assertArraySubset($this->user, $user);
 
+        $this->assertArraySubset($this->user, $user);
+        $this->assertTrue($this->role['id'] === $user['role']['id']);
         $this->assertTrue(Hash::check('directus', $this->user['password']));
     }
 
@@ -60,6 +71,7 @@ final class UserControllerTest extends TestCase
     {
         $this->postJson('/directus/users', [
             'status' => 'active',
+            'role_id' => $this->role['id'],
             'first_name' => 'directus',
             'last_name' => 'test',
             'email' => 'test@directus.com',
@@ -67,6 +79,7 @@ final class UserControllerTest extends TestCase
         ])->assertResponse();
 
         $this->assertDatabaseHas('directus_users', [
+            'role_id' => $this->role['id'],
             'email' => 'test@directus.com',
         ]);
     }
@@ -74,17 +87,13 @@ final class UserControllerTest extends TestCase
     public function testUpdateUser(): void
     {
         $this->patchJson("/directus/users/{$this->user['id']}", [
-            'status' => 'active',
-            'first_name' => 'thulioprado',
-            'last_name' => 'directus',
+            'status' => 'blocked',
             'email' => 'thulioprado@gmail.com',
-            'password' => 'directus',
         ])->assertResponse();
 
         $this->assertDatabaseHas('directus_users', [
+            'status' => 'blocked',
             'email' => 'thulioprado@gmail.com',
-            'first_name' => 'thulioprado',
-            'last_name' => 'directus',
         ]);
     }
 
@@ -92,6 +101,39 @@ final class UserControllerTest extends TestCase
     {
         $this->deleteJson("/directus/users/{$this->user['id']}")->assertStatus(204);
 
-        static::assertCount(0, $this->getJson('/directus/users')->assertResponse()->data());
+        $this->assertCount(0, $this->getJson('/directus/users')->assertResponse()->data());
     }
+
+    public function testInviteUser(): void
+    {
+        $this->postJson('/directus/users/invite', [
+            'email' => 'wolfulus@gmail.com',
+        ])->assertResponse();
+
+        $this->postJson('/directus/users/invite', [
+            'email' => 'wolfulus@gmail.com',
+        ])->assertStatus(422)->assertJsonValidationErrors(['email']);
+
+        $this->assertDatabaseHas('directus_users', [
+            'email' => 'wolfulus@gmail.com',
+            'status' => 'invited',
+        ]);
+    }
+
+    // TODO: testAcceptInviteUser
+
+    public function testTrackingPage(): void
+    {
+        $this->patchJson("/directus/users/{$this->user['id']}/tracking/page", [
+            'last_page' => '/thumper/setting/',
+        ])->assertResponse();
+
+        $this->assertDatabaseHas('directus_users', [
+            'id' => $this->user['id'],
+            'last_page' => '/thumper/setting/',
+        ]);
+    }
+
+    // TODO: testListUserRevision
+    // TODO: testUserRevision
 }
