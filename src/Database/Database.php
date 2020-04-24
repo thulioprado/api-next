@@ -10,7 +10,6 @@ use Directus\Contracts\Database\Inspection\Inspector as InspectorContract;
 use Directus\Database\Inspection\Inspector;
 use Illuminate\Database\ConnectionInterface;
 use Illuminate\Database\Schema\Builder;
-use Illuminate\Database\SQLiteConnection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 

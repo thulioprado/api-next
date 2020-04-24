@@ -4,10 +4,8 @@ declare(strict_types=1);
 
 namespace Directus\Database\Inspection;
 
-use Directus\Contracts\Database\Inspection\Table as TableContract;
 use Directus\Contracts\Database\Inspection\Column as ColumnContract;
-use Directus\Contracts\Database\Inspection\Inspector as InspectorContract;
-use \Doctrine\DBAL\Schema\Column as DoctrineColumn;
+use Doctrine\DBAL\Schema\Column as DoctrineColumn;
 
 class Column implements ColumnContract
 {
@@ -29,7 +27,8 @@ class Column implements ColumnContract
     /**
      * Column constructor.
      */
-    public function __construct(DoctrineColumn $column, bool $primary, bool $unique) {
+    public function __construct(DoctrineColumn $column, bool $primary, bool $unique)
+    {
         $this->column = $column;
         $this->primary = $primary;
         $this->unique = $unique;
@@ -45,7 +44,8 @@ class Column implements ColumnContract
         return $this->column->getType()->getName();
     }
 
-    public function scale(): int {
+    public function scale(): int
+    {
         return $this->column->getScale();
     }
 

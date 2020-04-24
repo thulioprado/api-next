@@ -4,13 +4,12 @@ declare(strict_types=1);
 
 namespace Directus\Database\Inspection;
 
+use Directus\Contracts\Database\Inspection\Column as ColumnContract;
+use Directus\Contracts\Database\Inspection\Table as TableContract;
 use Directus\Exceptions\ColumnNotFound;
-use Directus\Exceptions\TableNotFound;
 use Doctrine\DBAL\Schema\Column as DoctrineColumn;
 use Doctrine\DBAL\Schema\Table as DoctrineTable;
 use Illuminate\Support\Collection;
-use Directus\Contracts\Database\Inspection\Table as TableContract;
-use Directus\Contracts\Database\Inspection\Column as ColumnContract;
 
 class Table implements TableContract
 {
@@ -22,7 +21,7 @@ class Table implements TableContract
     /**
      * @var Collection
      */
-    protected $columns = null;
+    protected $columns;
 
     /**
      * @var Collection
@@ -36,7 +35,6 @@ class Table implements TableContract
 
     /**
      * Table constructor.
-     * @param DoctrineTable $table
      */
     public function __construct(DoctrineTable $table)
     {
@@ -67,39 +65,36 @@ class Table implements TableContract
         return $this->table->getName();
     }
 
-    /**
-     * @param array<string> $columns
-     */
     public function primary(string ...$columns): bool
     {
         $columns = collect($columns)->sort()->all();
         $index = $this->primaries->search($columns);
+
         return $index !== false;
     }
 
-    /**
-     * @param array<string> $columns
-     */
     public function unique(string ...$columns): bool
     {
         $columns = collect($columns)->sort()->all();
         $index = $this->uniques->search($columns);
+
         return $index !== false;
     }
 
     /**
-     * @return Collection<Column>
+     * @return Collection<ColumnContract>
      */
     public function columns(): Collection
     {
         return $this->columns = $this->columns ?? collect(array_values($this->table->getColumns()))
-            ->map(function (DoctrineColumn $column) {
+            ->map(function (DoctrineColumn $column): ColumnContract {
                 return new Column(
                     $column,
                     $this->primary($column->getName()),
                     $this->unique($column->getName())
                 );
-            });
+            })
+        ;
     }
 
     /**
@@ -107,7 +102,7 @@ class Table implements TableContract
      */
     public function column(string $name): ColumnContract
     {
-        $column = $this->columns()->filter(static function(Column $column) use ($name): bool {
+        $column = $this->columns()->filter(static function (Column $column) use ($name): bool {
             return $column->name() === $name;
         })->first();
 

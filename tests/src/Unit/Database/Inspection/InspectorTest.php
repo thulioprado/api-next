@@ -4,15 +4,15 @@ declare(strict_types=1);
 
 namespace Directus\Tests\Unit\Database\Inspection;
 
-use Directus\Database\Inspection\Inspector;
+use Directus\Contracts\Database\Inspection\Inspector as InspectorContract;
 use Directus\Testing\TestCase;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 
 /**
+ * @covers \Directus\Database\Inspection\Column
  * @covers \Directus\Database\Inspection\Inspector
  * @covers \Directus\Database\Inspection\Table
- * @covers \Directus\Database\Inspection\Column
  *
  * @internal
  */
@@ -21,7 +21,7 @@ final class InspectorTest extends TestCase
     use DatabaseTransactions;
 
     /**
-     * @var Inspector
+     * @var InspectorContract
      */
     private $inspector;
 
@@ -69,7 +69,7 @@ final class InspectorTest extends TestCase
         });
 
         static::assertEquals([
-            'id', 'title', 'content', 'published', 'edited', 'views'
+            'id', 'title', 'content', 'published', 'edited', 'views',
         ], $names->all());
     }
 

@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace Directus\Database\Inspection;
 
-use Directus\Contracts\Database\Inspection\Table as TableContract;
+use Directus\Contracts\Database\Database as DatabaseContract;
 use Directus\Contracts\Database\Inspection\Column as ColumnContract;
 use Directus\Contracts\Database\Inspection\Inspector as InspectorContract;
-use Directus\Contracts\Database\Database as DatabaseContract;
+use Directus\Contracts\Database\Inspection\Table as TableContract;
 use Directus\Exceptions\TableNotFound;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Schema\AbstractSchemaManager;
@@ -33,7 +33,6 @@ class Inspector implements InspectorContract
 
     /**
      * Inspector constructor.
-     * @param DatabaseContract $database
      */
     public function __construct(DatabaseContract $database)
     {
@@ -58,12 +57,12 @@ class Inspector implements InspectorContract
     {
         $columns = Collection::make();
 
-        $tables = $this->tables()->filter(static function (Table $table) use ($tableName) {
+        $tables = $this->tables()->filter(static function (Table $table) use ($tableName): bool {
             return $tableName === null || $table->name() === $tableName;
         });
 
         foreach ($tables as $table) {
-            /** @var TableContract $table */
+            // @var TableContract $table
             $columns->merge($table->columns());
         }
 
@@ -94,6 +93,7 @@ class Inspector implements InspectorContract
     public function tables(): Collection
     {
         $tables = $this->schema->listTables();
+
         return collect($tables)->map(static function (DoctrineTable $table): Table {
             return new Table($table);
         });

@@ -4,11 +4,8 @@ declare(strict_types=1);
 
 namespace Directus\Contracts\Database\Inspection;
 
-use Directus\Contracts\Database\Inspection\Table as TableContract;
 use Directus\Contracts\Database\Inspection\Column as ColumnContract;
-use Directus\Contracts\Database\Inspection\Inspector as InspectorContract;
 use Illuminate\Support\Collection;
-
 
 interface Table
 {

@@ -6,9 +6,6 @@ namespace Directus\Services\Databases;
 
 use Directus\Contracts\Database\Database;
 use Directus\Contracts\Services\Service;
-use Illuminate\Database\Eloquent\Relations\Relation;
-use Illuminate\Database\Query\Builder;
-use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
 use Throwable;
 
@@ -23,7 +20,7 @@ class DatabasesService implements Service
     protected $logging = false;
 
     /**
-     * @var array<string>
+     * @var array<array<string, mixed>>
      */
     protected $queries = [];
 
@@ -32,7 +29,7 @@ class DatabasesService implements Service
      */
     public function __construct()
     {
-        DB::listen(function($query) {
+        DB::listen(function ($query): void {
             if (!$this->logging) {
                 return;
             }
@@ -40,7 +37,7 @@ class DatabasesService implements Service
             $this->queries[] = [
                 'query' => $query->sql,
                 'time' => "{$query->time} sec",
-                'connection' => $query->connectionName
+                'connection' => $query->connectionName,
             ];
         });
     }
@@ -85,23 +82,21 @@ class DatabasesService implements Service
     /**
      * Traces database queries.
      */
-    public function trace(Callable $callback): array
+    public function trace(callable $callback): array
     {
         $this->queries = [];
-        if (is_callable($callback)) {
-            $this->logging = true;
-            try {
-                $callback();
-            } finally {
-                $this->logging = false;
-            }
+
+        $this->logging = true;
+
+        try {
+            $callback();
+        } finally {
+            $this->logging = false;
         }
+
         return $this->queries;
     }
 
-    /**
-     * @return array
-     */
     public function queries(): array
     {
         return $this->queries;

@@ -11,13 +11,12 @@ use Illuminate\Foundation\Application;
 use Orchestra\Testbench\Concerns\CreatesApplication;
 use PHPUnit\Runner\AfterLastTestHook;
 use PHPUnit\Runner\BeforeFirstTestHook;
-use PHPUnit\Runner\BeforeTestHook;
 
 class Initializer implements BeforeFirstTestHook, AfterLastTestHook
 {
     public static function path(): string
     {
-        return __DIR__ . '/../../../tests/data/database.sqlite';
+        return __DIR__.'/../../../tests/data/database.sqlite';
     }
 
     public static function database(): string
@@ -105,7 +104,7 @@ class Initializer implements BeforeFirstTestHook, AfterLastTestHook
                 'charset' => 'utf8',
                 'prefix' => '',
                 'prefix_indexes' => true,
-            ]
+            ],
         ];
 
         $database = static::database();
