@@ -15,7 +15,7 @@
   "require": {
     "php": ">=7.3",
     "ext-json": "*",
-    "doctrine/dbal": "^2.10",
+    "doctrine/dbal": "^2",
     "illuminate/config": "^7",
     "illuminate/console": "^7",
     "illuminate/container": "^7",
@@ -29,6 +29,7 @@
     "wolfulus/extras": "^0.0"
   },
   "require-dev": {
+    "beyondcode/laravel-query-detector": "^1.2",
     "cedx/coveralls": "^11.2",
     "dms/phpunit-arraysubset-asserts": "^0.2.0",
     "friendsofphp/php-cs-fixer": "^2.16",
@@ -77,6 +78,16 @@
       "@test"
     ],
     "test": "phpunit --colors=always",
+    "test:all": [
+      "@test:sqlite",
+      "@test:mysql",
+      "@test:postgres",
+      "@test:sqlsrv"
+    ],
+    "test:sqlite": "cross-env TEST_DATABASE=sqlite composer test",
+    "test:mysql": "cross-env TEST_DATABASE=mysql composer test",
+    "test:postgres": "cross-env TEST_DATABASE=postgres composer test",
+    "test:sqlsrv": "cross-env TEST_DATABASE=sqlsrv composer test",
     "coverage:report": "coveralls dist/coverage.xml"
   },
   "config": {

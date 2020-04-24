@@ -61,6 +61,12 @@ class CreateDirectusCollectionsAndFields extends Migration
                 $collection->foreign('collection_id')->references('id')->on(
                     $system->collection('collections')->name()
                 );
+            }
+        );
+
+        $system->schema()->table(
+            $system->collection('fields')->name(),
+            function (Blueprint $collection) use ($system): void {
                 $collection->foreign('group_id')->references('id')->on(
                     $system->collection('fields')->name()
                 );

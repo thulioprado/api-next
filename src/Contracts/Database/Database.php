@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Directus\Contracts\Database;
 
+use Directus\Contracts\Database\Inspection\Inspector as InspectorContract;
 use Illuminate\Database\ConnectionInterface;
 use Illuminate\Database\Schema\Builder;
 
@@ -33,6 +34,11 @@ interface Database
      * Gets the schema builder.
      */
     public function schema(): Builder;
+
+    /**
+     * Gets the database inspector.
+     */
+    public function inspector(): InspectorContract;
 
     /**
      * Gets a collection.

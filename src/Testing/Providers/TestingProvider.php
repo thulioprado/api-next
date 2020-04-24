@@ -7,6 +7,8 @@ declare(strict_types=1);
 namespace Directus\Testing\Providers;
 
 use Carbon\Laravel\ServiceProvider;
+use Directus\Database\Database;
+use Directus\Testing\Extensions\Initializer;
 use Illuminate\Testing\TestResponse;
 use PHPUnit\Framework\Assert;
 
@@ -14,6 +16,8 @@ class TestingProvider extends ServiceProvider
 {
     public function register(): void
     {
+        Initializer::configureApplication(app('config'));
+
         TestResponse::macro('data', function () {
             /** @var TestResponse $response */
             $response = $this;

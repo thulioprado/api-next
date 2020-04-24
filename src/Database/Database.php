@@ -6,8 +6,11 @@ namespace Directus\Database;
 
 use Directus\Contracts\Database\Collection as CollectionContract;
 use Directus\Contracts\Database\Database as DatabaseContract;
+use Directus\Contracts\Database\Inspection\Inspector as InspectorContract;
+use Directus\Database\Inspection\Inspector;
 use Illuminate\Database\ConnectionInterface;
 use Illuminate\Database\Schema\Builder;
+use Illuminate\Database\SQLiteConnection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
@@ -65,5 +68,10 @@ class Database implements DatabaseContract
         $class = $class ?? Collection::class;
 
         return new $class($this, $name);
+    }
+
+    public function inspector(): InspectorContract
+    {
+        return new Inspector($this);
     }
 }

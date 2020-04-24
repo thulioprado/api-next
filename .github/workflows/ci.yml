@@ -12,30 +12,68 @@ on:
       - created
 
 jobs:
+  services:
+    redis:
+      image: redis
+      ports:
+        - 6379:6379
+    memcached:
+      image: memcached
+      ports:
+        - 11211:11211
+    mysql:
+      image: mysql:5.7
+      ports:
+        - 3306:3306
+      environment:
+        MYSQL_ROOT_PASSWORD: "directus"
+        MYSQL_DATABASE: "directus"
+        MYSQL_USER: "directus"
+        MYSQL_PASSWORD: "directus"
+    postgres:
+      image: postgres:9.6
+      ports:
+        - 5432:5432
+      environment:
+        POSTGRES_DB: "directus"
+        POSTGRES_USER: "directus"
+        POSTGRES_PASSWORD: "directus"
 
   build:
-    name: PHP ${{ matrix.php }} checks on ${{ matrix.os }}
+    name: PHP ${{ matrix.php }} on ${{ matrix.os }} using '${{ matrix.database }}'
     runs-on: ${{ matrix.os }}
 
     strategy:
+      fail-fast: false
+      max-parallel: 1
       matrix:
         os:
           - "ubuntu-latest"
         php:
           - "7.3"
           - "7.4"
+        database:
+          - "sqlite"
+          # - "mysql"
+          # - "postgres"
+          # - "sqlsrv"
 
     steps:
       - name: Checkout
         uses: actions/checkout@v2
 
-      - name: Install environment
+      - name: Install PHP
         uses: shivammathur/setup-php@v1
         with:
           php-version: ${{ matrix.php }}
           extensions: curl, mbstring
           coverage: pcov
           tools: prestissimo
+
+      - name: Install Node
+        uses: actions/setup-node@v1
+        with:
+          node-version: "11.x"
 
       - name: Cache directory
         id: composer-cache
@@ -49,18 +87,20 @@ jobs:
           restore-keys: ${{ runner.os }}-composer-
 
       - name: Install dependencies
-        run: composer install --no-interaction --no-progress --no-suggest
+        run:
+          - npm install -g cross-env
+          - composer install --no-interaction --no-progress --no-suggest
 
       - name: Lint, static analysis, tests + coverage
         run: composer run ci
 
-      - name: Coveralls
+      - name: Report coverage
         env:
           COVERALLS_REPO_TOKEN: ${{secrets.GITHUB_TOKEN}}
         if: success() && matrix.php == '7.4'
         run: composer run coverage:report
 
-      - name: Sonar
+      - name: Report analysis
         uses: wolfulus/sonar@master
         if: success() && matrix.php == '7.4' && env.SONAR_TOKEN != ''
         env:
