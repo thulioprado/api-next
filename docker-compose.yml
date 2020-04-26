@@ -30,3 +30,23 @@ services:
       POSTGRES_DB: "directus"
       POSTGRES_USER: "directus"
       POSTGRES_PASSWORD: "directus"
+
+  sqlsrv:
+    image: mcr.microsoft.com/mssql/server:2017-latest
+    ports:
+      - 1433:1433
+    environment:
+      ACCEPT_EULA: "Y"
+      SA_PASSWORD: "Direc7us@"
+
+  sqlsrv-init:
+    image: wolfulus/mssql-init
+    environment:
+      MSSQL_HOSTNAME: sqlsrv
+      MSSQL_USERNAME: "sa"
+      MSSQL_PASSWORD: "Direc7us@"
+      MSSQL_DATABASE: "directus"
+    links:
+      - sqlsrv:sqlsrv
+    depends_on:
+      - sqlsrv

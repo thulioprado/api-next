@@ -10,8 +10,7 @@ use Illuminate\Database\Schema\Blueprint;
 
 class CreateDirectusActivities extends Migration
 {
-    use MigrateFields;
-    use
+    use MigrateFields,
         MigrateCollections;
 
     protected $uuid = '';

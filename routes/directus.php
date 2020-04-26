@@ -72,7 +72,7 @@ Route::group([
         // https://docs.directus.io/api/collection-presets.html
         Route::group([
             'prefix' => 'collection_presets',
-            'as' => 'presets.',
+            'as' => 'collection_presets.',
         ], static function (): void {
             Route::get('', [PresetController::class, 'all'])->name('all');
             Route::get('{key}', [PresetController::class, 'fetch'])->name('fetch');
@@ -85,7 +85,7 @@ Route::group([
         // https://docs.directus.io/api/users.html
         Route::group([
             'prefix' => 'users',
-            'as' => 'presets.',
+            'as' => 'users.',
         ], static function (): void {
             Route::get('', [UserController::class, 'all'])->name('all');
             Route::get('{key}', [UserController::class, 'fetch'])->name('fetch');
@@ -102,7 +102,7 @@ Route::group([
         // https://docs.directus.io/api/roles.html
         Route::group([
             'prefix' => 'roles',
-            'as' => 'presets.',
+            'as' => 'roles.',
         ], static function (): void {
             Route::get('', [RoleController::class, 'all'])->name('all');
             Route::get('{key}', [RoleController::class, 'fetch'])->name('fetch');
@@ -115,7 +115,7 @@ Route::group([
         // https://docs.directus.io/api/folders.html
         Route::group([
             'prefix' => 'folders',
-            'as' => 'presets.',
+            'as' => 'folders.',
         ], static function (): void {
             Route::get('', [FolderController::class, 'all'])->name('all');
             Route::get('{key}', [FolderController::class, 'fetch'])->name('fetch');
@@ -128,7 +128,7 @@ Route::group([
         // https://docs.directus.io/api/permissions.html
         Route::group([
             'prefix' => 'permissions',
-            'as' => 'presets.',
+            'as' => 'permissions.',
         ], static function (): void {
             Route::get('', [PermissionController::class, 'all'])->name('all');
             Route::get('{key}', [PermissionController::class, 'fetch'])->name('fetch');
@@ -141,7 +141,7 @@ Route::group([
         // https://docs.directus.io/api/revisions.html
         Route::group([
             'prefix' => 'revisions',
-            'as' => 'presets.',
+            'as' => 'revisions.',
         ], static function (): void {
             Route::get('', [RevisionController::class, 'all'])->name('all');
             Route::get('{key}', [RevisionController::class, 'fetch'])->name('fetch');

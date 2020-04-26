@@ -10,8 +10,8 @@ use Illuminate\Database\Schema\Blueprint;
 
 class CreateDirectusRevisions extends Migration
 {
-    use MigrateFields;
-    use MigrateCollections;
+    use MigrateCollections,
+        MigrateFields;
 
     /**
      * Run the migrations.

@@ -7,9 +7,6 @@ use Illuminate\Database\Migrations\Migration;
 
 class SeedDirectusSettings extends Migration
 {
-    /**
-     * Run the migrations.
-     */
     public function up(): void
     {
         $system = Directus::databases()->system();

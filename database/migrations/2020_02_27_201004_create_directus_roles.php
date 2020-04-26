@@ -10,9 +10,8 @@ use Illuminate\Database\Schema\Blueprint;
 
 class CreateDirectusRoles extends Migration
 {
-    use MigrateFields;
-    use
-        MigrateCollections;
+    use MigrateCollections,
+        MigrateFields;
 
     /**
      * Run the migrations.

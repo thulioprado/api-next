@@ -21,7 +21,19 @@ class Initializer implements BeforeFirstTestHook, AfterLastTestHook
 
     public static function database(): string
     {
-        return env('TEST_DATABASE', 'memory');
+        $database = env('TEST_DATABASE', 'memory');
+        $aliases = [
+            'pg' => 'pgsql',
+            'postgresql' => 'pgsql',
+            'postgres' => 'pgsql',
+            'mysql2' => 'mysql',
+            'sqlite3' => 'sqlite',
+            'mssql' => 'sqlsrv',
+            'mssqlrv' => 'sqlsrv',
+            'sqlserver' => 'sqlsrv'
+        ];
+
+        return $aliases[$database] ?? $database;
     }
 
     public function executeBeforeFirstTest(): void
@@ -79,7 +91,7 @@ class Initializer implements BeforeFirstTestHook, AfterLastTestHook
                     \PDO::MYSQL_ATTR_SSL_CA => env('MYSQL_ATTR_SSL_CA'),
                 ]) : [],
             ],
-            'postgres' => [
+            'pgsql' => [
                 'driver' => 'pgsql',
                 'url' => env('DATABASE_URL'),
                 'host' => env('DB_HOST', '127.0.0.1'),

@@ -10,8 +10,7 @@ use Illuminate\Database\Schema\Blueprint;
 
 class CreateDirectusFolders extends Migration
 {
-    use MigrateCollections;
-    use
+    use MigrateCollections,
         MigrateFields;
 
     /**
