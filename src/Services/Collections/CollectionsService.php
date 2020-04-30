@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Directus\Services\Collections;
 
 use Directus\Contracts\Services\Service;
-use Directus\Database\System\Models\Collection;
+use Directus\Database\Models\Collection;
 use Directus\Exceptions\CollectionNotFound;
 
 class CollectionsService implements Service

@@ -5,8 +5,14 @@ declare(strict_types=1);
 namespace Directus\Controllers;
 
 use Carbon\Carbon;
-use Directus\Database\System\Models\Role;
-use Directus\Database\System\Models\User;
+use Directus\Database\Models\User;
+use Directus\Exceptions\RoleNotFound;
+use Directus\Exceptions\UserNotCreated;
+use Directus\Exceptions\UserNotFound;
+use Directus\Requests\UserInviteRequest;
+use Directus\Requests\UserRequest;
+use Directus\Requests\UserTrackingRequest;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\JsonResponse;
 
 /**
@@ -18,104 +24,90 @@ class UserController extends BaseController
     {
         // TODO: validate query parameters
 
-        return directus()->respond()->with(
-            directus()->users()->all()
-        );
+        /** @var Collection $users */
+        $users = User::with(['role', 'sessions', 'collectionPresets'])->get();
+
+        return directus()->respond()->with($users->toArray());
     }
 
+    /**
+     * @throws UserNotFound
+     */
     public function fetch(string $key): JsonResponse
     {
         // TODO: validate query parameters
 
-        return directus()->respond()->with(
-            directus()->users()->find($key)
-        );
+        /** @var User $user */
+        $user = User::with(['role', 'sessions', 'collectionPresets'])->findOrFail($key);
+
+        return directus()->respond()->with($user->toArray());
     }
 
-    public function create(): JsonResponse
+    /**
+     * @throws UserNotCreated|UserNotFound
+     */
+    public function create(UserRequest $request): JsonResponse
     {
-        // TODO: validate avatar and external when both services are implemented
+        $attributes = $request->all();
 
-        $input = request()->validate([
-            'status' => 'required|string',
-            'role_id' => 'required|exists:'.Role::class.',id',
-            'first_name' => 'required|string',
-            'last_name' => 'required|string',
-            'email' => 'required|email|unique:'.User::class.',email',
-            'password' => 'required|string',
-            'last_access_on' => 'date|nullable',
-            'last_page' => 'string|nullable',
-            //'external_id' => 'string|nullable',
-            'theme' => 'string|nullable',
-            '2fa_secret' => 'string|nullable',
-            'password_reset_token' => 'string|nullable',
-            'timezone' => 'string|nullable',
-            'locale' => 'string|nullable',
-            'locale_options' => 'string|nullable',
-            //'avatar' => 'string|nullable',
-            'company' => 'string|nullable',
-            'title' => 'string|nullable',
-            'email_notifications' => 'boolean|nullable',
-        ]);
+        $user_id = directus()->databases()->system()->transaction(function () use ($attributes): string {
+            /** @var User $user */
+            $user = new User($attributes);
+            $user->saveOrFail();
 
-        return directus()->respond()->with(
-            directus()->users()->create($input)
-        );
+            return $user->id;
+        });
+
+        /** @var User $user */
+        $user = User::with(['role', 'sessions', 'collectionPresets'])->findOrFail($user_id);
+
+        return directus()->respond()->with($user->toArray());
     }
 
-    public function update(string $key): JsonResponse
+    /**
+     * @throws RoleNotFound|UserNotFound
+     */
+    public function update(string $key, UserRequest $request): JsonResponse
     {
-        // TODO: validate avatar and external when both services are implemented
+        /** @var User $user */
+        $user = User::with(['role', 'sessions', 'collectionPresets'])->findOrFail($key);
+        $user->update($request->all());
 
-        $input = request()->validate([
-            'status' => 'string',
-            'role_id' => 'exists:'.Role::class.',id',
-            'first_name' => 'string',
-            'last_name' => 'string',
-            'email' => 'email|unique:'.User::class.',email,'.$key,
-            'password' => 'string',
-            'last_access_on' => 'date|nullable',
-            'last_page' => 'string|nullable',
-            //'external_id' => 'string|nullable',
-            'theme' => 'string|nullable',
-            '2fa_secret' => 'string|nullable',
-            'password_reset_token' => 'string|nullable',
-            'timezone' => 'string|nullable',
-            'locale' => 'string|nullable',
-            'locale_options' => 'string|nullable',
-            //'avatar' => 'string|nullable',
-            'company' => 'string|nullable',
-            'title' => 'string|nullable',
-            'email_notifications' => 'boolean|nullable',
-        ]);
-
-        return directus()->respond()->with(
-            directus()->users()->update($key, $input)
-        );
+        return directus()->respond()->with($user->toArray());
     }
 
+    /**
+     * @throws UserNotFound
+     */
     public function delete(string $key): JsonResponse
     {
-        directus()->users()->delete($key);
+        /** @var User $user */
+        $user = User::findOrFail($key);
+        $user->delete();
 
         return directus()->respond()->withNothing();
     }
 
     // TODO: Missing https://docs.directus.io/api/users.html#retrieve-the-current-user
 
-    public function invite(): JsonResponse
+    /**
+     * @throws UserNotCreated
+     */
+    public function invite(UserInviteRequest $request): JsonResponse
     {
-        // TODO: validate avatar and external when both services are implemented
-
-        $input = request()->validate([
-            'email' => 'required|email|unique:'.User::class.',email',
-        ]);
+        $attributes = [
+            'email' => $request->get('email'),
+            'status' => 'invited',
+        ];
 
         return directus()->respond()->with(
-            directus()->users()->create([
-                'email' => data_get($input, 'email'),
-                'status' => 'invited',
-            ])
+            directus()->databases()->system()->transaction(function () use ($attributes): array {
+                /** @var User $user */
+                $user = new User($attributes);
+                $user->saveOrFail();
+
+                return $user->toArray();
+            })
         );
     }
 
@@ -125,18 +117,19 @@ class UserController extends BaseController
         return directus()->respond()->withNothing();
     }
 
-    public function updateLastPage(string $key): JsonResponse
+    /**
+     * @throws UserNotFound
+     */
+    public function updateLastPage(string $key, UserTrackingRequest $request): JsonResponse
     {
-        $input = request()->validate([
-            'last_page' => 'required|string',
+        /** @var User $user */
+        $user = User::findOrFail($key);
+        $user->update([
+            'last_page' => $request->get('last_page'),
+            'last_access_on' => Carbon::now(),
         ]);
 
-        return directus()->respond()->with(
-            directus()->users()->update($key, [
-                'last_page' => data_get($input, 'last_page'),
-                'last_access_on' => Carbon::now(),
-            ])
-        );
+        return directus()->respond()->with($user->toArray());
     }
 
     public function revision(string $key, string $offset = null): JsonResponse

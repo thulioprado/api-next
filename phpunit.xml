@@ -28,4 +28,8 @@
         </whitelist>
     </filter>
 
+    <php>
+        <env name="TEST_DATABASE" value="sqlite" />
+    </php>
+
 </phpunit>

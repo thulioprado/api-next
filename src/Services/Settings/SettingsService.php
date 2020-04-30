@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Directus\Services\Settings;
 
 use Directus\Contracts\Services\Service;
-use Directus\Database\System\Models\Setting;
+use Directus\Database\Models\Setting;
 use Directus\Exceptions\SettingAlreadyExists;
 use Directus\Exceptions\SettingNotFound;
 use Exception;

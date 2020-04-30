@@ -10,13 +10,8 @@ use Directus\Services\Activities\ActivitiesService;
 use Directus\Services\Collections\CollectionsService;
 use Directus\Services\Databases\DatabasesService;
 use Directus\Services\Fields\FieldsService;
-use Directus\Services\Folders\FoldersService;
-use Directus\Services\Permissions\PermissionsService;
 use Directus\Services\Presets\PresetsService;
-use Directus\Services\Revisions\RevisionsService;
-use Directus\Services\Roles\RolesService;
 use Directus\Services\Settings\SettingsService;
-use Directus\Services\Users\UsersService;
 use Illuminate\Support\ServiceProvider;
 
 /**
@@ -62,31 +57,6 @@ class ServicesProvider extends ServiceProvider
         $this->app->bindIf(PresetsService::class, PresetsService::class);
         Directus::macro('presets', function (): PresetsService {
             return resolve(PresetsService::class);
-        });
-
-        $this->app->bindIf(UsersService::class, UsersService::class);
-        Directus::macro('users', function (): UsersService {
-            return resolve(UsersService::class);
-        });
-
-        $this->app->bindIf(RolesService::class, RolesService::class);
-        Directus::macro('roles', function (): RolesService {
-            return resolve(RolesService::class);
-        });
-
-        $this->app->bindIf(FoldersService::class, FoldersService::class);
-        Directus::macro('folders', function (): FoldersService {
-            return resolve(FoldersService::class);
-        });
-
-        $this->app->bindIf(PermissionsService::class, PermissionsService::class);
-        Directus::macro('permissions', function (): PermissionsService {
-            return resolve(PermissionsService::class);
-        });
-
-        $this->app->bindIf(RevisionsService::class, RevisionsService::class);
-        Directus::macro('revisions', function (): RevisionsService {
-            return resolve(RevisionsService::class);
         });
     }
 }

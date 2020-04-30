@@ -6,8 +6,8 @@ namespace Directus\Services\Activities;
 
 use Carbon\Carbon;
 use Directus\Contracts\Services\Service;
-use Directus\Database\System\Models\Activity;
-use Directus\Database\System\Models\Collection;
+use Directus\Database\Models\Activity;
+use Directus\Database\Models\Collection;
 use Directus\Exceptions\ActivityNotFound;
 
 class ActivitiesService implements Service

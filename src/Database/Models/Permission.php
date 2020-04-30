@@ -2,10 +2,13 @@
 
 declare(strict_types=1);
 
-namespace Directus\Database\System\Models;
+namespace Directus\Database\Models;
 
 use Directus\Database\Traits\FromSystemDatabase;
+use Directus\Database\Traits\ModelOperations;
 use Directus\Database\Traits\UsesUuidPrimaryKey;
+use Directus\Exceptions\PermissionNotCreated;
+use Directus\Exceptions\PermissionNotFound;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Query\Builder;
@@ -34,6 +37,7 @@ class Permission extends Model
 {
     use FromSystemDatabase;
     use UsesUuidPrimaryKey;
+    use ModelOperations;
 
     /**
      * @var array
@@ -48,6 +52,8 @@ class Permission extends Model
      * @var array<string>
      */
     protected $fillable = [
+        'collection_id',
+        'role_id',
         'create',
         'read',
         'update',
@@ -63,24 +69,24 @@ class Permission extends Model
     /**
      * @var array<string>
      */
-    protected $hidden = [
-        'collection_id',
-        'role_id',
+    private static $exceptions = [
+        'not_found' => PermissionNotFound::class,
+        'not_created' => PermissionNotCreated::class,
     ];
 
     /**
-     * Get the collection.
+     * Gets the collection.
      */
     public function collection(): BelongsTo
     {
-        return $this->belongsTo(Collection::class, 'collection_id');
+        return $this->belongsTo(Collection::class);
     }
 
     /**
-     * Get the role.
+     * Gets the role.
      */
     public function role(): BelongsTo
     {
-        return $this->belongsTo(Role::class, 'role_id');
+        return $this->belongsTo(Role::class);
     }
 }

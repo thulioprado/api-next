@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Directus\Database\System\Models;
+namespace Directus\Database\Models;
 
 use Directus\Database\Traits\FromSystemDatabase;
 use Directus\Database\Traits\UsesUuidPrimaryKey;
@@ -54,10 +54,50 @@ class Collection extends Model
     ];
 
     /**
+     * Gets the activities.
+     */
+    public function activities(): HasMany
+    {
+        return $this->hasMany(Activity::class);
+    }
+
+    /**
+     * Gets the collection presets.
+     */
+    public function collectionPresets(): HasMany
+    {
+        return $this->hasMany(CollectionPreset::class);
+    }
+
+    /**
      * Gets the related fields.
      */
     public function fields(): HasMany
     {
         return $this->hasMany(Field::class);
+    }
+
+    /**
+     * Gets the permissions.
+     */
+    public function permissions(): HasMany
+    {
+        return $this->hasMany(Permission::class);
+    }
+
+    /**
+     * Gets the revisions.
+     */
+    public function revisions(): HasMany
+    {
+        return $this->hasMany(Revision::class);
+    }
+
+    /**
+     * Gets the webhooks.
+     */
+    public function webhooks(): HasMany
+    {
+        return $this->hasMany(Webhook::class);
     }
 }

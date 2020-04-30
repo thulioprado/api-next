@@ -2,14 +2,17 @@
 
 declare(strict_types=1);
 
-namespace Directus\Database\System\Models;
+namespace Directus\Database\Models;
 
 use DateTime;
 use Directus\Database\Traits\FromSystemDatabase;
+use Directus\Database\Traits\ModelOperations;
 use Directus\Database\Traits\UsesUuidPrimaryKey;
+use Directus\Exceptions\UserNotCreated;
+use Directus\Exceptions\UserNotFound;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Query\Builder;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
  * Collection model.
@@ -43,6 +46,7 @@ class User extends Model
 {
     use FromSystemDatabase;
     use UsesUuidPrimaryKey;
+    use ModelOperations;
 
     /**
      * @var array
@@ -55,6 +59,7 @@ class User extends Model
      * @var array<string>
      */
     protected $fillable = [
+        'role_id',
         'status',
         'first_name',
         'last_name',
@@ -64,11 +69,13 @@ class User extends Model
         'timezone',
         'locale',
         'locale_options',
+        'avatar_id',
         'company',
         'title',
         'email_notifications',
         'last_access_on',
         'last_page',
+        'external_id',
         'theme',
         'twofactor_secret',
         'password_reset_token',
@@ -79,18 +86,43 @@ class User extends Model
      */
     protected $hidden = [
         'role_id',
+        'avatar_id',
     ];
 
     /**
-     * Get the role.
+     * @var array<string>
+     */
+    private static $exceptions = [
+        'not_found' => UserNotFound::class,
+        'not_created' => UserNotCreated::class,
+    ];
+
+    /**
+     * Gets the role.
      */
     public function role(): BelongsTo
     {
-        return $this->belongsTo(Role::class, 'role_id');
+        return $this->belongsTo(Role::class);
     }
 
     /**
-     * Set the user password attribute.
+     * Gets the sessions.
+     */
+    public function sessions(): HasMany
+    {
+        return $this->hasMany(UserSession::class);
+    }
+
+    /**
+     * Gets the collection presets.
+     */
+    public function collectionPresets(): HasMany
+    {
+        return $this->hasMany(CollectionPreset::class);
+    }
+
+    /**
+     * Sets the user password attribute.
      */
     public function setPasswordAttribute(?string $value): void
     {

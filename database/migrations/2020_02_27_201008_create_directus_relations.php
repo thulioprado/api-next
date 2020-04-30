@@ -10,8 +10,8 @@ use Illuminate\Database\Schema\Blueprint;
 
 class CreateDirectusRelations extends Migration
 {
-    use MigrateCollections,
-        MigrateFields;
+    use MigrateCollections;
+    use MigrateFields;
 
     /**
      * Run the migrations.
@@ -22,13 +22,23 @@ class CreateDirectusRelations extends Migration
 
         $system->schema()->create(
             $system->collection('relations')->name(),
-            function (Blueprint $collection) {
+            function (Blueprint $collection) use ($system) {
                 $collection->uuid('id')->primary();
-                $collection->uuid('collection_many_id');
                 $collection->uuid('field_many_id');
-                $collection->uuid('collection_one_id');
                 $collection->uuid('field_one_id');
                 $collection->uuid('junction_field_id');
+
+                $collection->foreign('field_many_id')->references('id')->on(
+                    $system->collection('fields')->name()
+                );
+
+                $collection->foreign('field_one_id')->references('id')->on(
+                    $system->collection('fields')->name()
+                );
+
+                $collection->foreign('junction_field_id')->references('id')->on(
+                    $system->collection('fields')->name()
+                );
             }
         );
 
@@ -45,25 +55,11 @@ class CreateDirectusRelations extends Migration
                 ])
         );
         $this->registerField(
-            $this->createField('89d6b61d-b192-4c14-8be5-94de3fcfa150')
-                ->on('relations')
-                ->name('collection_many_id')
-                ->stringType()
-                ->collectionsInterface()
-        );
-        $this->registerField(
             $this->createField('4a585602-83ff-4e5a-9d93-e7ec1b4e87bb')
                 ->on('relations')
                 ->name('field_many_id')
                 ->stringType()
                 ->fieldsInterface()
-        );
-        $this->registerField(
-            $this->createField('6dd896a3-7dc1-4b64-85c7-b38e29d43f57')
-                ->on('relations')
-                ->name('collection_one_id')
-                ->stringType()
-                ->collectionsInterface()
         );
         $this->registerField(
             $this->createField('d93f3554-d7b3-47d4-be1e-8983ddeca68b')

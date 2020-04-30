@@ -7,7 +7,7 @@ namespace Directus\Services\Fields;
 use Directus\Contracts\Database\Collection;
 use Directus\Contracts\Database\Database;
 use Directus\Contracts\Services\Service;
-use Directus\Database\System\Models\Field;
+use Directus\Database\Models\Field;
 use Directus\Services\Collections\CollectionsService;
 use Directus\Services\Databases\DatabasesService;
 use JsonException;

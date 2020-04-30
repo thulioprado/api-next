@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Directus\Services\Presets;
 
 use Directus\Contracts\Services\Service;
-use Directus\Database\System\Models\CollectionPreset;
+use Directus\Database\Models\CollectionPreset;
 use Directus\Exceptions\PresetNotFound;
 
 class PresetsService implements Service

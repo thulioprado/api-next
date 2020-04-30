@@ -30,7 +30,7 @@ class Initializer implements BeforeFirstTestHook, AfterLastTestHook
             'sqlite3' => 'sqlite',
             'mssql' => 'sqlsrv',
             'mssqlrv' => 'sqlsrv',
-            'sqlserver' => 'sqlsrv'
+            'sqlserver' => 'sqlsrv',
         ];
 
         return $aliases[$database] ?? $database;

@@ -4,9 +4,13 @@ declare(strict_types=1);
 
 namespace Directus\Controllers;
 
-use Directus\Database\System\Models\Collection;
-use Directus\Database\System\Models\Permission;
-use Directus\Database\System\Models\Role;
+use Directus\Database\Models\Permission;
+use Directus\Exceptions\CollectionNotFound;
+use Directus\Exceptions\PermissionNotCreated;
+use Directus\Exceptions\PermissionNotFound;
+use Directus\Exceptions\RoleNotFound;
+use Directus\Requests\PermissionRequest;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\JsonResponse;
 
 /**
@@ -18,67 +22,66 @@ class PermissionController extends BaseController
     {
         // TODO: validate query parameters
 
-        return directus()->respond()->with(
-            directus()->permissions()->all()
-        );
+        /** @var Collection $permissions */
+        $permissions = Permission::with(['collection', 'role'])->get();
+
+        return directus()->respond()->with($permissions->toArray());
     }
 
+    /**
+     * @throws PermissionNotFound
+     */
     public function fetch(string $key): JsonResponse
     {
         // TODO: validate query parameters
 
-        return directus()->respond()->with(
-            directus()->permissions()->find($key)
-        );
+        /** @var Permission $permission */
+        $permission = Permission::with(['collection', 'role'])->findOrFail($key);
+
+        return directus()->respond()->with($permission->toArray());
     }
 
-    public function create(): JsonResponse
+    /**
+     * @throws PermissionNotCreated|PermissionNotFound
+     */
+    public function create(PermissionRequest $request): JsonResponse
     {
-        $input = request()->validate([
-            'collection_id' => 'required|exists:'.Collection::class.',id',
-            'role_id' => 'required|exists:'.Role::class.',id',
-            'status' => 'string|nullable',
-            'create' => 'string|nullable',
-            'read' => 'string|nullable',
-            'update' => 'string|nullable',
-            'delete' => 'string|nullable',
-            'comment' => 'string|nullable',
-            'explain' => 'string|nullable',
-            'read_field_blacklist' => 'array|nullable',
-            'write_field_blacklist' => 'array|nullable',
-            'status_blacklist' => 'array|nullable',
-        ]);
+        $attributes = $request->all();
 
-        return directus()->respond()->with(
-            directus()->permissions()->create($input)
-        );
+        $permission_id = directus()->databases()->system()->transaction(function () use ($attributes): string {
+            /** @var Permission $permission */
+            $permission = new Permission($attributes);
+            $permission->saveOrFail();
+
+            return $permission->id;
+        });
+
+        /** @var Permission $permission */
+        $permission = Permission::with(['collection', 'role'])->findOrFail($permission_id);
+
+        return directus()->respond()->with($permission->toArray());
     }
 
-    public function update(string $key): JsonResponse
+    /**
+     * @throws CollectionNotFound|PermissionNotFound|RoleNotFound
+     */
+    public function update(string $key, PermissionRequest $request): JsonResponse
     {
-        $input = request()->validate([
-            'collection_id' => 'exists:'.Collection::class.',id',
-            'role_id' => 'exists:'.Role::class.',id',
-            'status' => 'string|nullable',
-            'create' => 'string|nullable',
-            'read' => 'string|nullable',
-            'update' => 'string|nullable',
-            'delete' => 'string|nullable',
-            'comment' => 'string|nullable',
-            'explain' => 'string|nullable',
-            'read_field_blacklist' => 'array|nullable',
-            'write_field_blacklist' => 'array|nullable',
-            'status_blacklist' => 'array|nullable',
-        ]);
+        /** @var Permission $permission */
+        $permission = Permission::with(['collection', 'role'])->findOrFail($key);
+        $permission->update($request->all());
 
-        return directus()->respond()->with(
-            directus()->permissions()->update($key, $input)
-        );
+        return directus()->respond()->with($permission->toArray());
     }
 
+    /**
+     * @throws PermissionNotFound
+     */
     public function delete(string $key): JsonResponse
     {
-        directus()->permissions()->delete($key);
+        /** @var Permission $permission */
+        $permission = Permission::findOrFail($key);
+        $permission->delete();
 
         return directus()->respond()->withNothing();
     }

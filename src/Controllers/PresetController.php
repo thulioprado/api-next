@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Directus\Controllers;
 
-use Directus\Database\System\Models\Collection;
+use Directus\Database\Models\Collection;
 use Illuminate\Http\JsonResponse;
 
 /**

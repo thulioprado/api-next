@@ -8,3 +8,4 @@ parameters:
     # TODO: Remove once https://github.com/nunomaduro/larastan/issues/509 is fixed
     - '#Property Directus\\Database\\System\\Models\\Collection::\$id \(int\) does not accept string\.#'
     - '#Dynamic call to static method#'
+    - '#TModelClass#'

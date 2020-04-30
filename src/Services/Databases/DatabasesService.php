@@ -109,15 +109,10 @@ class DatabasesService implements Service
      *
      * @return mixed
      */
-    public function transaction(callable $callback)
+    public function transaction(\Closure $callback)
     {
-        $value = null;
-        $this->system()->connection()->transaction(function () use (&$value, $callback): void {
-            $this->database()->connection()->transaction(static function () use (&$value, $callback): void {
-                $value = $callback();
-            });
+        return $this->system()->transaction(function () use ($callback) {
+            return $this->database()->transaction($callback);
         });
-
-        return $value;
     }
 }

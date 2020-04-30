@@ -10,8 +10,8 @@ use Illuminate\Database\Schema\Blueprint;
 
 class CreateDirectusPermissions extends Migration
 {
-    use MigrateCollections,
-        MigrateFields;
+    use MigrateCollections;
+    use MigrateFields;
 
     /**
      * Run the migrations.

@@ -25,13 +25,26 @@ class Errors
 
     public const ACTIVITY_NOT_FOUND = 'activity_not_found';
     public const PRESET_NOT_FOUND = 'preset_not_found';
+
     public const USER_NOT_FOUND = 'user_not_found';
+    public const USER_NOT_CREATED = 'user_not_created';
+
     public const ROLE_NOT_FOUND = 'role_not_found';
+    public const ROLE_NOT_CREATED = 'role_not_created';
+
     public const FOLDER_NOT_FOUND = 'folder_not_found';
+    public const FOLDER_NOT_CREATED = 'folder_not_created';
+
     public const TABLE_NOT_FOUND = 'table_not_found';
     public const COLUMN_NOT_FOUND = 'column_not_found';
+
     public const PERMISSION_NOT_FOUND = 'permission_not_found';
+    public const PERMISSION_NOT_CREATED = 'permission_not_created';
+
     public const REVISION_NOT_FOUND = 'revision_not_found';
+
+    public const RELATION_NOT_FOUND = 'relation_not_found';
+    public const RELATION_NOT_CREATED = 'relation_not_created';
 
     /**
      * @var array
@@ -87,6 +100,11 @@ class Errors
             'context' => ['id'],
         ],
 
+        self::USER_NOT_CREATED => [
+            'status' => Response::HTTP_INTERNAL_SERVER_ERROR,
+            'context' => ['first_name', 'last_name', 'email', 'role_id', 'status'],
+        ],
+
         // Role
 
         self::ROLE_NOT_FOUND => [
@@ -94,11 +112,21 @@ class Errors
             'context' => ['id'],
         ],
 
+        self::ROLE_NOT_CREATED => [
+            'status' => Response::HTTP_INTERNAL_SERVER_ERROR,
+            'context' => ['name'],
+        ],
+
         // Folder
 
         self::FOLDER_NOT_FOUND => [
             'status' => Response::HTTP_NOT_FOUND,
             'context' => ['id'],
+        ],
+
+        self::FOLDER_NOT_CREATED => [
+            'status' => Response::HTTP_INTERNAL_SERVER_ERROR,
+            'context' => ['name'],
         ],
 
         // Inspection
@@ -120,11 +148,28 @@ class Errors
             'context' => ['id'],
         ],
 
+        self::PERMISSION_NOT_CREATED => [
+            'status' => Response::HTTP_INTERNAL_SERVER_ERROR,
+            'context' => ['collection_id', 'role_id'],
+        ],
+
         // Revision
 
         self::REVISION_NOT_FOUND => [
             'status' => Response::HTTP_NOT_FOUND,
             'context' => ['id'],
+        ],
+
+        // Relation
+
+        self::RELATION_NOT_FOUND => [
+            'status' => Response::HTTP_NOT_FOUND,
+            'context' => ['id'],
+        ],
+
+        self::RELATION_NOT_CREATED => [
+            'status' => Response::HTTP_INTERNAL_SERVER_ERROR,
+            'context' => ['field_many'],
         ],
     ];
 

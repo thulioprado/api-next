@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Directus\Events;
 
-use Directus\Database\System\Models\Setting;
+use Directus\Database\Models\Setting;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 

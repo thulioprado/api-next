@@ -2,10 +2,13 @@
 
 declare(strict_types=1);
 
-namespace Directus\Database\System\Models;
+namespace Directus\Database\Models;
 
 use Directus\Database\Traits\FromSystemDatabase;
+use Directus\Database\Traits\ModelOperations;
 use Directus\Database\Traits\UsesUuidPrimaryKey;
+use Directus\Exceptions\FolderNotCreated;
+use Directus\Exceptions\FolderNotFound;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -25,11 +28,13 @@ class Folder extends Model
 {
     use FromSystemDatabase;
     use UsesUuidPrimaryKey;
+    use ModelOperations;
 
     /**
      * @var array<string>
      */
     protected $fillable = [
+        'parent_id',
         'name',
     ];
 
@@ -43,12 +48,13 @@ class Folder extends Model
     /**
      * @var array<string>
      */
-    protected $appends = [
-        'parent_folder',
+    private static $exceptions = [
+        'not_found' => FolderNotFound::class,
+        'not_created' => FolderNotCreated::class,
     ];
 
     /**
-     * Get the parent folder.
+     * Gets the parent folder.
      */
     public function parent(): BelongsTo
     {
@@ -56,18 +62,18 @@ class Folder extends Model
     }
 
     /**
-     * Get the child folders.
+     * Gets the children.
      */
-    public function folders(): HasMany
+    public function children(): HasMany
     {
         return $this->hasMany(Folder::class, 'parent_id');
     }
 
     /**
-     * Get the parent folder attribute.
+     * Gets the files.
      */
-    public function getParentFolderAttribute(): ?string
+    public function files(): HasMany
     {
-        return $this->parent_id;
+        return $this->hasMany(File::class);
     }
 }

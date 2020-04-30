@@ -8,6 +8,7 @@ use Directus\Controllers\FolderController;
 use Directus\Controllers\PermissionController;
 use Directus\Controllers\PresetController;
 use Directus\Controllers\ProjectController;
+use Directus\Controllers\RelationController;
 use Directus\Controllers\RevisionController;
 use Directus\Controllers\RoleController;
 use Directus\Controllers\ServerController;
@@ -145,6 +146,19 @@ Route::group([
         ], static function (): void {
             Route::get('', [RevisionController::class, 'all'])->name('all');
             Route::get('{key}', [RevisionController::class, 'fetch'])->name('fetch');
+        });
+
+        // Relations
+        // https://docs.directus.io/api/relations.html
+        Route::group([
+            'prefix' => 'relations',
+            'as' => 'relations.',
+        ], static function (): void {
+            Route::get('', [RelationController::class, 'all'])->name('all');
+            Route::get('{key}', [RelationController::class, 'fetch'])->name('fetch');
+            Route::post('', [RelationController::class, 'create'])->name('create');
+            Route::patch('{key}', [RelationController::class, 'update'])->name('update');
+            Route::delete('{key}', [RelationController::class, 'delete'])->name('delete');
         });
 
         // Setting

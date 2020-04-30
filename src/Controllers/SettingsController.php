@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Directus\Controllers;
 
-use Directus\Database\System\Models\Setting;
+use Directus\Database\Models\Setting;
 use Directus\Exceptions\SettingAlreadyExists;
 use Directus\Exceptions\SettingNotFound;
 use Directus\Services\Settings\SettingsService;

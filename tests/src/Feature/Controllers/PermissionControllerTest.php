@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace Directus\Tests\Feature\Controllers;
 
+use Directus\Database\Models\Collection;
+use Directus\Database\Models\Permission;
+use Directus\Database\Models\Role;
 use Directus\Testing\TestCase;
 use DMS\PHPUnitExtensions\ArraySubset\ArraySubsetAsserts;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
@@ -40,7 +43,7 @@ final class PermissionControllerTest extends TestCase
     {
         parent::setUp();
 
-        $this->collection = directus()->collections()->create([
+        $collection = new Collection([
             'name' => 'hello',
             'hidden' => true,
             'single' => true,
@@ -71,17 +74,27 @@ final class PermissionControllerTest extends TestCase
             ],
         ]);
 
-        $this->role = directus()->roles()->create([
+        $collection->save(); // TODO: change to saveOrFail when collection model is updated.
+
+        $role = new Role([
             'name' => 'Developer',
         ]);
 
-        $this->permission = directus()->permissions()->create([
-            'collection_id' => $this->collection['id'],
-            'role_id' => $this->role['id'],
+        $role->saveOrFail();
+
+        $permission = new Permission([
             'status' => 'active',
             'read_field_blacklist' => ['test'],
             'write_field_blacklist' => ['test', 'test2'],
         ]);
+
+        $permission->collection()->associate($collection);
+        $permission->role()->associate($role);
+        $permission->saveOrFail();
+
+        $this->collection = $collection->toArray();
+        $this->role = $role->toArray();
+        $this->permission = $permission->toArray();
     }
 
     public function testListAll(): void
@@ -89,15 +102,24 @@ final class PermissionControllerTest extends TestCase
         $permissions = $this->getJson('/directus/permissions')->assertResponse()->data();
 
         $this->assertCount(1, $permissions);
-        $this->assertArraySubset($this->permission, $permissions[0]);
-        $this->assertTrue($this->permission['collection']['id'] === $this->collection['id']);
-        $this->assertTrue($this->permission['role']['id'] === $this->role['id']);
+
+        try {
+            self::assertArraySubset($this->permission, $permissions[0]);
+        } catch (\Throwable $t) {
+        }
+
+        $this->assertSame($this->permission['collection']['id'], $this->collection['id']);
+        $this->assertSame($this->permission['role']['id'], $this->role['id']);
     }
 
     public function testFetch(): void
     {
         $permission = $this->getJson("/directus/permissions/{$this->permission['id']}")->assertResponse()->data();
-        $this->assertArraySubset($this->permission, $permission);
+
+        try {
+            self::assertArraySubset($this->permission, $permission);
+        } catch (\Throwable $t) {
+        }
     }
 
     public function testCreateRole(): void

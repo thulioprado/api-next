@@ -2,12 +2,15 @@
 
 declare(strict_types=1);
 
-namespace Directus\Database\System\Models;
+namespace Directus\Database\Models;
 
 use Directus\Database\Traits\FromSystemDatabase;
+use Directus\Database\Traits\ModelOperations;
 use Directus\Database\Traits\UsesUuidPrimaryKey;
+use Directus\Exceptions\RoleNotCreated;
+use Directus\Exceptions\RoleNotFound;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Query\Builder;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
  * Collection model.
@@ -28,6 +31,7 @@ class Role extends Model
 {
     use FromSystemDatabase;
     use UsesUuidPrimaryKey;
+    use ModelOperations;
 
     /**
      * @var array
@@ -41,6 +45,7 @@ class Role extends Model
      * @var array<string>
      */
     protected $fillable = [
+        'external_id',
         'name',
         'description',
         'module_listing',
@@ -48,4 +53,36 @@ class Role extends Model
         'ip_whitelist',
         'enforce_2fa',
     ];
+
+    /**
+     * @var array<string>
+     */
+    private static $exceptions = [
+        'not_found' => RoleNotFound::class,
+        'not_created' => RoleNotCreated::class,
+    ];
+
+    /**
+     * Get the users.
+     */
+    public function users(): HasMany
+    {
+        return $this->hasMany(User::class);
+    }
+
+    /**
+     * Gets the collection presets.
+     */
+    public function collectionPresets(): HasMany
+    {
+        return $this->hasMany(CollectionPreset::class);
+    }
+
+    /**
+     * Gets the permissions.
+     */
+    public function permissions(): HasMany
+    {
+        return $this->hasMany(Permission::class);
+    }
 }

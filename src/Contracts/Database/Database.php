@@ -44,4 +44,9 @@ interface Database
      * Gets a collection.
      */
     public function collection(string $name, ?string $class = null): Collection;
+
+    /**
+     * @return mixed
+     */
+    public function transaction(\Closure $callback);
 }

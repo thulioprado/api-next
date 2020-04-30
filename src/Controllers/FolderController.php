@@ -4,7 +4,11 @@ declare(strict_types=1);
 
 namespace Directus\Controllers;
 
-use Directus\Database\System\Models\Folder;
+use Directus\Database\Models\Folder;
+use Directus\Exceptions\FolderNotCreated;
+use Directus\Exceptions\FolderNotFound;
+use Directus\Requests\FolderRequest;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\JsonResponse;
 
 /**
@@ -16,49 +20,68 @@ class FolderController extends BaseController
     {
         // TODO: validate query parameters
 
-        return directus()->respond()->with(
-            directus()->folders()->all()
-        );
+        /** @var Collection $folders */
+        $folders = Folder::with(['parent', 'children', 'files'])->get();
+
+        return directus()->respond()->with($folders->toArray());
     }
 
+    /**
+     * @throws FolderNotFound
+     */
     public function fetch(string $key): JsonResponse
     {
         // TODO: validate query parameters
 
-        return directus()->respond()->with(
-            directus()->folders()->find($key)
-        );
+        /** @var Folder $folder */
+        $folder = Folder::with(['parent', 'children', 'files'])->findOrFail($key);
+
+        return directus()->respond()->with($folder->toArray());
     }
 
-    public function create(): JsonResponse
+    /**
+     * @throws FolderNotCreated|FolderNotFound
+     */
+    public function create(FolderRequest $request): JsonResponse
     {
-        $parent = request()->get('parent_folder', 'NULL');
-        $input = request()->validate([
-            'parent_folder' => 'nullable|exists:'.Folder::class.',id',
-            'name' => 'required|string|unique:'.Folder::class.',name,NULL,id,parent_id,'.$parent,
-        ]);
+        $attributes = $request->all();
 
-        return directus()->respond()->with(
-            directus()->folders()->create($input)
-        );
+        $folder_id = directus()->databases()->system()->transaction(function () use ($attributes): string {
+            /** @var Folder $folder */
+            $folder = new Folder($attributes);
+            $folder->saveOrFail();
+
+            return $folder->id;
+        });
+
+        /** @var Folder $folder */
+        $folder = Folder::with(['parent', 'children', 'files'])->findOrFail($folder_id);
+
+        return directus()->respond()->with($folder->toArray());
     }
 
-    public function update(string $key): JsonResponse
+    /**
+     * @throws FolderNotFound
+     */
+    public function update(string $key, FolderRequest $request): JsonResponse
     {
-        $parent = request()->get('parent_folder', 'NULL');
-        $input = request()->validate([
-            'parent_folder' => 'nullable|exists:'.Folder::class.',id',
-            'name' => 'required|string|unique:'.Folder::class.',name,'.$key.',id,parent_id,'.$parent,
-        ]);
+        /** @var Folder $folder */
+        $folder = Folder::with(['parent', 'children', 'files'])->findOrFail($key);
+        $folder->update($request->all());
 
-        return directus()->respond()->with(
-            directus()->folders()->update($key, $input)
-        );
+        return directus()->respond()->with($folder->toArray());
     }
 
+    /**
+     * @throws FolderNotFound
+     */
     public function delete(string $key): JsonResponse
     {
-        directus()->folders()->delete($key);
+        /** @var Folder $folder */
+        $folder = Folder::with(['children', 'files'])->findOrFail($key);
+        $folder->files()->delete();
+        $folder->children()->delete();
+        $folder->delete();
 
         return directus()->respond()->withNothing();
     }

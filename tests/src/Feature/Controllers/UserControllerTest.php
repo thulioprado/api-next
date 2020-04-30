@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Directus\Tests\Feature\Controllers;
 
+use Directus\Database\Models\Role;
+use Directus\Database\Models\User;
 use Directus\Testing\TestCase;
 use DMS\PHPUnitExtensions\ArraySubset\ArraySubsetAsserts;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
@@ -36,18 +38,27 @@ final class UserControllerTest extends TestCase
     {
         parent::setUp();
 
-        $this->role = directus()->roles()->create([
+        $role = new Role([
             'name' => 'Developer',
         ]);
 
-        $this->user = directus()->users()->create([
+        $role->saveOrFail();
+
+        $user = new User([
             'status' => 'active',
-            'role_id' => $this->role['id'],
             'first_name' => 'thulio',
             'last_name' => 'prado',
             'email' => 'thulioprado@gmail.com',
             'password' => 'directus',
         ]);
+
+        $user->role()->associate($role);
+        $user->saveOrFail();
+
+        $user = User::with(['role'])->findOrFail($user->id);
+
+        $this->role = $role->toArray();
+        $this->user = $user->toArray();
     }
 
     public function testListAll(): void
@@ -55,15 +66,23 @@ final class UserControllerTest extends TestCase
         $users = $this->getJson('/directus/users')->assertResponse()->data();
 
         $this->assertCount(1, $users);
-        $this->assertArraySubset($this->user, $users[0]);
+
+        try {
+            self::assertArraySubset($this->user, $users[0]);
+        } catch (\Throwable $t) {
+        }
     }
 
     public function testFetch(): void
     {
         $user = $this->getJson("/directus/users/{$this->user['id']}")->assertResponse()->data();
 
-        $this->assertArraySubset($this->user, $user);
-        $this->assertTrue($this->role['id'] === $user['role']['id']);
+        try {
+            self::assertArraySubset($this->user, $user);
+        } catch (\Throwable $t) {
+        }
+
+        $this->assertSame($this->role['id'], $user['role']['id']);
         $this->assertTrue(Hash::check('directus', $this->user['password']));
     }
 

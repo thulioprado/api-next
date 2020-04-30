@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace Directus\Controllers;
 
+use Directus\Database\Models\Revision;
+use Directus\Exceptions\RevisionNotFound;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\JsonResponse;
 
 /**
@@ -15,17 +18,22 @@ class RevisionController extends BaseController
     {
         // TODO: validate query parameters
 
-        return directus()->respond()->with(
-            directus()->revisions()->all()
-        );
+        /** @var Collection $revisions */
+        $revisions = Revision::with(['activity', 'collection', 'parentCollection'])->get();
+
+        return directus()->respond()->with($revisions->toArray());
     }
 
+    /**
+     * @throws RevisionNotFound
+     */
     public function fetch(string $key): JsonResponse
     {
         // TODO: validate query parameters
 
-        return directus()->respond()->with(
-            directus()->revisions()->find($key)
-        );
+        /** @var Revision $revision */
+        $revision = Revision::with(['activity', 'collection', 'parentCollection'])->findOrFail($key);
+
+        return directus()->respond()->with($revision->toArray());
     }
 }

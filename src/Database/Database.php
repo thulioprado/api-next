@@ -73,4 +73,16 @@ class Database implements DatabaseContract
     {
         return new Inspector($this);
     }
+
+    /**
+     * Runs a transaction over the two databases.
+     *
+     * @throws \Throwable
+     *
+     * @return mixed
+     */
+    public function transaction(\Closure $callback)
+    {
+        return $this->connection()->transaction($callback);
+    }
 }

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Directus\Database\System\Models;
+namespace Directus\Database\Models;
 
 use Directus\Database\Traits\FromSystemDatabase;
 use Directus\Events\SettingChanged;

@@ -2,13 +2,14 @@
 
 declare(strict_types=1);
 
-namespace Directus\Database\System\Models;
+namespace Directus\Database\Models;
 
 use DateTime;
 use Directus\Database\Traits\FromSystemDatabase;
 use Directus\Database\Traits\UsesUuidPrimaryKey;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Query\Builder;
 
 /**
@@ -45,8 +46,19 @@ class Activity extends Model
         'comment_deleted_on' => 'datetime',
     ];
 
+    /**
+     * Gets the collection.
+     */
     public function collection(): BelongsTo
     {
         return $this->belongsTo(Collection::class);
+    }
+
+    /**
+     * Gets the revisions.
+     */
+    public function revisions(): HasMany
+    {
+        return $this->hasMany(Revision::class);
     }
 }

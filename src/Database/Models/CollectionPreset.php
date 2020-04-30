@@ -2,11 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Directus\Database\System\Models;
+namespace Directus\Database\Models;
 
 use Directus\Database\Traits\FromSystemDatabase;
 use Directus\Database\Traits\UsesUuidPrimaryKey;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Query\Builder;
 
 /**
@@ -53,4 +54,28 @@ class CollectionPreset extends Model
         'view_options',
         'translation',
     ];
+
+    /**
+     * Gets the collection.
+     */
+    public function collection(): BelongsTo
+    {
+        return $this->belongsTo(Collection::class);
+    }
+
+    /**
+     * Gets the user.
+     */
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
+    }
+
+    /**
+     * Gets the role.
+     */
+    public function role(): BelongsTo
+    {
+        return $this->belongsTo(Role::class);
+    }
 }

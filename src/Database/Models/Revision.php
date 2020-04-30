@@ -2,10 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Directus\Database\System\Models;
+namespace Directus\Database\Models;
 
 use Directus\Database\Traits\FromSystemDatabase;
+use Directus\Database\Traits\ModelOperations;
 use Directus\Database\Traits\UsesUuidPrimaryKey;
+use Directus\Exceptions\RevisionNotFound;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Query\Builder;
@@ -30,6 +32,7 @@ class Revision extends Model
 {
     use FromSystemDatabase;
     use UsesUuidPrimaryKey;
+    use ModelOperations;
 
     /**
      * @var array
@@ -43,10 +46,12 @@ class Revision extends Model
      * @var array<string>
      */
     protected $fillable = [
-        'id',
+        'activity_id',
+        'collection_id',
         'item',
         'data',
         'delta',
+        'parent_collection_id',
         'parent_item',
         'parent_changed',
     ];
@@ -61,23 +66,30 @@ class Revision extends Model
     ];
 
     /**
-     * Get the activity.
+     * @var array<string>
+     */
+    private static $exceptions = [
+        'not_found' => RevisionNotFound::class,
+    ];
+
+    /**
+     * Gets the activity.
      */
     public function activity(): BelongsTo
     {
-        return $this->belongsTo(Activity::class, 'activity_id');
+        return $this->belongsTo(Activity::class);
     }
 
     /**
-     * Get the collection.
+     * Gets the collection.
      */
     public function collection(): BelongsTo
     {
-        return $this->belongsTo(Collection::class, 'collection_id');
+        return $this->belongsTo(Collection::class);
     }
 
     /**
-     * Get the parent collection.
+     * Gets the parent collection.
      */
     public function parentCollection(): BelongsTo
     {
