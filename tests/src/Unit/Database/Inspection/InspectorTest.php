@@ -6,7 +6,6 @@ namespace Directus\Tests\Unit\Database\Inspection;
 
 use Directus\Contracts\Database\Inspection\Inspector as InspectorContract;
 use Directus\Testing\TestCase;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 
 /**
@@ -28,18 +27,6 @@ final class InspectorTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-
-        $database = directus()->databases()->database();
-
-        $database->schema()->create('posts', static function (Blueprint $table): void {
-            $table->id();
-            $table->text('title');
-            $table->text('content');
-            $table->dateTime('published')->nullable()->default(null);
-            $table->dateTime('edited')->nullable()->default(null);
-            $table->unsignedBigInteger('views');
-        });
-
         $this->inspector = directus()->databases()->database()->inspector();
     }
 
@@ -69,7 +56,7 @@ final class InspectorTest extends TestCase
         });
 
         static::assertEquals([
-            'id', 'title', 'content', 'published', 'edited', 'views',
+            'id', 'author_id', 'title', 'content', 'published', 'edited', 'views',
         ], $names->all());
     }
 
@@ -85,9 +72,15 @@ final class InspectorTest extends TestCase
 
         $title = $table->column('title');
         static::assertEquals('title', $title->name());
-        static::assertEquals('text', $title->type());
+        static::assertEquals('string', $title->type());
         static::assertFalse($title->primary());
         static::assertFalse($title->unique());
+
+        $content = $table->column('content');
+        static::assertEquals('content', $content->name());
+        static::assertEquals('text', $content->type());
+        static::assertFalse($content->primary());
+        static::assertFalse($content->unique());
 
         $views = $table->column('views');
         static::assertEquals('views', $views->name());

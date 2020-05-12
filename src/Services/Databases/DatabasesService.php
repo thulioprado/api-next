@@ -6,6 +6,7 @@ namespace Directus\Services\Databases;
 
 use Directus\Contracts\Database\Database;
 use Directus\Contracts\Services\Service;
+use Directus\Testing\DatabaseSeeder;
 use Illuminate\Support\Facades\DB;
 use Throwable;
 
@@ -114,5 +115,15 @@ class DatabasesService implements Service
         return $this->system()->transaction(function () use ($callback) {
             return $this->database()->transaction($callback);
         });
+    }
+
+    /**
+     * Executes the database seeds for testing.
+     * CAUTION: Don't invoke this outside a testing environment.
+     */
+    public function seed(): void
+    {
+        $seeder = new DatabaseSeeder();
+        $seeder->run();
     }
 }

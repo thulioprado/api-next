@@ -7,10 +7,10 @@ namespace Directus\Database\Models;
 use Directus\Database\Traits\FromSystemDatabase;
 use Directus\Database\Traits\ModelOperations;
 use Directus\Database\Traits\UsesUuidPrimaryKey;
+use Directus\Exceptions\RevisionNotCreated;
 use Directus\Exceptions\RevisionNotFound;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Query\Builder;
 
 /**
  * Collection model.
@@ -26,7 +26,6 @@ use Illuminate\Database\Query\Builder;
  * @property bool        $parent_changed
  *
  * @mixin Model
- * @mixin Builder
  */
 class Revision extends Model
 {
@@ -70,6 +69,7 @@ class Revision extends Model
      */
     private static $exceptions = [
         'not_found' => RevisionNotFound::class,
+        'not_created' => RevisionNotCreated::class,
     ];
 
     /**

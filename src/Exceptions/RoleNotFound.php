@@ -4,20 +4,13 @@ declare(strict_types=1);
 
 namespace Directus\Exceptions;
 
-use Directus\Responses\Errors;
+use Directus\Exceptions\Traits\SmartException;
+use Exception;
 
 /**
  * Exception.
  */
-class RoleNotFound extends DirectusException
+class RoleNotFound extends Exception
 {
-    /**
-     * Constructor.
-     */
-    public function __construct(string $id)
-    {
-        parent::__construct(Errors::ROLE_NOT_FOUND, [
-            'id' => $id,
-        ]);
-    }
+    use SmartException;
 }

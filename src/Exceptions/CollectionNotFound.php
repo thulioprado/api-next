@@ -4,20 +4,13 @@ declare(strict_types=1);
 
 namespace Directus\Exceptions;
 
-use Directus\Responses\Errors;
+use Directus\Exceptions\Traits\SmartException;
+use Exception;
 
 /**
  * DirectusException.
  */
-class CollectionNotFound extends DirectusException
+class CollectionNotFound extends Exception
 {
-    /**
-     * DirectusException constructor.
-     */
-    public function __construct(string $key)
-    {
-        parent::__construct(Errors::COLLECTION_NOT_FOUND, [
-            'key' => $key,
-        ]);
-    }
+    use SmartException;
 }

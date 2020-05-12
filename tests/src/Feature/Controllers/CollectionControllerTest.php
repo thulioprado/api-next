@@ -6,7 +6,6 @@ namespace Directus\Tests\Feature\Controllers;
 
 use Directus\Testing\TestCase;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
-use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
 
 /**
@@ -17,35 +16,6 @@ use Illuminate\Support\Facades\DB;
 final class CollectionControllerTest extends TestCase
 {
     use DatabaseTransactions;
-
-    public function testSystemCollectionsAreRegistered(): void
-    {
-        $collections = $this->getJson('/directus/collections')->data();
-        static::assertIsArray($collections);
-
-        $names = Arr::pluck($collections, 'name');
-
-        $tables = [
-            'directus_activities',
-            'directus_collection_presets',
-            'directus_collections',
-            'directus_fields',
-            'directus_files',
-            'directus_folders',
-            'directus_permissions',
-            'directus_relations',
-            'directus_revisions',
-            'directus_roles',
-            'directus_settings',
-            'directus_user_sessions',
-            'directus_users',
-            'directus_webhooks',
-        ];
-
-        foreach ($tables as $table) {
-            static::assertContains($table, $names);
-        }
-    }
 
     public function testAllResponseFormat(): void
     {
@@ -66,10 +36,10 @@ final class CollectionControllerTest extends TestCase
 
     public function testFetchSingleCollection(): void
     {
-        $collections = $this->getJson('/directus/collections/directus_activities');
+        $collections = $this->getJson('/directus/collections/posts');
         $collections->assertResponseHas([
-            'name' => 'directus_activities',
-            'collection' => 'directus_activities',
+            'name' => 'posts',
+            'collection' => 'posts',
         ]);
     }
 

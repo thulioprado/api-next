@@ -39,6 +39,15 @@ class Column implements ColumnContract
         return $this->column->getName();
     }
 
+    public function comment(?string $new = null): string
+    {
+        if ($new !== null) {
+            $this->column->setComment($new);
+        }
+
+        return $this->column->getComment() ?? '';
+    }
+
     public function type(): string
     {
         return $this->column->getType()->getName();

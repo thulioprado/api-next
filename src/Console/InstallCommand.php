@@ -4,8 +4,12 @@ declare(strict_types=1);
 
 namespace Directus\Console;
 
+use Directus\Database\Models\User;
 use Illuminate\Console\Command;
-use Symfony\Component\Console\Helper\ProgressBar;
+use Illuminate\Database\Migrations\DatabaseMigrationRepository;
+use Illuminate\Database\Migrations\Migrator;
+use Illuminate\Events\Dispatcher;
+use Illuminate\Support\Str;
 
 class InstallCommand extends Command
 {
@@ -15,8 +19,9 @@ class InstallCommand extends Command
      * @var string
      */
     protected $signature = 'directus:install
+                            {--email=admin@example.com : The initial user email.}
+                            {--password= : The initial user password.}
                             {--composer : Perform the composer project creation flow.}
-                            {--force : Forces the installation even if its already installed.}
                             ';
 
     /**
@@ -27,9 +32,14 @@ class InstallCommand extends Command
     protected $description = 'Install Directus in the current application.';
 
     /**
-     * @var ProgressBar
+     * @var array
      */
-    protected $progress;
+    protected $credentials = [
+        'created' => false,
+        'random' => true,
+        'email' => 'admin@example.com',
+        'password' => null,
+    ];
 
     /**
      * Execute the console command.
@@ -46,21 +56,15 @@ class InstallCommand extends Command
         }
 
         $steps[] = 'installDatabase';
-
-        $this->progress = $this->output->createProgressBar(\count($steps));
-        $this->progress->start();
+        $steps[] = 'createUser';
 
         foreach ($steps as $step) /* @var Callable $step */{
             $callback = [$this, $step];
             if (\is_callable($callback)) {
                 \call_user_func_array($callback, []);
             }
-            $this->progress->advance();
             usleep(100000);
         }
-
-        $this->progress->finish();
-        $this->progress->clear();
 
         if ($composer) {
             $this->info('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~');
@@ -87,6 +91,25 @@ class InstallCommand extends Command
             $this->info('           Your Directus project has been created!');
             $this->info('   Run `php artisan serve` to start the development server.');
             $this->info('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~');
+
+            if ($this->credentials['created']) {
+                $this->info('    The admin account has been created. You can now access');
+                $this->info('                it through the app interface');
+                $this->info('');
+                $this->info("       Email: {$this->credentials['email']}");
+                if ($this->credentials['random']) {
+                    $this->info("    Password: {$this->credentials['password']}");
+                } else {
+                    $this->info('    Password: <same as the one specified in the command>');
+                }
+            } else {
+                $this->info('    The admin account couldn\'t be created since it seems');
+                $this->info('     that there are some users in the database already.');
+                $this->info('     If you\'re trying to reset the admin password, try');
+                $this->info('        running the password reset command instead.');
+            }
+
+            $this->info('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~');
         } else {
             $this->info('Installation complete.');
         }
@@ -97,8 +120,76 @@ class InstallCommand extends Command
      */
     private function installDatabase(): void
     {
-        $this->progress->setMessage('Installing database contents');
-        $this->callSilent('migrate');
+        $this->info('Installing database contents');
+
+        $app = app();
+
+        $repository = new DatabaseMigrationRepository(
+            $app['db'],
+            config('directus.databases.system.options.prefix', '').'migrations'
+        );
+
+        // Since we have our own migrations, this avoids triggering migration related events
+        // inside to application code.
+        $events = new Dispatcher();
+
+        $migrator = new Migrator(
+            $repository,
+            $app['db'],
+            $app['files'],
+            $events
+        );
+
+        $migrator->setOutput($this->getOutput());
+        $migrator->path(__DIR__.'/../../database/migrations');
+
+        $migrator->usingConnection(
+            directus()->databases()->system()->connectionName(),
+            static function () use ($migrator, $repository): void {
+                if (!$migrator->repositoryExists()) {
+                    $repository->createRepository();
+                }
+
+                $migrator->run($migrator->paths(), [
+                    'pretend' => false,
+                    'step' => false,
+                ]);
+            }
+        );
+    }
+
+    /**
+     * Creates the initial user.
+     */
+    private function createUser(): void
+    {
+        if (User::query()->count() > 0) {
+            $this->info('Database already has users. Skipping.');
+
+            return;
+        }
+
+        /** @var string $email */
+        $email = $this->option('email') !== false ? $this->option('email') : 'admin@example.com';
+
+        /** @var string $password */
+        $password = $this->option('password') !== null ? $this->option('password') : Str::random(16);
+
+        $user = new User();
+        $user->email = $email;
+        $user->password = $password;
+        $user->saveOrFail();
+
+        $this->credentials = [
+            'created' => true,
+            'random' => $this->option('password') === null,
+            'email' => $email,
+            'password' => $password,
+        ];
+
+        if ($this->credentials['random'] && $this->option('composer') === false) {
+            $this->info("User with email '{$email}' has been created with password {$password}");
+        }
     }
 
     /**
@@ -106,8 +197,9 @@ class InstallCommand extends Command
      */
     private function assertDatabaseExists(): void
     {
-        $this->progress->setMessage('Asserting database exists');
+        $this->info('Asserting database exists');
         @touch(database_path('database.sqlite'));
+        @touch(database_path('directus.sqlite'));
     }
 
     /**
@@ -115,7 +207,7 @@ class InstallCommand extends Command
      */
     private function configureEnvironment(): void
     {
-        $this->progress->setMessage('Updating environment information');
+        $this->info('Updating environment information');
 
         $env = base_path('.env');
         if (!file_exists($env)) {
@@ -149,7 +241,7 @@ class InstallCommand extends Command
      */
     private function publishFiles(): void
     {
-        $this->progress->setMessage('Publishing files');
+        $this->info('Publishing files');
 
         $this->callSilent('vendor:publish', ['--tag' => 'directus']);
     }

@@ -24,5 +24,6 @@ class DirectusProvider extends ServiceProvider
         $this->app->register(RoutesProvider::class);
         $this->app->register(MigrationsProvider::class);
         $this->app->register(CommandsProvider::class);
+        $this->app->register(GraphQLProvider::class);
     }
 }

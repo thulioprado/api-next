@@ -21,7 +21,6 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property string $junction_field_id
  *
  * @mixin Model
- * @mixin Builder
  */
 class Relation extends Model
 {

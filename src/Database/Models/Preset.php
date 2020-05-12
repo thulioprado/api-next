@@ -5,33 +5,35 @@ declare(strict_types=1);
 namespace Directus\Database\Models;
 
 use Directus\Database\Traits\FromSystemDatabase;
+use Directus\Database\Traits\ModelOperations;
 use Directus\Database\Traits\UsesUuidPrimaryKey;
+use Directus\Exceptions\PresetNotCreated;
+use Directus\Exceptions\PresetNotFound;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Query\Builder;
 
 /**
  * Collection model.
  *
- * @property string $id
- * @property string $title
- * @property string $collection_id
- * @property string $user_id
- * @property string $role_id
- * @property string $search_query
- * @property array  $filters
- * @property string $view_type
- * @property string $view_query
- * @property array  $view_options
- * @property array  $translation
+ * @property string      $id
+ * @property null|string $title
+ * @property null|string $collection_id
+ * @property null|string $user_id
+ * @property null|string $role_id
+ * @property null|string $search_query
+ * @property null|array  $filters
+ * @property string      $view_type
+ * @property null|string $view_query
+ * @property null|array  $view_options
+ * @property null|array  $translation
  *
  * @mixin Model
- * @mixin Builder
  */
-class CollectionPreset extends Model
+class Preset extends Model
 {
     use FromSystemDatabase;
     use UsesUuidPrimaryKey;
+    use ModelOperations;
 
     /**
      * @var array<string>
@@ -53,6 +55,14 @@ class CollectionPreset extends Model
         'view_query',
         'view_options',
         'translation',
+    ];
+
+    /**
+     * @var array<string>
+     */
+    private static $exceptions = [
+        'not_found' => PresetNotFound::class,
+        'not_created' => PresetNotCreated::class,
     ];
 
     /**

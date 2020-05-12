@@ -14,6 +14,9 @@ use PHPUnit\Framework\Assert;
 
 class TestingProvider extends ServiceProvider
 {
+    /**
+     * @noinspection StaticClosureCanBeUsedInspection
+     */
     public function register(): void
     {
         Initializer::setupApplication(app('config'));

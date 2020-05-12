@@ -5,7 +5,10 @@ declare(strict_types=1);
 namespace Directus\Database\Models;
 
 use Directus\Database\Traits\FromSystemDatabase;
+use Directus\Database\Traits\ModelOperations;
 use Directus\Database\Traits\UsesUuidPrimaryKey;
+use Directus\Exceptions\WebhookNotCreated;
+use Directus\Exceptions\WebhookNotFound;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
@@ -20,12 +23,12 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property null|string $directus_action
  *
  * @mixin Model
- * @mixin Builder
  */
 class Webhook extends Model
 {
     use FromSystemDatabase;
     use UsesUuidPrimaryKey;
+    use ModelOperations;
 
     /**
      * @var array<string>
@@ -43,6 +46,14 @@ class Webhook extends Model
      */
     protected $hidden = [
         'collection_id',
+    ];
+
+    /**
+     * @var array<string>
+     */
+    private static $exceptions = [
+        'not_found' => WebhookNotFound::class,
+        'not_created' => WebhookNotCreated::class,
     ];
 
     /**

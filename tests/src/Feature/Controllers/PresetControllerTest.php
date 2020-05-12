@@ -30,7 +30,7 @@ final class PresetControllerTest extends TestCase
     {
         parent::setUp();
 
-        $this->preset = directus()->presets()->create('directus_users', [
+        $this->preset = directus()->presets()->create('posts', [
             'title' => 'preset title',
             'search_query' => 'my query',
         ]);
@@ -44,7 +44,7 @@ final class PresetControllerTest extends TestCase
 
     public function testListAll(): void
     {
-        $presets = $this->getJson('/directus/collection_presets')->assertResponse()->data();
+        $presets = $this->getJson('/directus/presets')->assertResponse()->data();
         static::assertCount(1, $presets);
 
         static::assertArraySubset($this->preset, $presets[0]);
@@ -52,38 +52,38 @@ final class PresetControllerTest extends TestCase
 
     public function testFetch(): void
     {
-        $preset = $this->getJson("/directus/collection_presets/{$this->preset['id']}")->assertResponse()->data();
+        $preset = $this->getJson("/directus/presets/{$this->preset['id']}")->assertResponse()->data();
         static::assertArraySubset($this->preset, $preset);
     }
 
     public function testCreatePreset(): void
     {
-        $this->postJson('/directus/collection_presets', [
-            'collection' => 'directus_users',
+        $this->postJson('/directus/presets', [
+            'collection' => 'posts',
             'title' => 'some random preset',
         ])->assertResponse();
 
-        $this->assertDatabaseHas('directus_collection_presets', [
+        $this->assertDatabaseHas('directus_presets', [
             'title' => 'some random preset',
         ]);
     }
 
     public function testUpdatePreset(): void
     {
-        $this->patchJson("/directus/collection_presets/{$this->preset['id']}", [
-            'collection' => 'directus_users',
+        $this->patchJson("/directus/presets/{$this->preset['id']}", [
+            'collection' => 'posts',
             'title' => 'my updated title',
         ])->assertResponse();
 
-        $this->assertDatabaseHas('directus_collection_presets', [
+        $this->assertDatabaseHas('directus_presets', [
             'title' => 'my updated title',
         ]);
     }
 
     public function testDeletePreset(): void
     {
-        $this->deleteJson("/directus/collection_presets/{$this->preset['id']}")->assertStatus(204);
+        $this->deleteJson("/directus/presets/{$this->preset['id']}")->assertStatus(204);
 
-        static::assertCount(0, $this->getJson('/directus/collection_presets')->assertResponse()->data());
+        static::assertCount(0, $this->getJson('/directus/presets')->assertResponse()->data());
     }
 }

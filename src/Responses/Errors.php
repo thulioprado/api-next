@@ -24,7 +24,12 @@ class Errors
     public const COLLECTION_ALREADY_EXISTS = 'collection_already_exists';
 
     public const ACTIVITY_NOT_FOUND = 'activity_not_found';
+    public const ACTIVITY_NOT_CREATED = 'activity_not_created';
+
     public const PRESET_NOT_FOUND = 'preset_not_found';
+
+    public const FIELD_NOT_FOUND = 'field_not_found';
+    public const FIELD_NOT_CREATED = 'field_not_created';
 
     public const USER_NOT_FOUND = 'user_not_found';
     public const USER_NOT_CREATED = 'user_not_created';
@@ -45,6 +50,8 @@ class Errors
 
     public const RELATION_NOT_FOUND = 'relation_not_found';
     public const RELATION_NOT_CREATED = 'relation_not_created';
+
+    public const GRAPHQL_EXCEPTION = 'graphql_exception';
 
     /**
      * @var array
@@ -85,6 +92,10 @@ class Errors
             'status' => Response::HTTP_NOT_FOUND,
             'context' => ['id'],
         ],
+        self::ACTIVITY_NOT_CREATED => [
+            'status' => Response::HTTP_INTERNAL_SERVER_ERROR,
+            'context' => ['id'],
+        ],
 
         // Preset
 
@@ -101,6 +112,18 @@ class Errors
         ],
 
         self::USER_NOT_CREATED => [
+            'status' => Response::HTTP_INTERNAL_SERVER_ERROR,
+            'context' => ['first_name', 'last_name', 'email', 'role_id', 'status'],
+        ],
+
+        // Field
+
+        self::FIELD_NOT_FOUND => [
+            'status' => Response::HTTP_NOT_FOUND,
+            'context' => ['id'],
+        ],
+
+        self::FIELD_NOT_CREATED => [
             'status' => Response::HTTP_INTERNAL_SERVER_ERROR,
             'context' => ['first_name', 'last_name', 'email', 'role_id', 'status'],
         ],
@@ -170,6 +193,13 @@ class Errors
         self::RELATION_NOT_CREATED => [
             'status' => Response::HTTP_INTERNAL_SERVER_ERROR,
             'context' => ['field_many'],
+        ],
+
+        // GraphQL
+
+        self::GRAPHQL_EXCEPTION => [
+            'status' => Response::HTTP_INTERNAL_SERVER_ERROR,
+            'context' => ['message'],
         ],
     ];
 

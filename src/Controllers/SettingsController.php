@@ -5,76 +5,80 @@ declare(strict_types=1);
 namespace Directus\Controllers;
 
 use Directus\Database\Models\Setting;
-use Directus\Exceptions\SettingAlreadyExists;
+use Directus\Exceptions\SettingNotCreated;
 use Directus\Exceptions\SettingNotFound;
-use Directus\Services\Settings\SettingsService;
-use Exception;
+use Directus\Requests\SettingCreateRequest;
+use Directus\Requests\SettingUpdateRequest;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
 
 /**
  * Setting controller.
  */
 class SettingsController extends BaseController
 {
-    public function all(SettingsService $settings): JsonResponse
+    public function all(): JsonResponse
     {
         // TODO: validate parameters
         // TODO: implement limit, offset, page, single, meta parameters
 
-        return directus()->respond()->with(
-            $settings->all()
-        );
+        /** @var Collection $settings */
+        $settings = Setting::all();
+
+        return directus()->respond()->with($settings->toArray());
     }
 
     /**
      * @throws SettingNotFound
      */
-    public function fetch(SettingsService $settings, string $key): JsonResponse
+    public function fetch(string $key): JsonResponse
     {
         // TODO: validate parameters
 
-        return directus()->respond()->with(
-            $settings->entry($key)->toArray()
-        );
+        /** @var Setting $settings */
+        $settings = Setting::findOrFail($key);
+
+        return directus()->respond()->with($settings->toArray());
     }
 
     /**
-     * @throws SettingAlreadyExists
+     * @throws SettingNotCreated
      */
-    public function create(SettingsService $settings, Request $request): JsonResponse
+    public function create(SettingCreateRequest $request): JsonResponse
     {
-        // TODO: validate parameters
+        $attributes = $request->all();
 
-        /** @var string $key */
-        $key = $request->post('key');
-        $value = $request->post('value');
+        $settings = directus()->databases()->system()->transaction(function () use ($attributes): Setting {
+            /** @var Setting $settings */
+            $settings = new Setting($attributes);
+            $settings->saveOrFail();
 
-        return directus()->respond()->with(
-            $settings->create($key, $value)
-        );
+            return $settings;
+        });
+
+        return directus()->respond()->with($settings->toArray());
+    }
+
+    /**
+     * @throws SettingNotFound
+     */
+    public function update(SettingUpdateRequest $request, string $key): JsonResponse
+    {
+        /** @var Setting $settings */
+        $settings = Setting::findOrFail($key);
+        $settings->update($request->all());
+
+        return directus()->respond()->with($settings->toArray());
     }
 
     /**
      * @throws SettingNotFound
      */
-    public function update(SettingsService $settings, Request $request, string $key): JsonResponse
+    public function delete(string $key): JsonResponse
     {
-        // TODO: validate parameter
-
-        return directus()->respond()->with(
-            $settings->update($key, $request->post('value'))
-        );
-    }
-
-    /**
-     * @throws SettingNotFound
-     * @throws Exception
-     */
-    public function delete(SettingsService $settings, string $key): JsonResponse
-    {
-        // TODO: validate parameter
-        $settings->delete($key);
+        /** @var Setting $settings */
+        $settings = Setting::findOrFail($key);
+        $settings->delete();
 
         return directus()->respond()->withNothing();
     }

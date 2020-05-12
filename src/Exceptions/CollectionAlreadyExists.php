@@ -4,20 +4,13 @@ declare(strict_types=1);
 
 namespace Directus\Exceptions;
 
-use Directus\Responses\Errors;
+use Directus\Exceptions\Traits\SmartException;
+use Exception;
 
 /**
  * DirectusException.
  */
-class CollectionAlreadyExists extends DirectusException
+class CollectionAlreadyExists extends Exception
 {
-    /**
-     * DirectusException constructor.
-     */
-    public function __construct(string $key)
-    {
-        parent::__construct(Errors::COLLECTION_ALREADY_EXISTS, [
-            'key' => $key,
-        ]);
-    }
+    use SmartException;
 }

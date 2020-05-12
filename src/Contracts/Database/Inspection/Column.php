@@ -12,6 +12,11 @@ interface Column
     public function name(): string;
 
     /**
+     * Gets or sets the table comment.
+     */
+    public function comment(?string $new = null): string;
+
+    /**
      * Gets the column type.
      */
     public function type(): string;

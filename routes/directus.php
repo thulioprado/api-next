@@ -5,6 +5,7 @@ declare(strict_types=1);
 use Directus\Controllers\ActivityController;
 use Directus\Controllers\CollectionController;
 use Directus\Controllers\FolderController;
+use Directus\Controllers\GraphQLController;
 use Directus\Controllers\PermissionController;
 use Directus\Controllers\PresetController;
 use Directus\Controllers\ProjectController;
@@ -25,7 +26,17 @@ Route::group([
     'middleware' => [
         DirectusMiddleware::class,
     ],
-], function (): void {
+], static function (): void {
+    // GraphQL
+    // https://docs.directus.io/api/graphql.html
+    Route::group([
+        'prefix' => 'graphql',
+        'as' => 'graphql.',
+    ], static function (): void {
+        Route::get('', [GraphQLController::class, 'query'])->name('get');
+        Route::post('', [GraphQLController::class, 'query'])->name('post');
+    });
+
     // Server
     // https://docs.directus.io/api/server.html
     Route::group([
@@ -72,8 +83,8 @@ Route::group([
         // Presets
         // https://docs.directus.io/api/collection-presets.html
         Route::group([
-            'prefix' => 'collection_presets',
-            'as' => 'collection_presets.',
+            'prefix' => 'presets',
+            'as' => 'presets.',
         ], static function (): void {
             Route::get('', [PresetController::class, 'all'])->name('all');
             Route::get('{key}', [PresetController::class, 'fetch'])->name('fetch');
@@ -89,6 +100,7 @@ Route::group([
             'as' => 'users.',
         ], static function (): void {
             Route::get('', [UserController::class, 'all'])->name('all');
+            Route::get('me', [UserController::class, 'current'])->name('all');
             Route::get('{key}', [UserController::class, 'fetch'])->name('fetch');
             Route::post('', [UserController::class, 'create'])->name('create');
             Route::patch('{key}', [UserController::class, 'update'])->name('update');

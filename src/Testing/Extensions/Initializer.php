@@ -6,6 +6,7 @@ namespace Directus\Testing\Extensions;
 
 use Directus\Providers\DirectusProvider;
 use Illuminate\Config\Repository;
+use Illuminate\Container\Container;
 use Illuminate\Contracts\Console\Kernel;
 use Illuminate\Foundation\Application;
 use Orchestra\Testbench\Concerns\CreatesApplication;
@@ -45,7 +46,7 @@ class Initializer implements BeforeFirstTestHook, AfterLastTestHook
             @touch(static::path());
         }
 
-        $this->executeMigrations();
+        $this->executeInstall();
     }
 
     public function executeAfterLastTest(): void
@@ -128,7 +129,7 @@ class Initializer implements BeforeFirstTestHook, AfterLastTestHook
     /**
      * Execute the package migrations into the test database.
      */
-    private function executeMigrations(): void
+    private function executeInstall(): void
     {
         $bootstrap = new class() {
             use CreatesApplication;
@@ -152,10 +153,18 @@ class Initializer implements BeforeFirstTestHook, AfterLastTestHook
             }
         };
 
-        /** @var Application $app */
-        $app = $bootstrap->createApplication();
-        $app[Kernel::class]->call('migrate:fresh');
+        // @var Application $app
+        Container::setInstance($app = $bootstrap->createApplication());
+
+        $app[Kernel::class]->call('directus:install', [
+            '--email' => 'admin@example.com',
+            '--password' => 'password',
+        ]);
+
+        directus()->databases()->seed();
+
         $app->flush();
-        $app = null;
+
+        Container::setInstance($app = null);
     }
 }

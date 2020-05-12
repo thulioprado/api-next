@@ -4,15 +4,11 @@ declare(strict_types=1);
 
 namespace Directus\Database\Traits;
 
-use Directus\Exceptions\DirectusException;
-
 trait ModelOperations
 {
     /**
      * @param mixed $id
      * @param array $columns
-     *
-     * @throws DirectusException
      *
      * @return mixed
      */
@@ -23,7 +19,7 @@ trait ModelOperations
         } catch (\Throwable $t) {
             $exception = static::$exceptions['not_found'] ?? '\Exception';
 
-            throw new $exception($id);
+            throw new $exception();
         }
 
         return $result;
@@ -31,19 +27,15 @@ trait ModelOperations
 
     /**
      * @param array $options
-     *
-     * @throws DirectusException
-     *
-     * @return bool
      */
-    public function saveOrFail($options = [])
+    public function saveOrFail($options = []): bool
     {
         $saved = parent::save($options);
 
         if ($saved === false) {
             $exception = static::$exceptions['not_created'] ?? '\Exception'; // TODO: nem sempre vai ser create qnd der save
 
-            throw new $exception($options);
+            throw new $exception();
         }
 
         return $saved;

@@ -38,26 +38,12 @@ final class UserControllerTest extends TestCase
     {
         parent::setUp();
 
-        $role = new Role([
-            'name' => 'Developer',
-        ]);
-
-        $role->saveOrFail();
-
-        $user = new User([
-            'status' => 'active',
-            'first_name' => 'thulio',
-            'last_name' => 'prado',
-            'email' => 'thulioprado@gmail.com',
-            'password' => 'directus',
-        ]);
-
-        $user->role()->associate($role);
-        $user->saveOrFail();
-
-        $user = User::with(['role'])->findOrFail($user->id);
-
+        /** @var Role $role */
+        $role = Role::where('name', 'User')->first();
         $this->role = $role->toArray();
+
+        /** @var User $user */
+        $user = User::with(['role'])->where('email', 'thulioprado@gmail.com')->first();
         $this->user = $user->toArray();
     }
 
@@ -65,10 +51,10 @@ final class UserControllerTest extends TestCase
     {
         $users = $this->getJson('/directus/users')->assertResponse()->data();
 
-        $this->assertCount(1, $users);
+        $this->assertCount(2, $users);
 
         try {
-            self::assertArraySubset($this->user, $users[0]);
+            self::assertArraySubset([$this->user], $users);
         } catch (\Throwable $t) {
         }
     }
@@ -118,9 +104,11 @@ final class UserControllerTest extends TestCase
 
     public function testDeleteUser(): void
     {
+        $oldCount = count($this->getJson('/directus/users')->assertResponse()->data());
         $this->deleteJson("/directus/users/{$this->user['id']}")->assertStatus(204);
 
-        $this->assertCount(0, $this->getJson('/directus/users')->assertResponse()->data());
+        $newCount = count($this->getJson('/directus/users')->assertResponse()->data());
+        static::assertEquals($oldCount - 1, $newCount);
     }
 
     public function testInviteUser(): void

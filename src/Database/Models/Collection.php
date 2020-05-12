@@ -5,10 +5,12 @@ declare(strict_types=1);
 namespace Directus\Database\Models;
 
 use Directus\Database\Traits\FromSystemDatabase;
+use Directus\Database\Traits\ModelOperations;
 use Directus\Database\Traits\UsesUuidPrimaryKey;
+use Directus\Exceptions\CollectionNotCreated;
+use Directus\Exceptions\CollectionNotFound;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Database\Query\Builder;
 
 /**
  * Collection model.
@@ -23,12 +25,12 @@ use Illuminate\Database\Query\Builder;
  * @property array  $translation
  *
  * @mixin Model
- * @mixin Builder
  */
 class Collection extends Model
 {
     use FromSystemDatabase;
     use UsesUuidPrimaryKey;
+    use ModelOperations;
 
     /**
      * @var array
@@ -54,6 +56,14 @@ class Collection extends Model
     ];
 
     /**
+     * @var array<string>
+     */
+    private static $exceptions = [
+        'not_found' => CollectionNotFound::class,
+        'not_created' => CollectionNotCreated::class,
+    ];
+
+    /**
      * Gets the activities.
      */
     public function activities(): HasMany
@@ -66,7 +76,7 @@ class Collection extends Model
      */
     public function collectionPresets(): HasMany
     {
-        return $this->hasMany(CollectionPreset::class);
+        return $this->hasMany(Preset::class);
     }
 
     /**

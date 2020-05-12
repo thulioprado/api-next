@@ -40,7 +40,6 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property null|string   $password_reset_token
  *
  * @mixin Model
- * @mixin Builder
  */
 class User extends Model
 {
@@ -110,15 +109,15 @@ class User extends Model
      */
     public function sessions(): HasMany
     {
-        return $this->hasMany(UserSession::class);
+        return $this->hasMany(Session::class);
     }
 
     /**
      * Gets the collection presets.
      */
-    public function collectionPresets(): HasMany
+    public function presets(): HasMany
     {
-        return $this->hasMany(CollectionPreset::class);
+        return $this->hasMany(Preset::class);
     }
 
     /**

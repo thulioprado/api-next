@@ -21,7 +21,7 @@ class RoleController extends BaseController
         // TODO: validate query parameters
 
         /** @var Collection $roles */
-        $roles = Role::with(['users', 'collectionPresets', 'permissions'])->get();
+        $roles = Role::with(['users', 'presets', 'permissions'])->get();
 
         return directus()->respond()->with($roles->toArray());
     }
@@ -34,7 +34,7 @@ class RoleController extends BaseController
         // TODO: validate query parameters
 
         /** @var Role $role */
-        $role = Role::with(['users', 'collectionPresets', 'permissions'])->findOrFail($key);
+        $role = Role::with(['users', 'presets', 'permissions'])->findOrFail($key);
 
         return directus()->respond()->with($role->toArray());
     }
@@ -55,18 +55,18 @@ class RoleController extends BaseController
         });
 
         /** @var Role $role */
-        $role = Role::with(['users', 'collectionPresets', 'permissions'])->findOrFail($role_id);
+        $role = Role::with(['users', 'presets', 'permissions'])->findOrFail($role_id);
 
         return directus()->respond()->with($role->toArray());
     }
 
     /**
-     * @throws RoleNotfound
+     * @throws RoleNotFound
      */
     public function update(string $key, RoleRequest $request): JsonResponse
     {
         /** @var Role $role */
-        $role = Role::with(['users', 'collectionPresets', 'permissions'])->findOrFail($key);
+        $role = Role::with(['users', 'presets', 'permissions'])->findOrFail($key);
         $role->update($request->all());
 
         return directus()->respond()->with($role->toArray());

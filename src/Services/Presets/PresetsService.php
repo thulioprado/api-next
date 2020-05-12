@@ -5,14 +5,14 @@ declare(strict_types=1);
 namespace Directus\Services\Presets;
 
 use Directus\Contracts\Services\Service;
-use Directus\Database\Models\CollectionPreset;
+use Directus\Database\Models\Preset;
 use Directus\Exceptions\PresetNotFound;
 
 class PresetsService implements Service
 {
     public function all(): array
     {
-        return CollectionPreset::all()->toArray();
+        return Preset::all()->toArray();
     }
 
     /**
@@ -28,7 +28,7 @@ class PresetsService implements Service
         $collection_id = directus()->collections()->find($collection)['id'];
 
         // TODO: validate parameters
-        $preset = new CollectionPreset();
+        $preset = new Preset();
         $preset->title = data_get($attributes, 'title', null);
 
         // TODO: use relationships to set column
@@ -80,11 +80,11 @@ class PresetsService implements Service
         $preset->delete();
     }
 
-    private function findModel(string $key): CollectionPreset
+    private function findModel(string $key): Preset
     {
-        $preset = CollectionPreset::find($key);
+        $preset = Preset::find($key);
         if ($preset === null) {
-            throw new PresetNotFound($key);
+            throw new PresetNotFound();
         }
 
         return $preset;

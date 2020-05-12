@@ -65,6 +65,15 @@ class Table implements TableContract
         return $this->table->getName();
     }
 
+    public function comment(?string $new = null): string
+    {
+        if ($new !== null) {
+            $this->table->setComment($new);
+        }
+
+        return $this->table->getComment() ?? '';
+    }
+
     public function primary(string ...$columns): bool
     {
         $columns = collect($columns)->sort()->all();
@@ -107,7 +116,7 @@ class Table implements TableContract
         })->first();
 
         if ($column === null) {
-            throw new ColumnNotFound($name);
+            throw new ColumnNotFound();
         }
 
         return $column;

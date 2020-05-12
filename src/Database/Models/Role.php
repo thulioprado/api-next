@@ -25,7 +25,6 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property bool        $enforce_2fa
  *
  * @mixin Model
- * @mixin Builder
  */
 class Role extends Model
 {
@@ -73,9 +72,9 @@ class Role extends Model
     /**
      * Gets the collection presets.
      */
-    public function collectionPresets(): HasMany
+    public function presets(): HasMany
     {
-        return $this->hasMany(CollectionPreset::class);
+        return $this->hasMany(Preset::class);
     }
 
     /**

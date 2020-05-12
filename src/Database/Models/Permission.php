@@ -11,7 +11,6 @@ use Directus\Exceptions\PermissionNotCreated;
 use Directus\Exceptions\PermissionNotFound;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Query\Builder;
 
 /**
  * Collection model.
@@ -31,7 +30,6 @@ use Illuminate\Database\Query\Builder;
  * @property null|array  $write_field_blacklist
  *
  * @mixin Model
- * @mixin Builder
  */
 class Permission extends Model
 {

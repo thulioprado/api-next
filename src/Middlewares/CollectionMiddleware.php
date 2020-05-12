@@ -34,7 +34,7 @@ class CollectionMiddleware
 
         $route->setParameter(
             self::COLLECTION_PARAMETER,
-            Directus::databases()->database()->collection($parameters[self::COLLECTION_PARAMETER])
+            directus()->databases()->database()->collection($parameters[self::COLLECTION_PARAMETER])
         );
 
         return $next($request);

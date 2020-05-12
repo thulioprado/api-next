@@ -33,14 +33,14 @@ final class ActivityControllerTest extends TestCase
     {
         parent::setUp();
 
-        $this->activity = directus()->activities()->create('created', 'directus_users', [
+        $this->activity = directus()->activities()->create('created', 'posts', [
             'id' => 'some-user',
         ]);
         unset($this->activity['collection']);
 
         $this->comment = directus()->activities()->comment(
             'My comment lives here.',
-            'directus_users',
+            'posts',
             [
                 'id' => 'random',
             ]
@@ -67,7 +67,7 @@ final class ActivityControllerTest extends TestCase
     public function testCreateComment(): void
     {
         $activity = $this->postJson('/directus/activity/comment', [
-            'collection' => 'directus_users',
+            'collection' => 'posts',
             'item' => [
                 'id' => 'wow',
             ],

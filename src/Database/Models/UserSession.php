@@ -6,7 +6,10 @@ namespace Directus\Database\Models;
 
 use DateTime;
 use Directus\Database\Traits\FromSystemDatabase;
+use Directus\Database\Traits\ModelOperations;
 use Directus\Database\Traits\UsesUuidPrimaryKey;
+use Directus\Exceptions\SessionNotCreated;
+use Directus\Exceptions\SessionNotFound;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
@@ -23,12 +26,12 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property null|DateTime $token_expired_at
  *
  * @mixin Model
- * @mixin Builder
  */
-class UserSession extends Model
+class Session extends Model
 {
     use FromSystemDatabase;
     use UsesUuidPrimaryKey;
+    use ModelOperations;
 
     /**
      * @var array
@@ -56,6 +59,14 @@ class UserSession extends Model
      */
     protected $hidden = [
         'user_id',
+    ];
+
+    /**
+     * @var array<string>
+     */
+    private static $exceptions = [
+        'not_found' => SessionNotFound::class,
+        'not_created' => SessionNotCreated::class,
     ];
 
     /**

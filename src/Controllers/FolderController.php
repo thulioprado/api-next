@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Directus\Controllers;
 
+use Directus\Database\Models\File;
 use Directus\Database\Models\Folder;
 use Directus\Exceptions\FolderNotCreated;
 use Directus\Exceptions\FolderNotFound;
@@ -79,8 +80,19 @@ class FolderController extends BaseController
     {
         /** @var Folder $folder */
         $folder = Folder::with(['children', 'files'])->findOrFail($key);
-        $folder->files()->delete();
-        $folder->children()->delete();
+
+        /*
+        TODO: delete files from children and current folder.
+
+        $folders = $folder->children->toArray();
+
+        File::whereIn('folder_id', $folders)->update([
+            'folder_id' => null
+        ]);*/
+
+        $folder->files()->update([
+            'folder_id' => null,
+        ]);
         $folder->delete();
 
         return directus()->respond()->withNothing();

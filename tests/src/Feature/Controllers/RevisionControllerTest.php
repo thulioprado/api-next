@@ -20,6 +20,7 @@ final class RevisionControllerTest extends TestCase
 
     public function testListAll(): void
     {
+        // TODO: test
         $revisions = $this->getJson('/directus/revisions')->assertResponse()->data();
 
         $this->assertCount(0, $revisions);
@@ -27,6 +28,7 @@ final class RevisionControllerTest extends TestCase
 
     public function testFetch(): void
     {
+        // TODO: test
         $this->getJson('/directus/revisions/1')->assertStatus(404);
     }
 }

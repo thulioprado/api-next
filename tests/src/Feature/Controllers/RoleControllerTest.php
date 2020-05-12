@@ -19,45 +19,23 @@ final class RoleControllerTest extends TestCase
     use DatabaseTransactions;
     use ArraySubsetAsserts;
 
-    /**
-     * @var array
-     */
-    private $role;
-
-    /**
-     * Set up.
-     */
-    protected function setUp(): void
-    {
-        parent::setUp();
-
-        $role = new Role([
-            'name' => 'Developer',
-        ]);
-
-        $role->saveOrFail();
-
-        $this->role = $role->toArray();
-    }
-
     public function testListAll(): void
     {
         $roles = $this->getJson('/directus/roles')->assertResponse()->data();
 
-        $this->assertCount(1, $roles);
-
-        try {
-            self::assertArraySubset($this->role, $roles[0]);
-        } catch (\Throwable $t) {
-        }
+        $this->assertCount(2, $roles);
     }
 
     public function testFetch(): void
     {
-        $role = $this->getJson("/directus/roles/{$this->role['id']}")->assertResponse()->data();
+        /** @var ROle $dev */
+        $dev = Role::where('name', 'Developer')->first();
+        $role = $this->getJson("/directus/roles/{$dev->id}")->assertResponse()->data();
 
         try {
-            self::assertArraySubset($this->role, $role);
+            self::assertArraySubset([
+                'name' => 'Developer',
+            ], $role);
         } catch (\Throwable $t) {
         }
     }
@@ -79,7 +57,9 @@ final class RoleControllerTest extends TestCase
 
     public function testUpdateRole(): void
     {
-        $this->patchJson("/directus/roles/{$this->role['id']}", [
+        /** @var Role $dev */
+        $dev = Role::where('name', 'Developer')->first();
+        $this->patchJson("/directus/roles/{$dev->id}", [
             'name' => 'Designer',
         ])->assertResponse();
 
@@ -90,8 +70,12 @@ final class RoleControllerTest extends TestCase
 
     public function testDeleteRole(): void
     {
-        $this->deleteJson("/directus/roles/{$this->role['id']}")->assertStatus(204);
+        $role = new Role([
+            'name' => 'Random',
+        ]);
+        $role->save();
 
-        $this->assertCount(0, $this->getJson('/directus/roles')->assertResponse()->data());
+        $this->deleteJson("/directus/roles/{$role->id}")->assertStatus(204);
+        $this->getJson("/directus/roles/{$role->id}")->assertStatus(404);
     }
 }

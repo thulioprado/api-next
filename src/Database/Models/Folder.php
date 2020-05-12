@@ -12,7 +12,6 @@ use Directus\Exceptions\FolderNotFound;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Database\Query\Builder;
 
 /**
  * Collection model.
@@ -22,7 +21,6 @@ use Illuminate\Database\Query\Builder;
  * @property string      $name
  *
  * @mixin Model
- * @mixin Builder
  */
 class Folder extends Model
 {
@@ -36,13 +34,6 @@ class Folder extends Model
     protected $fillable = [
         'parent_id',
         'name',
-    ];
-
-    /**
-     * @var array<string>
-     */
-    protected $hidden = [
-        'parent_id',
     ];
 
     /**

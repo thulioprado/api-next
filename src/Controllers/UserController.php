@@ -25,7 +25,7 @@ class UserController extends BaseController
         // TODO: validate query parameters
 
         /** @var Collection $users */
-        $users = User::with(['role', 'sessions', 'collectionPresets'])->get();
+        $users = User::with(['role', 'sessions', 'presets'])->get();
 
         return directus()->respond()->with($users->toArray());
     }
@@ -38,7 +38,7 @@ class UserController extends BaseController
         // TODO: validate query parameters
 
         /** @var User $user */
-        $user = User::with(['role', 'sessions', 'collectionPresets'])->findOrFail($key);
+        $user = User::with(['role', 'sessions', 'presets'])->findOrFail($key);
 
         return directus()->respond()->with($user->toArray());
     }
@@ -59,7 +59,7 @@ class UserController extends BaseController
         });
 
         /** @var User $user */
-        $user = User::with(['role', 'sessions', 'collectionPresets'])->findOrFail($user_id);
+        $user = User::with(['role', 'sessions', 'presets'])->findOrFail($user_id);
 
         return directus()->respond()->with($user->toArray());
     }
@@ -70,7 +70,7 @@ class UserController extends BaseController
     public function update(string $key, UserRequest $request): JsonResponse
     {
         /** @var User $user */
-        $user = User::with(['role', 'sessions', 'collectionPresets'])->findOrFail($key);
+        $user = User::with(['role', 'sessions', 'presets'])->findOrFail($key);
         $user->update($request->all());
 
         return directus()->respond()->with($user->toArray());

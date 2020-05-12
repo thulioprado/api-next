@@ -65,7 +65,7 @@ class CollectionsService implements Service
         ;
 
         if ($collection === null) {
-            throw new CollectionNotFound($key);
+            throw new CollectionNotFound();
         }
 
         return $collection;

@@ -7,7 +7,7 @@ namespace Directus\Contracts;
 use Illuminate\Contracts\Config\Repository;
 
 /**
- * Config class.
+ * Config contract.
  */
 interface Config extends Repository
 {

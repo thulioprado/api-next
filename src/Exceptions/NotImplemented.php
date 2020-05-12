@@ -4,18 +4,25 @@ declare(strict_types=1);
 
 namespace Directus\Exceptions;
 
-use Directus\Responses\Errors;
+use Directus\Exceptions\Traits\SmartException;
+use Exception;
 
 /**
  * DirectusException.
  */
-class NotImplemented extends DirectusException
+class NotImplemented extends Exception
 {
+    use SmartException {
+        __construct as initialize;
+    }
+
     /**
      * DirectusException constructor.
      */
     public function __construct(?string $method = null)
     {
+        parent::__construct();
+
         if ($method === null) {
             $trace = $this->getTrace()[0];
             if (isset($trace['class']) && $trace['class'] !== '') {
@@ -25,7 +32,7 @@ class NotImplemented extends DirectusException
             }
         }
 
-        parent::__construct(Errors::NOT_IMPLEMENTED, [
+        $this->initialize([
             'method' => $method,
         ]);
     }

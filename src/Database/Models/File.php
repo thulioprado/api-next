@@ -6,7 +6,10 @@ namespace Directus\Database\Models;
 
 use DateTime;
 use Directus\Database\Traits\FromSystemDatabase;
+use Directus\Database\Traits\ModelOperations;
 use Directus\Database\Traits\UsesUuidPrimaryKey;
+use Directus\Exceptions\FileNotCreated;
+use Directus\Exceptions\FileNotFound;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
@@ -36,12 +39,12 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property null|string $metadata
  *
  * @mixin Model
- * @mixin Builder
  */
 class File extends Model
 {
     use FromSystemDatabase;
     use UsesUuidPrimaryKey;
+    use ModelOperations;
 
     /**
      * @var array
@@ -81,6 +84,14 @@ class File extends Model
      */
     protected $hidden = [
         'folder_id',
+    ];
+
+    /**
+     * @var array<string>
+     */
+    private static $exceptions = [
+        'not_found' => FileNotFound::class,
+        'not_created' => FileNotCreated::class,
     ];
 
     /**

@@ -4,20 +4,13 @@ declare(strict_types=1);
 
 namespace Directus\Exceptions;
 
-use Directus\Responses\Errors;
+use Directus\Exceptions\Traits\SmartException;
+use Exception;
 
 /**
  * Exception.
  */
-class TableNotFound extends DirectusException
+class TableNotFound extends Exception
 {
-    /**
-     * Constructor.
-     */
-    public function __construct(string $name)
-    {
-        parent::__construct(Errors::TABLE_NOT_FOUND, [
-            'name' => $name,
-        ]);
-    }
+    use SmartException;
 }

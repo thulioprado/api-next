@@ -30,7 +30,7 @@ class ActivitiesService implements Service
 
         $activity = Activity::find($key);
         if ($activity === null) {
-            throw new ActivityNotFound($key);
+            throw new ActivityNotFound();
         }
 
         return $activity->toArray();
@@ -44,12 +44,14 @@ class ActivitiesService implements Service
         // TODO: validate parameters
         $collection = directus()->collections()->find($collection);
 
+        $ip = request()->ip() ?? '0.0.0.0'; // TODO: check this later
+
         $activity = new Activity();
         $activity->action = $action;
         $activity->action_by = null; // TODO: associate user with the activity
         $activity->action_on = Carbon::now();
-        $activity->ip = request()->ip();
-        $activity->user_agent = request()->userAgent();
+        $activity->ip = $ip;
+        $activity->user_agent = request()->userAgent() ?? 'Unknown';
         $activity->item = $item;
         $activity->edited_on = null;
         $activity->comment = $comment;
@@ -80,7 +82,7 @@ class ActivitiesService implements Service
 
         $activity = Activity::where('id', '=', $key)->where('action', '=', 'comment')->first();
         if ($activity === null) {
-            throw new ActivityNotFound($key);
+            throw new ActivityNotFound();
         }
 
         $activity->edited_on = Carbon::now();

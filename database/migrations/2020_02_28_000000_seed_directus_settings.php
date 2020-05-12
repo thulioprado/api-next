@@ -9,7 +9,7 @@ class SeedDirectusSettings extends Migration
 {
     public function up(): void
     {
-        $system = Directus::databases()->system();
+        $system = directus()->databases()->system();
 
         $system->collection('settings')->builder()->insert([
             [
@@ -159,7 +159,7 @@ class SeedDirectusSettings extends Migration
      */
     public function down(): void
     {
-        $system = Directus::databases()->system();
+        $system = directus()->databases()->system();
 
         $system->collection('settings')->truncate();
     }

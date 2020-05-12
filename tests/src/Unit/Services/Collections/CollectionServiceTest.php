@@ -39,10 +39,9 @@ final class CollectionServiceTest extends TestCase
 
     public function testCanFetchCollectionByNameOrId(): void
     {
-        $activities1 = $this->collections->find('directus_activities');
-        $activities2 = $this->collections->find('c5e7edfd-f7e8-42b5-8da3-a433d3c7822b');
+        $posts = $this->collections->find('posts');
 
-        static::assertSame($activities1, $activities2);
+        static::assertSame('posts', $posts['name']);
     }
 
     public function testShouldThrowIfNotFound(): void

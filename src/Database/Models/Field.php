@@ -5,11 +5,13 @@ declare(strict_types=1);
 namespace Directus\Database\Models;
 
 use Directus\Database\Traits\FromSystemDatabase;
+use Directus\Database\Traits\ModelOperations;
 use Directus\Database\Traits\UsesUuidPrimaryKey;
+use Directus\Exceptions\FieldNotCreated;
+use Directus\Exceptions\FieldNotFound;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Database\Query\Builder;
 
 /**
  * Field model.
@@ -33,12 +35,12 @@ use Illuminate\Database\Query\Builder;
  * @property array  $translation
  *
  * @mixin Model
- * @mixin Builder
  */
 class Field extends Model
 {
     use FromSystemDatabase;
     use UsesUuidPrimaryKey;
+    use ModelOperations;
 
     /**
      * @var array
@@ -75,6 +77,14 @@ class Field extends Model
         'group_id',
         'note',
         'translation',
+    ];
+
+    /**
+     * @var array<string>
+     */
+    private static $exceptions = [
+        'not_found' => FieldNotFound::class,
+        'not_created' => FieldNotCreated::class,
     ];
 
     /**

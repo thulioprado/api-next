@@ -24,8 +24,10 @@
     "illuminate/http": "^7",
     "illuminate/routing": "^7",
     "illuminate/support": "^7",
+    "mll-lab/graphql-php-scalars": "^3.0",
     "nesbot/carbon": "^2",
     "webmozart/path-util": "^2.3",
+    "webonyx/graphql-php": "^0.13.8",
     "wolfulus/extras": "^0.0"
   },
   "require-dev": {

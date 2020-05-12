@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Directus\Providers;
 
 use Directus\Console\InstallCommand;
+use Directus\Console\UpgradeCommand;
 use Illuminate\Support\ServiceProvider;
 
 /**
@@ -17,6 +18,7 @@ class CommandsProvider extends ServiceProvider
      */
     private $commands = [
         InstallCommand::class,
+        UpgradeCommand::class,
     ];
 
     /**

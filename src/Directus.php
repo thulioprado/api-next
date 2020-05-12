@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace Directus;
 
+use Directus\GraphQL\Runner;
 use Directus\Responses\DirectusResponse;
 use Directus\Services\Activities\ActivitiesService;
 use Directus\Services\Collections\CollectionsService;
 use Directus\Services\Databases\DatabasesService;
 use Directus\Services\Fields\FieldsService;
 use Directus\Services\Presets\PresetsService;
-use Directus\Services\Settings\SettingsService;
 use Illuminate\Support\Traits\Macroable;
 
 /**
@@ -20,9 +20,9 @@ use Illuminate\Support\Traits\Macroable;
  * @method static CollectionsService collections()
  * @method static FieldsService fields()
  * @method static DatabasesService databases()
- * @method static SettingsService settings()
  * @method static ActivitiesService activities()
  * @method static PresetsService presets()
+ * @method static Runner graphql()
  */
 class Directus
 {

@@ -4,20 +4,13 @@ declare(strict_types=1);
 
 namespace Directus\Exceptions;
 
-use Directus\Responses\Errors;
+use Directus\Exceptions\Traits\SmartException;
+use Exception;
 
 /**
  * Exception.
  */
-class ColumnNotFound extends DirectusException
+class ColumnNotFound extends Exception
 {
-    /**
-     * Constructor.
-     */
-    public function __construct(string $name)
-    {
-        parent::__construct(Errors::COLUMN_NOT_FOUND, [
-            'name' => $name,
-        ]);
-    }
+    use SmartException;
 }

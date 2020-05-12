@@ -63,22 +63,6 @@ class DirectusResponse extends JsonResponse
     }
 
     /**
-     * Responds with an error.
-     */
-    public function withError(string $code, array $context = []): self
-    {
-        $error = Errors::for($code, $context);
-        $this->setStatusCode($error['status']);
-        unset($error['status']);
-        $this->set('error', $error);
-
-        // TODO: dispatch event for plugins to transform the response and
-        //       leverage request()->route()->getName() for identification
-
-        return $this;
-    }
-
-    /**
      * Sets data on the array.
      *
      * @param mixed $data

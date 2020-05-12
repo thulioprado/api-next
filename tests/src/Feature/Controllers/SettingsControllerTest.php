@@ -6,6 +6,7 @@ namespace Directus\Tests\Feature\Controllers;
 
 use Directus\Responses\Errors;
 use Directus\Testing\TestCase;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * @covers \Directus\Controllers\SettingsController
@@ -17,6 +18,7 @@ final class SettingsControllerTest extends TestCase
     public function testAll(): void
     {
         $data = $this->getJson('/directus/settings')->data();
+
         static::assertIsArray($data);
         static::assertCount(22, $data);
     }
@@ -70,7 +72,7 @@ final class SettingsControllerTest extends TestCase
     {
         $this->patchJson('/directus/settings/some_unknown_setting', [
             'value' => 'new value',
-        ])->assertErrorCode(Errors::SETTING_NOT_FOUND);
+        ])->assertStatus(Response::HTTP_NOT_FOUND)->assertErrorCode('setting_not_found');
     }
 
     public function testCreateAlreadyExists(): void
@@ -78,7 +80,7 @@ final class SettingsControllerTest extends TestCase
         $this->postJson('/directus/settings', [
             'key' => 'asset_url_naming',
             'value' => 'another_value',
-        ])->assertErrorCode(Errors::SETTING_ALREADY_EXISTS);
+        ])->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY)->assertErrorCode('request_validation_failed');
     }
 
     public function testDelete(): void

@@ -4,20 +4,13 @@ declare(strict_types=1);
 
 namespace Directus\Exceptions;
 
-use Directus\Responses\Errors;
+use Directus\Exceptions\Traits\SmartException;
+use Exception;
 
 /**
  * Exception.
  */
-class RevisionNotFound extends DirectusException
+class RevisionNotFound extends Exception
 {
-    /**
-     * Constructor.
-     */
-    public function __construct(string $id)
-    {
-        parent::__construct(Errors::REVISION_NOT_FOUND, [
-            'id' => $id,
-        ]);
-    }
+    use SmartException;
 }

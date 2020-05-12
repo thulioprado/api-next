@@ -81,7 +81,7 @@ class Inspector implements InspectorContract
         });
 
         if ($table === null || $table === false) {
-            throw new TableNotFound($tableName);
+            throw new TableNotFound();
         }
 
         return $tables[$table];

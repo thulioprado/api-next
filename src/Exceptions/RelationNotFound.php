@@ -4,20 +4,13 @@ declare(strict_types=1);
 
 namespace Directus\Exceptions;
 
-use Directus\Responses\Errors;
+use Directus\Exceptions\Traits\SmartException;
+use Exception;
 
 /**
  * Exception.
  */
-class RelationNotFound extends DirectusException
+class RelationNotFound extends Exception
 {
-    /**
-     * Constructor.
-     */
-    public function __construct(string $id)
-    {
-        parent::__construct(Errors::RELATION_NOT_FOUND, [
-            'id' => $id,
-        ]);
-    }
+    use SmartException;
 }

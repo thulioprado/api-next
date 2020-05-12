@@ -4,20 +4,13 @@ declare(strict_types=1);
 
 namespace Directus\Exceptions;
 
-use Directus\Responses\Errors;
+use Directus\Exceptions\Traits\SmartException;
+use Exception;
 
 /**
  * Exception.
  */
-class PermissionNotFound extends DirectusException
+class PermissionNotFound extends Exception
 {
-    /**
-     * Constructor.
-     */
-    public function __construct(string $id)
-    {
-        parent::__construct(Errors::PERMISSION_NOT_FOUND, [
-            'id' => $id,
-        ]);
-    }
+    use SmartException;
 }

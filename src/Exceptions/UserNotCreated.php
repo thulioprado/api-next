@@ -4,18 +4,13 @@ declare(strict_types=1);
 
 namespace Directus\Exceptions;
 
-use Directus\Responses\Errors;
+use Directus\Exceptions\Traits\SmartException;
+use Exception;
 
 /**
  * Exception.
  */
-class UserNotCreated extends DirectusException
+class UserNotCreated extends Exception
 {
-    /**
-     * Constructor.
-     */
-    public function __construct(array $attributes)
-    {
-        parent::__construct(Errors::USER_NOT_CREATED, $attributes);
-    }
+    use SmartException;
 }

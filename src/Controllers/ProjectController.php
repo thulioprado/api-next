@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Directus\Controllers;
 
-use Directus\Services\Settings\SettingsService;
+use Directus\Database\Models\Setting;
 use Illuminate\Http\JsonResponse;
 
 /**
@@ -17,23 +17,20 @@ class ProjectController extends BaseController
      */
     public function info(): JsonResponse
     {
-        /** @var SettingsService $settings */
-        $settings = directus()->settings();
-
         // TODO: split this response into composeable plugins/hooks/extensions
         return directus()->respond()->with([
             // TODO: this would be a better place and makes more sense
-            'name' => $settings->get('project_name'),
-            'url' => $settings->get('project_url'),
-            'public_note' => $settings->get('project_public_note'),
-            'logo' => $settings->get('project_logo'),
-            'color' => $settings->get('project_color'),
+            'name' => Setting::fromKey('project_name'),
+            'url' => Setting::fromKey('project_url'),
+            'public_note' => Setting::fromKey('project_public_note'),
+            'logo' => Setting::fromKey('project_logo'),
+            'color' => Setting::fromKey('project_color'),
             'files' => [
-                'foreground' => $settings->get('project_foreground'),
-                'background' => $settings->get('project_background'),
+                'foreground' => Setting::fromKey('project_foreground'),
+                'background' => Setting::fromKey('project_background'),
             ],
-            'telemetry' => $settings->get('telemetry'),
-            'default_locale' => $settings->get('default_locale'),
+            'telemetry' => Setting::fromKey('telemetry'),
+            'default_locale' => Setting::fromKey('default_locale'),
             // ENDTODO
 
             // TODO: remove this block later
@@ -47,14 +44,14 @@ class ProjectController extends BaseController
                     'system' => directus()->databases()->system()->driver(),
                 ],
                 // TODO: better structure this, separate to 'settings' key outside 'api'
-                'project_name' => $settings->get('project_name'),
-                'project_logo' => $settings->get('project_logo'),
-                'project_color' => $settings->get('project_color'),
-                'project_foreground' => $settings->get('project_foreground'),
-                'project_background' => $settings->get('project_background'),
-                'telemetry' => $settings->get('telemetry'),
-                'default_locale' => $settings->get('default_locale'),
-                'project_public_note' => $settings->get('project_public_note'),
+                'project_name' => Setting::fromKey('project_name'),
+                'project_logo' => Setting::fromKey('project_logo'),
+                'project_color' => Setting::fromKey('project_color'),
+                'project_foreground' => Setting::fromKey('project_foreground'),
+                'project_background' => Setting::fromKey('project_background'),
+                'telemetry' => Setting::fromKey('telemetry'),
+                'default_locale' => Setting::fromKey('default_locale'),
+                'project_public_note' => Setting::fromKey('project_public_note'),
                 // ENDTODO
             ],
 
