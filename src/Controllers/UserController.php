@@ -88,7 +88,17 @@ class UserController extends BaseController
         return directus()->respond()->withNothing();
     }
 
-    // TODO: Missing https://docs.directus.io/api/users.html#retrieve-the-current-user
+    public function current(): JsonResponse
+    {
+        /** @var User $user */
+        $user = User::query()->first(); // TODO: fetch user from context
+
+        return directus()->respond()->with([
+            'first_name' => $user->first_name,
+            'last_name' => $user->last_name,
+            'role' => $user->role->name,
+        ]);
+    }
 
     /**
      * @throws UserNotCreated

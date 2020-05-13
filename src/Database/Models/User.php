@@ -38,6 +38,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property string        $theme
  * @property null|string   $twofactor_secret
  * @property null|string   $password_reset_token
+ * @property Role          $role
  *
  * @mixin Model
  */
