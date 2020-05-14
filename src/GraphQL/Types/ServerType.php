@@ -44,6 +44,13 @@ class ServerType extends Type
         ];
     }
 
+    public function resolveProjects(): array
+    {
+        return [
+            config('directus.project.id'),
+        ];
+    }
+
     protected function name(): string
     {
         return 'Server';
@@ -60,6 +67,9 @@ class ServerType extends Type
             'ping' => [
                 'type' => Types::required(Types::string()),
                 'description' => 'Pings the server instance.',
+            ],
+            'projects' => [
+                'type' => Types::required(Types::list(Types::string())),
             ],
             'info' => [
                 'type' => new ObjectType([

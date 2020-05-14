@@ -13,11 +13,6 @@ Thumbs.db
 /.vscode
 /.ddev
 
-# Assets
-
-!/public/.gitkeep
-/public/**/*
-
 # Dependencies
 
 /vendor

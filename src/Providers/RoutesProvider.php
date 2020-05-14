@@ -20,6 +20,11 @@ class RoutesProvider extends ServiceProvider
         /** @var bool $debug */
         $debug = config('app.debug', false);
 
+        // TODO: better handling of this (check for existence)
+        $paths = config('cors.paths', []);
+        $paths[] = config('directus.routes.base').'/*';
+        config()->set('cors.paths', $paths);
+
         // Do not create routes if it's cached.
         // TODO: check whenever `App::` can be replaced with `$this->app->`
         // in https://github.com/nunomaduro/larastan/issues/483

@@ -25,7 +25,8 @@ class InstallCommand extends Command
     protected $signature = 'directus:install
                             {--email=admin@example.com : The initial user email.}
                             {--password= : The initial user password.}
-                            {--app : Also installs the admin dashboard.}
+                            {--app : Installs the admin dashboard.}
+                            {--graphiql : Installs the GraphiQL IDE.}
                             {--composer : Perform the composer project creation flow.}
                             ';
 
@@ -56,6 +57,11 @@ class InstallCommand extends Command
         $app = (bool) $this->option('app');
         if ($app) {
             $steps[] = 'installApp';
+        }
+
+        $graphiql = (bool) $this->option('graphiql');
+        if ($graphiql) {
+            $steps[] = 'installGraphiQL';
         }
 
         $composer = (bool) $this->option('composer');
@@ -123,6 +129,34 @@ class InstallCommand extends Command
         } else {
             $this->info('Installation complete.');
         }
+    }
+
+    public function installGraphiQL(): void
+    {
+        $this->info('Installing GraphiQL interface.');
+
+        $target = Path::join(public_path(), config('directus.routes.base'), 'graphiql');
+        if (file_exists($target)) {
+            $composer = (bool) $this->option('composer');
+            if ($composer) {
+                $this->info('GraphiQL folder already exists. Skipping installation.');
+
+                return;
+            }
+
+            $overwrite = $this->confirm("'{$target}' already exists. Do you want to overwrite the contents?", false);
+            if (!$overwrite) {
+                $this->info('GraphiQL installation skipped.');
+
+                return;
+            }
+        }
+
+        $this->callSilent('vendor:publish', [
+            '--tag' => 'directus-graphiql',
+        ]);
+
+        $this->info('GraphiQL interface installed.');
     }
 
     /**
