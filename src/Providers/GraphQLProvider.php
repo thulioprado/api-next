@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Directus\Providers;
 
 use Directus\Directus;
+use Directus\GraphQL\GraphQL;
 use Directus\GraphQL\Runner;
 use Illuminate\Support\ServiceProvider;
 use Webmozart\PathUtil\Path;
@@ -16,17 +17,13 @@ class GraphQLProvider extends ServiceProvider
 {
     /**
      * Service register.
-     *
-     * @noinspection StaticClosureCanBeUsedInspection
      */
     public function register(): void
     {
-        Directus::macro('graphql', function (): Runner {
-            return resolve(Runner::class);
-        });
+        $this->app->bind(GraphQL::class, GraphQL::class);
 
         $this->publishes([
-            __DIR__.'/../../public/admin/graphiql' => public_path(
+            __DIR__.'/../../public/graphiql' => public_path(
                 Path::join(config('directus.routes.base'), 'graphiql')
             ),
         ], [

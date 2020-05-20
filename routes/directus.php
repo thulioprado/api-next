@@ -33,8 +33,8 @@ Route::group([
         'prefix' => 'graphql',
         'as' => 'graphql.',
     ], static function (): void {
-        Route::get('', [GraphQLController::class, 'query'])->name('get');
-        Route::post('', [GraphQLController::class, 'query'])->name('post');
+        Route::get('', [GraphQLController::class, 'system'])->name('get');
+        Route::post('', [GraphQLController::class, 'system'])->name('post');
     });
 
     // Server

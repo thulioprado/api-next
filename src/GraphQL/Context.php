@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Directus\GraphQL;
 
-class Context
+use Directus\Contracts\GraphQL\Context as ContextContract;
+
+class Context implements ContextContract
 {
 }

@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Directus;
 
-use Directus\GraphQL\Runner;
-use Directus\Responses\DirectusResponse;
+use Directus\GraphQL\GraphQL;
+use Directus\Responses\Response;
 use Directus\Services\Activities\ActivitiesService;
 use Directus\Services\Collections\CollectionsService;
 use Directus\Services\Databases\DatabasesService;
@@ -15,14 +15,6 @@ use Illuminate\Support\Traits\Macroable;
 
 /**
  * Directus main class.
- *
- * @method static DirectusResponse respond(string $context = '')
- * @method static CollectionsService collections()
- * @method static FieldsService fields()
- * @method static DatabasesService databases()
- * @method static ActivitiesService activities()
- * @method static PresetsService presets()
- * @method static Runner graphql()
  */
 class Directus
 {
@@ -34,5 +26,61 @@ class Directus
     public function version(): string
     {
         return (string) config('directus.version');
+    }
+
+    /**
+     * Gets a Directus response.
+     */
+    public function respond(): Response
+    {
+        return resolve(Response::class);
+    }
+
+    /**
+     * Gets the fields service.
+     */
+    public function fields(): FieldsService
+    {
+        return resolve(FieldsService::class);
+    }
+
+    /**
+     * Gets the activities service.
+     */
+    public function activities(): ActivitiesService
+    {
+        return resolve(ActivitiesService::class);
+    }
+
+    /**
+     * Gets the presets service.
+     */
+    public function presets(): PresetsService
+    {
+        return resolve(PresetsService::class);
+    }
+
+    /**
+     * Gets the databases service.
+     */
+    public function databases(): DatabasesService
+    {
+        return resolve(DatabasesService::class);
+    }
+
+    /**
+     * Gets the collections service.
+     */
+    public function collections(): CollectionsService
+    {
+        return resolve(CollectionsService::class);
+    }
+
+    /**
+     * Gets the GraphQL service.
+     */
+    public function graphql(): GraphQL
+    {
+        return resolve(GraphQL::class);
     }
 }

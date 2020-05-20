@@ -30,7 +30,8 @@ class ServerController extends BaseController
                 ],
             ],
             'env' => [
-                'name' => config('directus.env.name'),
+                'name' => config('app.env'),
+                'debug' => (bool) config('app.debug'),
                 'server' => @$_SERVER['SERVER_SOFTWARE'] ?? 'Unknown',
                 'container' => (bool) config('directus.env.container'),
                 'os' => php_uname(),

@@ -38,6 +38,13 @@ class Types
         ], $config);
     }
 
+    // Resolvers
+
+    public static function resolver($class): callable
+    {
+        return [$class, 'resolve'];
+    }
+
     // Directus types
 
     public static function json(): JsonType

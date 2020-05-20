@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 return [
     'env' => [
-        'name' => env('DIRECTUS_ENVIRONMENT', 'production'),
         'container' => env('DIRECTUS_CONTAINER', false),
     ],
     'routes' => [
