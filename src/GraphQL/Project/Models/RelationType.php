@@ -33,7 +33,7 @@ class RelationType extends ObjectType
                 ],
 
                 // TODO: relationships
-            ]
+            ],
         ]);
     }
 }

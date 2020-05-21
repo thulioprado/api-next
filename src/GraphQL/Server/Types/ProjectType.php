@@ -18,7 +18,7 @@ class ProjectType extends ObjectType
             'fields' => [
                 'id' => [
                     'type' => Types::required(Types::string()),
-                    'description' => 'The unique project ID.'
+                    'description' => 'The unique project ID.',
                 ],
                 'name' => [
                     'type' => Types::required(Types::string()),

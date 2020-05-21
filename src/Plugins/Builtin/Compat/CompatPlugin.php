@@ -13,7 +13,7 @@ class CompatPlugin implements Plugin
     public function info(): array
     {
         return [
-            'description' => 'Provides backwards compatibility with v8 and v9.'
+            'description' => 'Provides backwards compatibility with v8 and v9.',
         ];
     }
 

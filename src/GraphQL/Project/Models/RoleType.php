@@ -49,7 +49,7 @@ class RoleType extends ObjectType
                 ],
 
                 // TODO: relationships
-            ]
+            ],
         ]);
     }
 }

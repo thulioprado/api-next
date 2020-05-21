@@ -44,7 +44,7 @@ class CollectionType extends ObjectType
                     'description' => 'Key value pairs of how to show this collection\'s name in different languages in the admin app.',
                 ],
                 // TODO: relationships
-            ]
+            ],
         ]);
     }
 }

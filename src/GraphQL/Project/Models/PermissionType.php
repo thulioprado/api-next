@@ -69,7 +69,7 @@ class PermissionType extends ObjectType
                 ],
 
                 // TODO: relationships
-            ]
+            ],
         ]);
     }
 }

@@ -25,7 +25,7 @@ class FieldType extends ObjectType
                     'type' => Types::required(Types::string()),
                 ],
                 // TODO: relationships
-            ]
+            ],
         ]);
     }
 }

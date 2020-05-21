@@ -53,7 +53,7 @@ class RevisionType extends ObjectType
                 ],
 
                 // TODO: relationships
-            ]
+            ],
         ]);
     }
 }

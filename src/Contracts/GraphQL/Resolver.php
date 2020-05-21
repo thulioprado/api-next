@@ -11,8 +11,7 @@ interface Resolver
     /**
      * @param mixed $parent
      * @param array $arguments
-     * @param Context $context
-     * @param ResolveInfo $info
+     *
      * @return mixed
      */
     public static function resolve($parent, $arguments, Context $context, ResolveInfo $info);

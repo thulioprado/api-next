@@ -97,7 +97,7 @@ class UserType extends ObjectType
                 ],
 
                 // TODO: relationships
-            ]
+            ],
         ]);
     }
 }

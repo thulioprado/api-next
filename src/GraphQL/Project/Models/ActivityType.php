@@ -60,7 +60,7 @@ class ActivityType extends ObjectType
                     'description' => 'When and if the comment was (soft-)deleted.',
                 ],
                 // TODO: relationships
-            ]
+            ],
         ]);
     }
 }

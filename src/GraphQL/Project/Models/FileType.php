@@ -100,7 +100,7 @@ class FileType extends ObjectType
                     'description' => 'User provided miscellaneous key value pairs that serve as additional metadata for the file.',
                 ],
                 // TODO: folder relationship
-            ]
+            ],
         ]);
     }
 }

@@ -28,7 +28,7 @@ class FolderType extends ObjectType
                     'description' => 'Unique identifier of the parent folder. This allows for nested folders.',
                 ],
                 // TODO: relationships
-            ]
+            ],
         ]);
     }
 }

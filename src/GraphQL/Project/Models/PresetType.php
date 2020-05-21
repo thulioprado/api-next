@@ -60,7 +60,7 @@ class PresetType extends ObjectType
                     'description' => 'Key value pair of language-translation. Can be used to translate the bookmark title in multiple languages.',
                 ],
                 // TODO: relationships
-            ]
+            ],
         ]);
     }
 }

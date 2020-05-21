@@ -117,6 +117,7 @@ class Response extends JsonResponse
     public function type(string $type): self
     {
         $this->headers->set('Content-Type', $type);
+
         return $this;
     }
 
@@ -128,6 +129,7 @@ class Response extends JsonResponse
     public function set(string $key, $value): self
     {
         $data = $this->getData(true);
+
         return $this->setData(Arr::set($data, $key, $value));
     }
 
@@ -135,6 +137,7 @@ class Response extends JsonResponse
      * Sets data on the array.
      *
      * @param mixed $default
+     *
      * @return mixed
      */
     public function get(string $key, $default = null)
@@ -150,6 +153,7 @@ class Response extends JsonResponse
     public function unset(string $key): self
     {
         $data = $this->getData(true);
+
         return $this->setData(
             Arr::except($data, $key)
         );

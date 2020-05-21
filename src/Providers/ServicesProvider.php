@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace Directus\Providers;
 
-use Directus\Directus;
-use Directus\GraphQL\GraphQL;
 use Directus\Responses\Response;
 use Directus\Services\Activities\ActivitiesService;
 use Directus\Services\Collections\CollectionsService;

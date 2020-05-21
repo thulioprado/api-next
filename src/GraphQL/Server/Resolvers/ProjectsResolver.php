@@ -15,7 +15,7 @@ class ProjectsResolver implements Resolver
         return [
             [
                 'id' => config('directus.project.id'),
-            ]
+            ],
         ];
     }
 }
