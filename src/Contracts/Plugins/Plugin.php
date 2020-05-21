@@ -20,4 +20,14 @@ interface Plugin
      * @return array<Dependency>
      */
     public function dependencies(): array;
+
+    /**
+     * Boots the plugin (under same laravel lifecycle).
+     */
+    public function boot(): void;
+
+    /**
+     * Registers the plugin (under same laravel lifecycle).
+     */
+    public function register(): void;
 }

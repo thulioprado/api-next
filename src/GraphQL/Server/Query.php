@@ -5,12 +5,33 @@ declare(strict_types=1);
 namespace Directus\GraphQL\Server;
 
 use Directus\GraphQL\Server\Resolvers\PingResolver;
+use Directus\GraphQL\Server\Resolvers\ProjectsResolver;
 use Directus\GraphQL\Server\Types\PingType;
-use Directus\GraphQL\Types\Type;
+use Directus\GraphQL\Server\Types\ProjectType;
 use Directus\GraphQL\Types\Types;
+use GraphQL\Type\Definition\ObjectType;
 
-class Query extends Type
+class Query extends ObjectType
 {
+    public function __construct()
+    {
+        parent::__construct([
+            'name' => 'Query',
+            'description' => 'Server queries.',
+            'fields' => [
+                'ping' => [
+                    'type' => Types::required(Types::from(PingType::class)),
+                    'description' => 'Pings the server instance.',
+                    'resolve' => Types::resolver(PingResolver::class),
+                ],
+                'projects' => [
+                    'type' => Types::required(Types::list(Types::required(Types::from(ProjectType::class)))),
+                    'resolve' => Types::resolver(ProjectsResolver::class),
+                ],
+            ],
+        ]);
+    }
+
     public function resolveInfo(): array
     {
         return [
@@ -42,36 +63,10 @@ class Query extends Type
         ];
     }
 
-    public function resolveProjects(): array
-    {
-        return [
-            config('directus.project.id'),
-        ];
-    }
-
-    protected function name(): string
-    {
-        return 'Server';
-    }
-
-    protected function description(): string
-    {
-        return 'Server information.';
-    }
-
     protected function fields(): array
     {
         return [
-            'ping' => [
-                'type' => Types::required(Types::from(PingType::class)),
-                'description' => 'Pings the server instance.',
-                'resolve' => Types::resolver(PingResolver::class),
-            ],
             /*
-            'projects' => [
-                'type' => Types::required(Types::list(Types::string())),
-                'resolve' => ProjectsResolver::class,
-            ],
             'info' => [
                 'type' => new ObjectType([
                     'name' => 'ServerInfo',

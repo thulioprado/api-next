@@ -4,38 +4,31 @@ declare(strict_types=1);
 
 namespace Directus\GraphQL\Types\Models;
 
-use Directus\GraphQL\Types\Type;
 use Directus\GraphQL\Types\Types;
+use GraphQL\Type\Definition\ObjectType;
 
-class FolderType extends Type
+class FolderType extends ObjectType
 {
-    protected function name(): string
+    public function __construct()
     {
-        return 'Folder';
-    }
-
-    protected function description(): string
-    {
-        return 'Directus folder information.';
-    }
-
-    protected function fields(): array
-    {
-        return [
-            'id' => [
-                'type' => Types::required(Types::string()),
-                'description' => 'Unique folder id.',
-            ],
-            'name' => [
-                'type' => Types::required(Types::string()),
-                'description' => 'Name of the folder.',
-            ],
-            'parent_id' => [
-                'type' => Types::string(),
-                'description' => 'Unique identifier of the parent folder. This allows for nested folders.',
-            ],
-
-            // TODO: relationships
-        ];
+        parent::__construct([
+            'name' => 'Folder',
+            'description' => 'Directus folder information.',
+            'fields' => [
+                'id' => [
+                    'type' => Types::required(Types::string()),
+                    'description' => 'Unique folder id.',
+                ],
+                'name' => [
+                    'type' => Types::required(Types::string()),
+                    'description' => 'Name of the folder.',
+                ],
+                'parent_id' => [
+                    'type' => Types::string(),
+                    'description' => 'Unique identifier of the parent folder. This allows for nested folders.',
+                ],
+                // TODO: relationships
+            ]
+        ]);
     }
 }

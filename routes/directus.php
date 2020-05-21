@@ -22,7 +22,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::group([
     'prefix' => config('directus.routes.base', '/'),
-    'as' => 'directus.',
+    'as' => 'route.',
     'middleware' => [
         DirectusMiddleware::class,
     ],

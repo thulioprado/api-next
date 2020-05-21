@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Directus\Controllers;
 
+use Directus\Responses\Response;
 use Illuminate\Http\JsonResponse;
 
 /**
@@ -66,9 +67,13 @@ class ServerController extends BaseController
      */
     public function ping(): JsonResponse
     {
-        return directus()->respond()->with([
-            'pong' => true,
-        ]);
+        return directus()->respond()->withQuery(
+            directus()->graphql()->server()->execute('
+                query {
+                    ping
+                }
+            ')
+        );
     }
 
     /**
@@ -77,8 +82,16 @@ class ServerController extends BaseController
     public function projects(): JsonResponse
     {
         // TODO: dynamic load of projects
-        return directus()->respond()->public()->with([
-            config('directus.project.id'),
-        ]);
+        return directus()->respond()->public()->withQuery(
+            directus()->graphql()->server()->execute('
+                query {
+                    projects {
+                        id
+                    }
+                }
+            ')
+        )->transform(static function ($response) {
+            $response->set('data', collect($response->get('data.projects'))->pluck('id')->toArray());
+        });
     }
 }

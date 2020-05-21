@@ -112,7 +112,7 @@
     ],
     "directus": {
       "plugins": [
-        "Directus\\Plugins\\Builtin\\Types"
+        "Directus\\Plugins\\Builtin\\Compat\\CompatPlugin"
       ]
     }
   }

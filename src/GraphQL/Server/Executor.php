@@ -5,9 +5,8 @@ declare(strict_types=1);
 namespace Directus\GraphQL\Server;
 
 use Directus\GraphQL\Context;
-use Directus\GraphQL\Types\QueryType;
 use Directus\GraphQL\Types\Types;
-use GraphQL\Error\Debug;
+use GraphQL\Executor\ExecutionResult;
 use GraphQL\GraphQL;
 use GraphQL\Type\Schema;
 
@@ -19,17 +18,11 @@ class Executor
     protected $context;
 
     /**
-     * @var bool
-     */
-    protected $debug;
-
-    /**
      * Runner constructor.
      */
     public function __construct()
     {
         $this->context = new Context();
-        $this->debug = (bool) config('app.debug');
     }
 
     /**
@@ -40,12 +33,9 @@ class Executor
         return $this->context;
     }
 
-    /**
-     * @return mixed
-     */
-    public function execute(string $query, ?array $variables = [])
+    public function execute(string $query, ?array $variables = []): ExecutionResult
     {
-        $result = GraphQL::executeQuery(
+        return GraphQL::executeQuery(
             new Schema([
                 'query' => Types::from(Query::class),
             ]),
@@ -53,10 +43,6 @@ class Executor
             null,
             $this->context ?? [],
             $variables ?? []
-        );
-
-        return $result->toArray(
-            $this->debug ? Debug::INCLUDE_DEBUG_MESSAGE | Debug::INCLUDE_TRACE : false
         );
     }
 }
