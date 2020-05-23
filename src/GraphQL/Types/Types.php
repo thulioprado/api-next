@@ -5,6 +5,15 @@ declare(strict_types=1);
 namespace Directus\GraphQL\Types;
 
 use Directus\GraphQL\Types\Scalars\JsonType;
+use GraphQL\Language\AST\BooleanValueNode;
+use GraphQL\Language\AST\FloatValueNode;
+use GraphQL\Language\AST\IntValueNode;
+use GraphQL\Language\AST\NamedTypeNode;
+use GraphQL\Language\AST\NameNode;
+use GraphQL\Language\AST\NonNullTypeNode;
+use GraphQL\Language\AST\NullValueNode;
+use GraphQL\Language\AST\StringValueNode;
+use GraphQL\Language\AST\ValueNode;
 use GraphQL\Type\Definition\BooleanType;
 use GraphQL\Type\Definition\FloatType;
 use GraphQL\Type\Definition\IntType;
@@ -88,5 +97,46 @@ class Types
     public static function required($type): NonNull
     {
         return new NonNull($type);
+    }
+
+    public static function typeToNode(Type $type)
+    {
+        if ($type instanceof NonNull) {
+            return new NonNullTypeNode([
+                'type' => static::typeToNode($type->getWrappedType()),
+            ]);
+        }
+        if ($type instanceof ListOfType) {
+            return new ListTypeNode([
+                'type' => static::typeToNode($type->getWrappedType()),
+            ]);
+        }
+
+        return new NamedTypeNode([
+            'name' => new NameNode([
+                'value' => $type->name,
+            ]),
+        ]);
+    }
+
+    public static function nodeFromValue($value): ValueNode
+    {
+        if (is_null($value)) {
+            return new NullValueNode();
+        }
+        if (is_int($value)) {
+            return new IntValueNode(['value' => $value]);
+        }
+        if (is_float($value)) {
+            return new FloatValueNode(['value' => $value]);
+        }
+        if (is_string($value)) {
+            return new StringValueNode(['value' => $value]);
+        }
+        if (is_bool($value)) {
+            return new BooleanValueNode(['value' => $value]);
+        }
+
+        return new NullValueNode();
     }
 }

@@ -7,7 +7,7 @@ query {
     ping
     directus {
         version
-        extensions {
+        plugins {
             # TBD
         }
     }
