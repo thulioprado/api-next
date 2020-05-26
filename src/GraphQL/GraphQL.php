@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Directus\GraphQL;
 
+use Directus\GraphQL\Project\Executor as ProjectExecutor;
 use Directus\GraphQL\Query\QueryBuilder;
 use Directus\GraphQL\Server\Server;
 
@@ -28,8 +29,8 @@ class GraphQL
     /**
      * Gets a project graph executor.
      */
-    public function project(string $project): Server
+    public function project(string $project): ProjectExecutor
     {
-        return new Server();
+        return new ProjectExecutor();
     }
 }

@@ -14,6 +14,11 @@ use Illuminate\Support\Facades\Hash;
  */
 final class UtilsControllerTest extends TestCase
 {
+    protected function setUp(): void
+    {
+        $this->markTestSkipped();
+    }
+
     public function testRandom(): void
     {
         $this->getJson('/directus/utils/random/string')

@@ -31,7 +31,9 @@ final class ActivityControllerTest extends TestCase
 
     protected function setUp(): void
     {
-        parent::setUp();
+        $this->markTestSkipped();
+
+        /*parent::setUp();
 
         $this->activity = directus()->activities()->create('created', 'posts', [
             'id' => 'some-user',
@@ -45,7 +47,7 @@ final class ActivityControllerTest extends TestCase
                 'id' => 'random',
             ]
         );
-        unset($this->comment['collection']);
+        unset($this->comment['collection']);*/
     }
 
     public function testListAll(): void

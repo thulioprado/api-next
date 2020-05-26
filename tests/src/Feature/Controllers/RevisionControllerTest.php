@@ -18,6 +18,11 @@ final class RevisionControllerTest extends TestCase
     use DatabaseTransactions;
     use ArraySubsetAsserts;
 
+    protected function setUp(): void
+    {
+        $this->markTestSkipped();
+    }
+
     public function testListAll(): void
     {
         // TODO: test

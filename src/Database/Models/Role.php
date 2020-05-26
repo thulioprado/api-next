@@ -22,7 +22,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property null|array  $module_listing
  * @property null|array  $collection_listing
  * @property null|string $ip_whitelist
- * @property bool        $enforce_2fa
+ * @property bool        $enforce_twofactor
  *
  * @mixin Model
  */

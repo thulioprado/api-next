@@ -22,6 +22,11 @@ final class FolderControllerTest extends TestCase
     use DatabaseTransactions;
     use ArraySubsetAsserts;
 
+    protected function setUp(): void
+    {
+        $this->markTestSkipped();
+    }
+
     public function testListAll(): void
     {
         /** @var Folder $main */

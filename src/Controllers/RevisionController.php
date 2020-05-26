@@ -4,9 +4,6 @@ declare(strict_types=1);
 
 namespace Directus\Controllers;
 
-use Directus\Database\Models\Revision;
-use Directus\Exceptions\RevisionNotFound;
-use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\JsonResponse;
 
 /**
@@ -16,24 +13,55 @@ class RevisionController extends BaseController
 {
     public function all(): JsonResponse
     {
-        // TODO: validate query parameters
+        // TODO: query filters
 
-        /** @var Collection $revisions */
-        $revisions = Revision::with(['activity', 'collection', 'parentCollection'])->get();
+        $project = config('directus.project.id', 'api');
+        $fields = [];
 
-        return directus()->respond()->with($revisions->toArray());
+        return directus()->respond()->withQuery(
+            directus()->graphql()->project($project)->execute('
+                query {
+                    revisions {
+                        id
+                        activity_id
+                        collection_id
+                        item
+                        data
+                        delta
+                        parent_collection_id
+                        parent_item
+                        parent_changed
+                    }
+                }
+            ', $fields)
+        );
     }
 
-    /**
-     * @throws RevisionNotFound
-     */
     public function fetch(string $key): JsonResponse
     {
-        // TODO: validate query parameters
+        // TODO: query filters
 
-        /** @var Revision $revision */
-        $revision = Revision::with(['activity', 'collection', 'parentCollection'])->findOrFail($key);
+        $project = config('directus.project.id', 'api');
+        $fields = [
+            'id' => $key,
+        ];
 
-        return directus()->respond()->with($revision->toArray());
+        return directus()->respond()->withQuery(
+            directus()->graphql()->project($project)->execute('
+                query Revisions($id: String!) {
+                    revision(id: $id) {
+                        id
+                        activity_id
+                        collection_id
+                        item
+                        data
+                        delta
+                        parent_collection_id
+                        parent_item
+                        parent_changed
+                    }
+                }
+            ', $fields)
+        );
     }
 }

@@ -4,12 +4,7 @@ declare(strict_types=1);
 
 namespace Directus\Controllers;
 
-use Directus\Database\Models\Setting;
-use Directus\Exceptions\SettingNotCreated;
-use Directus\Exceptions\SettingNotFound;
-use Directus\Requests\SettingCreateRequest;
-use Directus\Requests\SettingUpdateRequest;
-use Illuminate\Database\Eloquent\Collection;
+use Directus\Exceptions\NotImplemented;
 use Illuminate\Http\JsonResponse;
 
 /**
@@ -19,67 +14,107 @@ class SettingsController extends BaseController
 {
     public function all(): JsonResponse
     {
-        // TODO: validate parameters
-        // TODO: implement limit, offset, page, single, meta parameters
+        // TODO: query filters
 
-        /** @var Collection $settings */
-        $settings = Setting::all();
+        $project = config('directus.project.id', 'api');
+        $fields = [];
 
-        return directus()->respond()->with($settings->toArray());
+        return directus()->respond()->withQuery(
+            directus()->graphql()->project($project)->execute('
+                query {
+                    settings {
+                        key
+                        value
+                    }
+                }
+            ', $fields)
+        );
     }
 
-    /**
-     * @throws SettingNotFound
-     */
     public function fetch(string $key): JsonResponse
     {
-        // TODO: validate parameters
+        // TODO: query filters
 
-        /** @var Setting $settings */
-        $settings = Setting::findOrFail($key);
+        $project = config('directus.project.id', 'api');
+        $fields = [
+            'key' => $key,
+        ];
 
-        return directus()->respond()->with($settings->toArray());
+        return directus()->respond()->withQuery(
+            directus()->graphql()->project($project)->execute('
+                query Setting($key: String!) {
+                    setting(key: $key) {
+                        key
+                        value
+                    }
+                }
+            ', $fields)
+        );
     }
 
-    /**
-     * @throws SettingNotCreated
-     */
-    public function create(SettingCreateRequest $request): JsonResponse
+    public function create(): JsonResponse
     {
-        $attributes = $request->all();
+        // TODO: query filters
 
-        $settings = directus()->databases()->system()->transaction(function () use ($attributes): Setting {
-            /** @var Setting $settings */
-            $settings = new Setting($attributes);
-            $settings->saveOrFail();
+        $project = config('directus.project.id', 'api');
+        $fields = request()->all();
 
-            return $settings;
-        });
-
-        return directus()->respond()->with($settings->toArray());
+        return directus()->respond()->withQuery(
+            directus()->graphql()->project($project)->execute('
+                mutation CreateSetting($key: String!, $value: String) {
+                    createSetting(key: $key, value: $value) {
+                        key
+                        value
+                    }
+                }
+            ', $fields)
+        );
     }
 
-    /**
-     * @throws SettingNotFound
-     */
-    public function update(SettingUpdateRequest $request, string $key): JsonResponse
+    public function update(string $key): JsonResponse
     {
-        /** @var Setting $settings */
-        $settings = Setting::findOrFail($key);
-        $settings->update($request->all());
+        // TODO: query filters
 
-        return directus()->respond()->with($settings->toArray());
+        $project = config('directus.project.id', 'api');
+        $fields = array_merge(request()->all(), [
+            'key' => $key,
+        ]);
+
+        return directus()->respond()->withQuery(
+            directus()->graphql()->project($project)->execute('
+                query UpdateSetting($key: String!, $value: String) {
+                    updateSetting(key: $key, value: $value) {
+                        key
+                        value
+                    }
+                }
+            ', $fields)
+        );
     }
 
-    /**
-     * @throws SettingNotFound
-     */
     public function delete(string $key): JsonResponse
     {
-        /** @var Setting $settings */
-        $settings = Setting::findOrFail($key);
-        $settings->delete();
+        $project = config('directus.project.id', 'api');
+        $fields = [
+            'key' => $key,
+        ];
 
-        return directus()->respond()->withNothing();
+        return directus()->respond()->withQuery(
+            directus()->graphql()->project($project)->execute('
+                mutation DeleteSetting($key: String!) {
+                    deleteSetting(key: $key) {
+                        key
+                    }
+                }
+            ', $fields)
+        );
+    }
+
+    /**
+     * @throws NotImplemented
+     */
+    public function fields(string $key): JsonResponse
+    {
+        throw new NotImplemented();
     }
 }

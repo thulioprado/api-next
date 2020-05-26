@@ -4,12 +4,6 @@ declare(strict_types=1);
 
 namespace Directus\Controllers;
 
-use Directus\Database\Models\File;
-use Directus\Database\Models\Folder;
-use Directus\Exceptions\FolderNotCreated;
-use Directus\Exceptions\FolderNotFound;
-use Directus\Requests\FolderRequest;
-use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\JsonResponse;
 
 /**
@@ -19,82 +13,99 @@ class FolderController extends BaseController
 {
     public function all(): JsonResponse
     {
-        // TODO: validate query parameters
+        // TODO: query filters
 
-        /** @var Collection $folders */
-        $folders = Folder::with(['parent', 'children', 'files'])->get();
+        $project = config('directus.project.id', 'api');
+        $fields = [];
 
-        return directus()->respond()->with($folders->toArray());
+        return directus()->respond()->withQuery(
+            directus()->graphql()->project($project)->execute('
+                query {
+                    folders {
+                        id
+                        name
+                        parent_id
+                    }
+                }
+            ', $fields)
+        );
     }
 
-    /**
-     * @throws FolderNotFound
-     */
     public function fetch(string $key): JsonResponse
     {
-        // TODO: validate query parameters
+        // TODO: query filters
 
-        /** @var Folder $folder */
-        $folder = Folder::with(['parent', 'children', 'files'])->findOrFail($key);
+        $project = config('directus.project.id', 'api');
+        $fields = [
+            'id' => $key,
+        ];
 
-        return directus()->respond()->with($folder->toArray());
+        return directus()->respond()->withQuery(
+            directus()->graphql()->project($project)->execute('
+                query Folder($id: String!) {
+                    folder(id: $id) {
+                        id
+                        name
+                        parent_id
+                    }
+                }
+            ', $fields)
+        );
     }
 
-    /**
-     * @throws FolderNotCreated|FolderNotFound
-     */
-    public function create(FolderRequest $request): JsonResponse
+    public function create(): JsonResponse
     {
-        $attributes = $request->all();
+        $project = config('directus.project.id', 'api');
+        $fields = request()->all();
 
-        $folder_id = directus()->databases()->system()->transaction(function () use ($attributes): string {
-            /** @var Folder $folder */
-            $folder = new Folder($attributes);
-            $folder->saveOrFail();
-
-            return $folder->id;
-        });
-
-        /** @var Folder $folder */
-        $folder = Folder::with(['parent', 'children', 'files'])->findOrFail($folder_id);
-
-        return directus()->respond()->with($folder->toArray());
+        return directus()->respond()->withQuery(
+            directus()->graphql()->project($project)->execute('
+                mutation CreateFolder($name: String!, $parent_id: String) {
+                    createFolder(name: $name, parent_id: $parent_id) {
+                        id
+                        name
+                        parent_id
+                    }
+                }
+            ', $fields)
+        );
     }
 
-    /**
-     * @throws FolderNotFound
-     */
-    public function update(string $key, FolderRequest $request): JsonResponse
+    public function update(string $key): JsonResponse
     {
-        /** @var Folder $folder */
-        $folder = Folder::with(['parent', 'children', 'files'])->findOrFail($key);
-        $folder->update($request->all());
+        $project = config('directus.project.id', 'api');
+        $fields = array_merge(request()->all(), [
+            'id' => $key,
+        ]);
 
-        return directus()->respond()->with($folder->toArray());
+        return directus()->respond()->withQuery(
+            directus()->graphql()->project($project)->execute('
+                mutation UpdateFolder($id: String!, $name: String, $parent_id: String) {
+                    updateFolder(id: $id, name: $name, parent_id: $parent_id) {
+                        id
+                        name
+                        parent_id
+                    }
+                }
+            ', $fields)
+        );
     }
 
-    /**
-     * @throws FolderNotFound
-     */
     public function delete(string $key): JsonResponse
     {
-        /** @var Folder $folder */
-        $folder = Folder::with(['children', 'files'])->findOrFail($key);
+        $project = config('directus.project.id', 'api');
+        $fields = [
+            'id' => $key,
+        ];
 
-        /*
-        TODO: delete files from children and current folder.
-
-        $folders = $folder->children->toArray();
-
-        File::whereIn('folder_id', $folders)->update([
-            'folder_id' => null
-        ]);*/
-
-        $folder->files()->update([
-            'folder_id' => null,
-        ]);
-        $folder->delete();
-
-        return directus()->respond()->withNothing();
+        return directus()->respond()->withQuery(
+            directus()->graphql()->project($project)->execute('
+                mutation DeleteFolder($id: String!) {
+                    deleteFolder(id: $id) {
+                        id
+                    }
+                }
+            ', $fields)
+        );
     }
 }

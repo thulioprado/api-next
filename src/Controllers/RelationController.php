@@ -4,11 +4,7 @@ declare(strict_types=1);
 
 namespace Directus\Controllers;
 
-use Directus\Database\Models\Relation;
-use Directus\Exceptions\RelationNotCreated;
-use Directus\Exceptions\RelationNotFound;
-use Directus\Requests\RelationRequest;
-use Illuminate\Database\Eloquent\Collection;
+use Directus\Exceptions\NotImplemented;
 use Illuminate\Http\JsonResponse;
 
 /**
@@ -16,71 +12,43 @@ use Illuminate\Http\JsonResponse;
  */
 class RelationController extends BaseController
 {
+    /**
+     * @throws NotImplemented
+     */
     public function all(): JsonResponse
     {
-        // TODO: validate query parameters
-
-        /** @var Collection $relations */
-        $relations = Relation::with(['fieldMany', 'fieldOne', 'junctionField'])->get();
-
-        return directus()->respond()->with($relations->toArray());
+        throw new NotImplemented();
     }
 
     /**
-     * @throws RelationNotFound
+     * @throws NotImplemented
      */
     public function fetch(string $key): JsonResponse
     {
-        // TODO: validate query parameters
-
-        /** @var Relation $relation */
-        $relation = Relation::with(['fieldMany', 'fieldOne', 'junctionField'])->findOrFail($key);
-
-        return directus()->respond()->with($relation->toArray());
+        throw new NotImplemented();
     }
 
     /**
-     * @throws RelationNotCreated|RelationNotFound
+     * @throws NotImplemented
      */
-    public function create(RelationRequest $request): JsonResponse
+    public function create(): JsonResponse
     {
-        $attributes = $request->all();
-
-        $relation_id = directus()->databases()->system()->transaction(function () use ($attributes): string {
-            /** @var Relation $relation */
-            $relation = new Relation($attributes);
-            $relation->saveOrFail();
-
-            return $relation->id;
-        });
-
-        /** @var Relation $relation */
-        $relation = Relation::with(['fieldMany', 'fieldOne', 'junctionField'])->findOrFail($relation_id);
-
-        return directus()->respond()->with($relation->toArray());
+        throw new NotImplemented();
     }
 
     /**
-     * @throws RelationNotFound
+     * @throws NotImplemented
      */
-    public function update(string $key, RelationRequest $request): JsonResponse
+    public function update(string $key): JsonResponse
     {
-        /** @var Relation $relation */
-        $relation = Relation::with(['fieldMany', 'fieldOne', 'junctionField'])->findOrFail($key);
-        $relation->update($request->all());
-
-        return directus()->respond()->with($relation->toArray());
+        throw new NotImplemented();
     }
 
     /**
-     * @throws RelationNotFound
+     * @throws NotImplemented
      */
     public function delete(string $key): JsonResponse
     {
-        /** @var Relation $relation */
-        $relation = Relation::findOrFail($key);
-        $relation->delete();
-
-        return directus()->respond()->withNothing();
+        throw new NotImplemented();
     }
 }

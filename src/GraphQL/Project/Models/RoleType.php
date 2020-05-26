@@ -43,7 +43,7 @@ class RoleType extends ObjectType
                     'type' => Types::string(),
                     'description' => 'Custom override for the admin app collection navigation.',
                 ],
-                'enforce_2fa' => [
+                'enforce_twofactor' => [
                     'type' => Types::required(Types::boolean()),
                     'description' => 'Whether or not this role enforces the use of 2FA.',
                 ],

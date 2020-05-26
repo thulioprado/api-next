@@ -17,6 +17,11 @@ final class CollectionControllerTest extends TestCase
 {
     use DatabaseTransactions;
 
+    protected function setUp(): void
+    {
+        $this->markTestSkipped();
+    }
+
     public function testAllResponseFormat(): void
     {
         $collections = $this->getJson('/directus/collections');

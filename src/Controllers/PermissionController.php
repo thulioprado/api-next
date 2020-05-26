@@ -4,13 +4,7 @@ declare(strict_types=1);
 
 namespace Directus\Controllers;
 
-use Directus\Database\Models\Permission;
-use Directus\Exceptions\CollectionNotFound;
-use Directus\Exceptions\PermissionNotCreated;
-use Directus\Exceptions\PermissionNotFound;
-use Directus\Exceptions\RoleNotFound;
-use Directus\Requests\PermissionRequest;
-use Illuminate\Database\Eloquent\Collection;
+use Directus\Exceptions\NotImplemented;
 use Illuminate\Http\JsonResponse;
 
 /**
@@ -20,72 +14,46 @@ class PermissionController extends BaseController
 {
     public function all(): JsonResponse
     {
-        // TODO: validate query parameters
-
-        /** @var Collection $permissions */
-        $permissions = Permission::with(['collection', 'role'])->get();
-
-        return directus()->respond()->with($permissions->toArray());
+        throw new NotImplemented();
     }
 
     /**
-     * @throws PermissionNotFound
+     * @throws NotImplemented
      */
     public function fetch(string $key): JsonResponse
     {
-        // TODO: validate query parameters
-
-        /** @var Permission $permission */
-        $permission = Permission::with(['collection', 'role'])->findOrFail($key);
-
-        return directus()->respond()->with($permission->toArray());
+        throw new NotImplemented();
     }
 
     /**
-     * @throws PermissionNotCreated|PermissionNotFound
+     * @throws NotImplemented
      */
-    public function create(PermissionRequest $request): JsonResponse
+    public function create(): JsonResponse
     {
-        $attributes = $request->all();
-
-        $permission_id = directus()->databases()->system()->transaction(function () use ($attributes): string {
-            /** @var Permission $permission */
-            $permission = new Permission($attributes);
-            $permission->saveOrFail();
-
-            return $permission->id;
-        });
-
-        /** @var Permission $permission */
-        $permission = Permission::with(['collection', 'role'])->findOrFail($permission_id);
-
-        return directus()->respond()->with($permission->toArray());
+        throw new NotImplemented();
     }
 
     /**
-     * @throws CollectionNotFound|PermissionNotFound|RoleNotFound
+     * @throws NotImplemented
      */
-    public function update(string $key, PermissionRequest $request): JsonResponse
+    public function update(string $key): JsonResponse
     {
-        /** @var Permission $permission */
-        $permission = Permission::with(['collection', 'role'])->findOrFail($key);
-        $permission->update($request->all());
-
-        return directus()->respond()->with($permission->toArray());
+        throw new NotImplemented();
     }
 
     /**
-     * @throws PermissionNotFound
+     * @throws NotImplemented
      */
     public function delete(string $key): JsonResponse
     {
-        /** @var Permission $permission */
-        $permission = Permission::findOrFail($key);
-        $permission->delete();
-
-        return directus()->respond()->withNothing();
+        throw new NotImplemented();
     }
 
-    // TODO: Missing endpoints: List the current users permissions and
-    // list the current users permissions for given collection
+    /**
+     * @throws NotImplemented
+     */
+    public function me(string $key, string $collection = null): JsonResponse
+    {
+        throw new NotImplemented();
+    }
 }

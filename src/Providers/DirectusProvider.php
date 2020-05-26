@@ -16,6 +16,7 @@ class DirectusProvider extends ServiceProvider
      */
     public function register(): void
     {
+        $this->app->register(UtilsProvider::class);
         $this->app->register(ConfigProvider::class);
         $this->app->register(TranslationProvider::class);
         $this->app->register(DependenciesProvider::class);

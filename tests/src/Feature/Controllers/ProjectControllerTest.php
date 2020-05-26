@@ -13,6 +13,11 @@ use Directus\Testing\TestCase;
  */
 final class ProjectControllerTest extends TestCase
 {
+    protected function setUp(): void
+    {
+        $this->markTestSkipped();
+    }
+
     public function testProjectInfo(): void
     {
         $this->getJson('/directus')->assertResponseStructure([

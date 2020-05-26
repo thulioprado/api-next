@@ -82,13 +82,6 @@ class File extends Model
     /**
      * @var array<string>
      */
-    protected $hidden = [
-        'folder_id',
-    ];
-
-    /**
-     * @var array<string>
-     */
     private static $exceptions = [
         'not_found' => FileNotFound::class,
         'not_created' => FileNotCreated::class,

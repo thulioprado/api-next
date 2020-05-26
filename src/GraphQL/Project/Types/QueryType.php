@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Directus\GraphQL\Types;
+namespace Directus\GraphQL\Project\Types;
 
 use Directus\Database\Models\Activity;
 use Directus\Database\Models\Collection;
@@ -26,15 +26,12 @@ use Directus\GraphQL\Types\Models\RelationType;
 use Directus\GraphQL\Types\Models\RevisionType;
 use Directus\GraphQL\Types\Models\RoleType;
 use Directus\GraphQL\Types\Models\UserType;
+use Directus\GraphQL\Types\Type;
+use Directus\GraphQL\Types\Types;
 use Illuminate\Database\Eloquent\Collection as EloquentCollection;
 
 class QueryType extends Type
 {
-    public function resolveServer(): array
-    {
-        return [];
-    }
-
     /**
      * @param mixed $root
      *
@@ -213,10 +210,6 @@ class QueryType extends Type
     protected function fields(): array
     {
         return [
-            'server' => [
-                'type' => Types::required(Types::from(ServerType::class)),
-                'description' => 'Server information.',
-            ],
             'activities' => [
                 'type' => Types::required(
                     Types::list(

@@ -4,11 +4,6 @@ declare(strict_types=1);
 
 namespace Directus\Controllers;
 
-use Directus\Database\Models\Role;
-use Directus\Exceptions\RoleNotCreated;
-use Directus\Exceptions\RoleNotFound;
-use Directus\Requests\RoleRequest;
-use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\JsonResponse;
 
 /**
@@ -18,69 +13,157 @@ class RoleController extends BaseController
 {
     public function all(): JsonResponse
     {
-        // TODO: validate query parameters
+        // TODO: query filters
 
-        /** @var Collection $roles */
-        $roles = Role::with(['users', 'presets', 'permissions'])->get();
+        $project = config('directus.project.id', 'api');
+        $fields = [];
 
-        return directus()->respond()->with($roles->toArray());
+        return directus()->respond()->withQuery(
+            directus()->graphql()->project($project)->execute('
+                query {
+                    roles {
+                        id
+                        name
+                        description
+                        ip_whitelist
+                        external_id
+                        module_listing
+                        collection_listing
+                        enforce_2fa
+                    }
+                }
+            ', $fields)
+        );
     }
 
-    /**
-     * @throws RoleNotFound
-     */
     public function fetch(string $key): JsonResponse
     {
-        // TODO: validate query parameters
+        // TODO: query filters
 
-        /** @var Role $role */
-        $role = Role::with(['users', 'presets', 'permissions'])->findOrFail($key);
+        $project = config('directus.project.id', 'api');
+        $fields = [
+            'id' => $key,
+        ];
 
-        return directus()->respond()->with($role->toArray());
+        return directus()->respond()->withQuery(
+            directus()->graphql()->project($project)->execute('
+                query Role($id: String!) {
+                    role(id: $id) {
+                        id
+                        name
+                        description
+                        ip_whitelist
+                        external_id
+                        module_listing
+                        collection_listing
+                        enforce_2fa
+                    }
+                }
+            ', $fields)
+        );
     }
 
-    /**
-     * @throws RoleNotCreated|RoleNotFound
-     */
-    public function create(RoleRequest $request): JsonResponse
+    public function create(): JsonResponse
     {
-        $attributes = $request->all();
+        // TODO: query fields
 
-        $role_id = directus()->databases()->system()->transaction(function () use ($attributes): string {
-            /** @var Role $role */
-            $role = new Role($attributes);
-            $role->saveOrFail();
+        $project = config('directus.project.id', 'api');
+        $fields = request()->all();
 
-            return $role->id;
-        });
-
-        /** @var Role $role */
-        $role = Role::with(['users', 'presets', 'permissions'])->findOrFail($role_id);
-
-        return directus()->respond()->with($role->toArray());
+        return directus()->respond()->withQuery(
+            directus()->graphql()->project($project)->execute('
+                mutation CreateRole(
+                    $name: String!,
+                    $description: String,
+                    $ip_whitelist: [String],
+                    $external_id: String,
+                    $module_listing: String,
+                    $collection_listing: String,
+                    $enforce_2fa: Boolean
+                ) {
+                    createRole(
+                        name: $name,
+                        description: $description,
+                        ip_whitelist: $ip_whitelist,
+                        external_id: $external_id,
+                        module_listing: $module_listing,
+                        collection_listing: $collection_listing,
+                        enforce_2fa: $enforce_2fa
+                    ) {
+                        id
+                        name
+                        description
+                        ip_whitelist
+                        external_id
+                        module_listing
+                        collection_listing
+                        enforce_2fa
+                    }
+                }
+            ', $fields)
+        );
     }
 
-    /**
-     * @throws RoleNotFound
-     */
-    public function update(string $key, RoleRequest $request): JsonResponse
+    public function update(string $key): JsonResponse
     {
-        /** @var Role $role */
-        $role = Role::with(['users', 'presets', 'permissions'])->findOrFail($key);
-        $role->update($request->all());
+        // TODO: query fields
 
-        return directus()->respond()->with($role->toArray());
+        $project = config('directus.project.id', 'api');
+        $fields = array_merge(request()->all(), [
+            'id' => $key,
+        ]);
+
+        return directus()->respond()->withQuery(
+            directus()->graphql()->project($project)->execute('
+                mutation UpdateRole(
+                    $id: String!,
+                    $name: String,
+                    $description: String,
+                    $ip_whitelist: [String],
+                    $external_id: String,
+                    $module_listing: String,
+                    $collection_listing: String,
+                    $enforce_2fa: Boolean
+                ) {
+                    updateRole(
+                        id: $id,
+                        name: $name,
+                        description: $description,
+                        ip_whitelist: $ip_whitelist,
+                        external_id: $external_id,
+                        module_listing: $module_listing,
+                        collection_listing: $collection_listing,
+                        enforce_2fa: $enforce_2fa
+                    ) {
+                        id
+                        name
+                        description
+                        ip_whitelist
+                        external_id
+                        module_listing
+                        collection_listing
+                        enforce_2fa
+                    }
+                }
+            ', $fields)
+        );
     }
 
-    /**
-     * @throws RoleNotfound
-     */
     public function delete(string $key): JsonResponse
     {
-        /** @var Role $role */
-        $role = Role::findOrFail($key);
-        $role->delete();
+        $project = config('directus.project.id', 'api');
+        $fields = [
+            'id' => $key,
+        ];
 
-        return directus()->respond()->withNothing();
+        return directus()->respond()->withQuery(
+            directus()->graphql()->project($project)->execute('
+                mutation DeleteRole($id: String!) {
+                    deleteRole(id: $id) {
+                        id
+                    }
+                }
+            ', $fields)
+        );
     }
 }

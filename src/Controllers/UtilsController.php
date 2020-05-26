@@ -5,58 +5,72 @@ declare(strict_types=1);
 namespace Directus\Controllers;
 
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Str;
 
 /**
  * Utils controller.
  */
 class UtilsController extends BaseController
 {
-    /**
-     * Random string generator.
-     */
-    public function randomString(Request $request): JsonResponse
+    public function randomString(): JsonResponse
     {
-        $request->validate([
-            'length' => 'integer|min:1|max:128',
-        ]);
+        $project = config('directus.project.id', 'api');
+        $fields = request()->all();
 
-        return directus()->respond()->with([
-            'random' => Str::random($request->input('length', 32)),
-        ]);
+        return directus()->respond()->withQuery(
+            directus()->graphql()->project($project)->execute('
+                query randomString($length: Int) {
+                    randomString(length: $length) {
+                        random
+                    }
+                }
+            ', $fields)
+        );
     }
 
-    /**
-     * Hash computer.
-     */
-    public function hashCreate(Request $request): JsonResponse
+    public function hashCreate(): JsonResponse
     {
-        $request->validate([
-            'string' => 'required|string',
-        ]);
+        $project = config('directus.project.id', 'api');
+        $fields = request()->all();
 
-        return directus()->respond()->with([
-            'hash' => Hash::make($request->input('string')),
-        ]);
+        return directus()->respond()->withQuery(
+            directus()->graphql()->project($project)->execute('
+                query hashCreate($length: Int) {
+                    hashCreate(length: $length) {
+                        hash
+                    }
+                }
+            ', $fields)
+        );
     }
 
-    /**
-     * Hash verifier.
-     */
-    public function hashVerify(Request $request): JsonResponse
+    public function hashMatch(): JsonResponse
     {
-        $request->validate([
-            'string' => 'required|string',
-            'hash' => 'required|string',
-        ]);
+        $project = config('directus.project.id', 'api');
+        $fields = request()->all();
 
-        return directus()->respond()->with([
-            'valid' => Hash::check(
-                $request->input('string'),
-                $request->input('hash'),
-            ),
-        ]);
+        return directus()->respond()->withQuery(
+            directus()->graphql()->project($project)->execute('
+                query hashMatch($string: String!, $hash: String!) {
+                    hashMatch(string: $string, hash: $hash) {
+                        valid
+                    }
+                }
+            ', $fields)
+        );
+    }
+
+    public function generate2faSecret(): JsonResponse
+    {
+        $project = config('directus.project.id', 'api');
+
+        return directus()->respond()->withQuery(
+            directus()->graphql()->project($project)->execute('
+                query GenerateTFSecret($length: Int) {
+                    generateTFSecret(length: $length) {
+                        twofactor_secret
+                    }
+                }
+            ')
+        );
     }
 }
