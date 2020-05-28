@@ -8,6 +8,7 @@ use Directus\Contracts\GraphQL\Engine;
 use Directus\Contracts\GraphQL\Query\MutationBuilder as MutationBuilderContract;
 use Directus\Contracts\GraphQL\Query\QueryBuilder as QueryBuilderContract;
 use Directus\GraphQL\Context;
+use Directus\GraphQL\Project\Types\MutationType;
 use Directus\GraphQL\Project\Types\QueryType;
 use Directus\GraphQL\Query\MutationBuilder;
 use Directus\GraphQL\Query\QueryBuilder;

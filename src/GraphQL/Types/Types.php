@@ -8,8 +8,10 @@ use Directus\GraphQL\Types\Scalars\JsonType;
 use GraphQL\Language\AST\BooleanValueNode;
 use GraphQL\Language\AST\FloatValueNode;
 use GraphQL\Language\AST\IntValueNode;
+use GraphQL\Language\AST\ListTypeNode;
 use GraphQL\Language\AST\NamedTypeNode;
 use GraphQL\Language\AST\NameNode;
+use GraphQL\Language\AST\Node;
 use GraphQL\Language\AST\NonNullTypeNode;
 use GraphQL\Language\AST\NullValueNode;
 use GraphQL\Language\AST\StringValueNode;
@@ -49,6 +51,9 @@ class Types
 
     // Resolvers
 
+    /**
+     * @param mixed $class
+     */
     public static function resolver($class): callable
     {
         return [$class, 'resolve'];
@@ -99,7 +104,7 @@ class Types
         return new NonNull($type);
     }
 
-    public static function typeToNode(Type $type)
+    public static function typeToNode(Type $type): Node
     {
         if ($type instanceof NonNull) {
             return new NonNullTypeNode([
@@ -119,10 +124,13 @@ class Types
         ]);
     }
 
+    /**
+     * @param mixed $value
+     */
     public static function nodeFromValue($value): ValueNode
     {
         if (is_null($value)) {
-            return new NullValueNode();
+            return new NullValueNode([]);
         }
         if (is_int($value)) {
             return new IntValueNode(['value' => $value]);
@@ -137,6 +145,6 @@ class Types
             return new BooleanValueNode(['value' => $value]);
         }
 
-        return new NullValueNode();
+        return new NullValueNode([]);
     }
 }

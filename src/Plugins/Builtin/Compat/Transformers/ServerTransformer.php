@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Directus\Plugins\Builtin\Compat\Transformers;
 
+use Closure;
 use Directus\Responses\Response;
 use Illuminate\Events\Dispatcher;
 use Illuminate\Http\Request;
@@ -12,12 +13,35 @@ class ServerTransformer
 {
     public function subscribe(Dispatcher $events): void
     {
-        $events->listen('directus.request.route.server.info', [$this, 'infoRequest']);
-        $events->listen('directus.response.route.server.info', [$this, 'infoResponse']);
-        $events->listen('directus.request.route.server.ping', [$this, 'pingRequest']);
-        $events->listen('directus.response.route.server.ping', [$this, 'pingResponse']);
-        $events->listen('directus.request.route.server.projects.all', [$this, 'listProjectsRequest']);
-        $events->listen('directus.response.route.server.projects.all', [$this, 'listProjectsResponse']);
+        $events->listen(
+            'directus.request.route.server.info',
+            Closure::fromCallable([$this, 'infoRequest'])
+        );
+
+        $events->listen(
+            'directus.response.route.server.info',
+            Closure::fromCallable([$this, 'infoResponse'])
+        );
+
+        $events->listen(
+            'directus.request.route.server.ping',
+            Closure::fromCallable([$this, 'pingRequest'])
+        );
+
+        $events->listen(
+            'directus.response.route.server.ping',
+            Closure::fromCallable([$this, 'pingResponse'])
+        );
+
+        $events->listen(
+            'directus.request.route.server.projects.all',
+            Closure::fromCallable([$this, 'listProjectsRequest'])
+        );
+
+        $events->listen(
+            'directus.response.route.server.projects.all',
+            Closure::fromCallable([$this, 'listProjectsResponse'])
+        );
     }
 
     public function infoRequest(Request $request): void

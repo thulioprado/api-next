@@ -93,7 +93,7 @@ class Source
             ]);
         }
 
-        $contents = $this->filesystem->exists($filePath);
+        $contents = $this->filesystem->get($filePath);
 
         return collect(explode("\n", $contents))
             ->map(function (string $line) use ($fileDirectory): array {

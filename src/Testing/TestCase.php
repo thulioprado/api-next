@@ -6,6 +6,7 @@ namespace Directus\Testing;
 
 use Directus\Providers\DirectusProvider;
 use Generator;
+use Illuminate\Contracts\Filesystem\Filesystem;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Storage;
@@ -58,7 +59,7 @@ abstract class TestCase extends OrchestraTestCase
         ]);
     }
 
-    protected function getDataFilesystem(string $root = '', array $config = [])
+    protected function getDataFilesystem(string $root = '', array $config = []): Filesystem
     {
         Storage::set('test_data', $storage = Storage::createLocalDriver(array_merge($config, [
             'root' => $this->getDataPath($root),
@@ -72,11 +73,6 @@ abstract class TestCase extends OrchestraTestCase
      */
     protected function getDataPath(string $file = ''): string
     {
-        $root = sprintf('%s/tests/data/', dirname(__DIR__, 2));
-        if ($root === false) {
-            throw new \RuntimeException('Missing tests data folder');
-        }
-
-        return Path::join($root, $file);
+        return Path::join(sprintf('%s/tests/data/', dirname(__DIR__, 2)), $file);
     }
 }

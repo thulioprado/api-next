@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Directus\Plugins\Builtin\Compat\Transformers;
 
+use Closure;
 use Directus\Responses\Response;
 use Illuminate\Events\Dispatcher;
 
@@ -11,12 +12,35 @@ class FieldTransformer
 {
     public function subscribe(Dispatcher $events): void
     {
-        $events->listen('directus.response.route.project.fields.all', [$this, 'list']);
-        $events->listen('directus.response.route.project.fields.collection.all', [$this, 'list']);
-        $events->listen('directus.response.route.project.fields.collection.fetch', [$this, 'one']);
-        $events->listen('directus.response.route.project.fields.collection.create', [$this, 'one']);
-        $events->listen('directus.response.route.project.fields.collection.update', [$this, 'one']);
-        $events->listen('directus.response.route.project.fields.collection.delete', [$this, 'delete']);
+        $events->listen(
+            'directus.response.route.project.fields.all',
+            Closure::fromCallable([$this, 'list'])
+        );
+
+        $events->listen(
+            'directus.response.route.project.fields.collection.all',
+            Closure::fromCallable([$this, 'list'])
+        );
+
+        $events->listen(
+            'directus.response.route.project.fields.collection.fetch',
+            Closure::fromCallable([$this, 'one'])
+        );
+
+        $events->listen(
+            'directus.response.route.project.fields.collection.create',
+            Closure::fromCallable([$this, 'one'])
+        );
+
+        $events->listen(
+            'directus.response.route.project.fields.collection.update',
+            Closure::fromCallable([$this, 'one'])
+        );
+
+        $events->listen(
+            'directus.response.route.project.fields.collection.delete',
+            Closure::fromCallable([$this, 'delete'])
+        );
     }
 
     public function list(Response $response): void

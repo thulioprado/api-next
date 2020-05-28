@@ -6,12 +6,19 @@ namespace Directus\Middlewares;
 
 use Closure;
 use Illuminate\Http\Request;
+use Illuminate\Routing\Route;
 
 class RequestMiddleware
 {
+    /**
+     * @return mixed
+     */
     public function handle(Request $request, Closure $next)
     {
-        event('directus.request.'.$request->route()->getName(), $request);
+        /** @var Route $route */
+        $route = request()->route();
+
+        event('directus.request.'.$route->getName(), $request);
 
         return $next($request);
     }

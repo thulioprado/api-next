@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Directus\Plugins\Builtin\Compat\Transformers;
 
+use Closure;
 use Directus\Responses\Response;
 use Illuminate\Events\Dispatcher;
 
@@ -11,11 +12,30 @@ class FileTransformer
 {
     public function subscribe(Dispatcher $events): void
     {
-        $events->listen('directus.response.route.project.files.all', [$this, 'list']);
-        $events->listen('directus.response.route.project.files.fetch', [$this, 'one']);
-        $events->listen('directus.response.route.project.files.create', [$this, 'one']);
-        $events->listen('directus.response.route.project.files.update', [$this, 'one']);
-        $events->listen('directus.response.route.project.files.delete', [$this, 'delete']);
+        $events->listen(
+            'directus.response.route.project.files.all',
+            Closure::fromCallable([$this, 'list'])
+        );
+
+        $events->listen(
+            'directus.response.route.project.files.fetch',
+            Closure::fromCallable([$this, 'one'])
+        );
+
+        $events->listen(
+            'directus.response.route.project.files.create',
+            Closure::fromCallable([$this, 'one'])
+        );
+
+        $events->listen(
+            'directus.response.route.project.files.update',
+            Closure::fromCallable([$this, 'one'])
+        );
+
+        $events->listen(
+            'directus.response.route.project.files.delete',
+            Closure::fromCallable([$this, 'delete'])
+        );
     }
 
     public function list(Response $response): void

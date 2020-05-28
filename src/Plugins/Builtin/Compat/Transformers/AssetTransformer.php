@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Directus\Plugins\Builtin\Compat\Transformers;
 
+use Closure;
 use Directus\Responses\Response;
 use Illuminate\Events\Dispatcher;
 
@@ -11,7 +12,10 @@ class AssetTransformer
 {
     public function subscribe(Dispatcher $events): void
     {
-        $events->listen('directus.response.route.project.asset', [$this, 'one']);
+        $events->listen(
+            'directus.response.route.project.asset',
+            Closure::fromCallable([$this, 'one'])
+        );
     }
 
     public function one(Response $response): void

@@ -36,6 +36,11 @@ class MutationBuilder implements MutationBuilderContract
     protected $alias;
 
     /**
+     * @var null|array
+     */
+    protected $fields;
+
+    /**
      * Constructor.
      */
     public function __construct(Engine $engine, string $name, ?string $alias = null)
@@ -48,11 +53,15 @@ class MutationBuilder implements MutationBuilderContract
     public function value(): self
     {
         $this->fields = null;
+
+        return $this;
     }
 
-    public function select($fields): self
+    public function select(array $fields): self
     {
         $this->fields = $fields;
+
+        return $this;
     }
 
     public function as(string $alias): self

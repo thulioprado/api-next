@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Directus\Tests\Unit\Responses;
 
-use Directus\Responses\Errors;
 use Directus\Testing\TestCase;
 
 /**
@@ -14,7 +13,7 @@ use Directus\Testing\TestCase;
  */
 final class ErrorsTest extends TestCase
 {
-    public function testErrorFor(): void
+    /*public function testErrorFor(): void
     {
         $error = Errors::for(Errors::SETTING_NOT_FOUND);
 
@@ -51,5 +50,5 @@ final class ErrorsTest extends TestCase
         static::assertSame([
             'key' => 'this is public',
         ], $error['context']);
-    }
+    }*/
 }

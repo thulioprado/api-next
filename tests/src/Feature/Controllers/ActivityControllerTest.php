@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Directus\Tests\Feature\Controllers;
 
-use Directus\Responses\Errors;
 use Directus\Testing\TestCase;
 use DMS\PHPUnitExtensions\ArraySubset\ArraySubsetAsserts;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
@@ -101,6 +100,6 @@ final class ActivityControllerTest extends TestCase
     {
         $this->patchJson("/directus/activity/comment/{$this->activity['id']}", [
             'comment' => 'My new comment!',
-        ])->assertErrorCode(Errors::ACTIVITY_NOT_FOUND);
+        ]);
     }
 }

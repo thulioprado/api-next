@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Directus\Plugins\Builtin\Compat\Transformers;
 
+use Closure;
 use Directus\Responses\Response;
 use Illuminate\Events\Dispatcher;
 
@@ -11,11 +12,30 @@ class RoleTransformer
 {
     public function subscribe(Dispatcher $events): void
     {
-        $events->listen('directus.response.route.project.roles.all', [$this, 'list']);
-        $events->listen('directus.response.route.project.roles.fetch', [$this, 'one']);
-        $events->listen('directus.response.route.project.roles.create', [$this, 'one']);
-        $events->listen('directus.response.route.project.roles.update', [$this, 'one']);
-        $events->listen('directus.response.route.project.roles.delete', [$this, 'delete']);
+        $events->listen(
+            'directus.response.route.project.roles.all',
+            Closure::fromCallable([$this, 'list'])
+        );
+
+        $events->listen(
+            'directus.response.route.project.roles.fetch',
+            Closure::fromCallable([$this, 'one'])
+        );
+
+        $events->listen(
+            'directus.response.route.project.roles.create',
+            Closure::fromCallable([$this, 'one'])
+        );
+
+        $events->listen(
+            'directus.response.route.project.roles.update',
+            Closure::fromCallable([$this, 'one'])
+        );
+
+        $events->listen(
+            'directus.response.route.project.roles.delete',
+            Closure::fromCallable([$this, 'delete'])
+        );
     }
 
     public function list(Response $response): void
@@ -35,7 +55,7 @@ class RoleTransformer
         $response->setContent('')->setStatusCode(204);
     }
 
-    private function hydrate(array $role)
+    private function hydrate(array $role): array
     {
         return $role;
     }

@@ -70,8 +70,11 @@ abstract class Engine implements EngineContract
      */
     public function schema(): Schema
     {
+        /** @var string $contents */
+        $contents = file_get_contents($this->file());
+
         $schema = BuildSchema::build(
-            file_get_contents($this->file()),
+            $contents,
             static function ($config, $definition) {
                 return $config;
             }
@@ -86,7 +89,11 @@ abstract class Engine implements EngineContract
     public function execute(string $query, ?array $variables = []): ExecutionResult
     {
         $rules = null;
-        if (config('app.debug')) {
+
+        /** @var bool $debug */
+        $debug = config('app.debug', false);
+
+        if ($debug) {
             $rules = [
                 new DisableIntrospection(),
             ];

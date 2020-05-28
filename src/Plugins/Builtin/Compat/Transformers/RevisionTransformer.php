@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Directus\Plugins\Builtin\Compat\Transformers;
 
+use Closure;
 use Directus\Responses\Response;
 use Illuminate\Events\Dispatcher;
 
@@ -11,9 +12,20 @@ class RevisionTransformer
 {
     public function subscribe(Dispatcher $events): void
     {
-        $events->listen('directus.response.route.project.revisions.all', [$this, 'list']);
-        $events->listen('directus.response.route.project.revisions.fetch', [$this, 'one']);
-        $events->listen('directus.response.route.project.*.revisions', [$this, 'list']);
+        $events->listen(
+            'directus.response.route.project.revisions.all',
+            Closure::fromCallable([$this, 'list'])
+        );
+
+        $events->listen(
+            'directus.response.route.project.revisions.fetch',
+            Closure::fromCallable([$this, 'one'])
+        );
+
+        $events->listen(
+            'directus.response.route.project.*.revisions',
+            Closure::fromCallable([$this, 'list'])
+        );
     }
 
     public function list(Response $response): void

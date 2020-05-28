@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Directus\Plugins\Builtin\Compat\Transformers;
 
+use Closure;
 use Directus\Responses\Response;
 use Illuminate\Events\Dispatcher;
 
@@ -11,11 +12,30 @@ class RelationTransformer
 {
     public function subscribe(Dispatcher $events): void
     {
-        $events->listen('directus.response.route.project.relations.all', [$this, 'list']);
-        $events->listen('directus.response.route.project.relations.fetch', [$this, 'one']);
-        $events->listen('directus.response.route.project.relations.create', [$this, 'one']);
-        $events->listen('directus.response.route.project.relations.update', [$this, 'one']);
-        $events->listen('directus.response.route.project.relations.delete', [$this, 'delete']);
+        $events->listen(
+            'directus.response.route.project.relations.all',
+            Closure::fromCallable([$this, 'list'])
+        );
+
+        $events->listen(
+            'directus.response.route.project.relations.fetch',
+            Closure::fromCallable([$this, 'one'])
+        );
+
+        $events->listen(
+            'directus.response.route.project.relations.create',
+            Closure::fromCallable([$this, 'one'])
+        );
+
+        $events->listen(
+            'directus.response.route.project.relations.update',
+            Closure::fromCallable([$this, 'one'])
+        );
+
+        $events->listen(
+            'directus.response.route.project.relations.delete',
+            Closure::fromCallable([$this, 'delete'])
+        );
     }
 
     public function list(Response $response): void

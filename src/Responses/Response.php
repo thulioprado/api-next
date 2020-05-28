@@ -7,6 +7,7 @@ namespace Directus\Responses;
 use GraphQL\Error\Debug;
 use GraphQL\Executor\ExecutionResult;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Routing\Route;
 use Illuminate\Support\Arr;
 
 /**
@@ -44,7 +45,10 @@ class Response extends JsonResponse
         $this->set('data', $data);
         $this->setStatusCode($status);
 
-        event('directus.response.'.request()->route()->getName(), $this);
+        /** @var Route $route */
+        $route = request()->route();
+
+        event('directus.response.'.$route->getName(), $this);
 
         return $this;
     }
@@ -57,7 +61,10 @@ class Response extends JsonResponse
         $this->setStatusCode($status);
         $this->data = '';
 
-        event('directus.response.'.request()->route()->getName(), $this);
+        /** @var Route $route */
+        $route = request()->route();
+
+        event('directus.response.'.$route->getName(), $this);
 
         return $this;
     }
@@ -84,7 +91,10 @@ class Response extends JsonResponse
             $this->set('errors', $content['errors']);
         }
 
-        event('directus.response.'.request()->route()->getName(), $this);
+        /** @var Route $route */
+        $route = request()->route();
+
+        event('directus.response.'.$route->getName(), $this);
 
         return $this;
     }
@@ -94,9 +104,7 @@ class Response extends JsonResponse
      */
     public function transform(callable $transformer): self
     {
-        if (is_callable($transformer)) {
-            $transformer($this);
-        }
+        $transformer($this);
 
         return $this;
     }
@@ -147,8 +155,6 @@ class Response extends JsonResponse
 
     /**
      * Sets data on the array.
-     *
-     * @return mixed
      */
     public function unset(string $key): self
     {

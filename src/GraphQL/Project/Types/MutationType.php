@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Directus\GraphQL\Project;
+namespace Directus\GraphQL\Project\Types;
 
 use Directus\GraphQL\Types\Types;
 use GraphQL\Type\Definition\ObjectType;

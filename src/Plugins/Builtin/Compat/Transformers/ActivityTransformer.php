@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Directus\Plugins\Builtin\Compat\Transformers;
 
+use Closure;
 use Directus\Responses\Response;
 use Illuminate\Events\Dispatcher;
 
@@ -11,11 +12,30 @@ class ActivityTransformer
 {
     public function subscribe(Dispatcher $events): void
     {
-        $events->listen('directus.response.route.project.activities.all', [$this, 'list']);
-        $events->listen('directus.response.route.project.activities.fetch', [$this, 'one']);
-        $events->listen('directus.response.route.project.activities.comment.create', [$this, 'one']);
-        $events->listen('directus.response.route.project.activities.comment.update', [$this, 'one']);
-        $events->listen('directus.response.route.project.activities.comment.delete', [$this, 'delete']);
+        $events->listen(
+            'directus.response.route.project.activities.all',
+            Closure::fromCallable([$this, 'list'])
+        );
+
+        $events->listen(
+            'directus.response.route.project.activities.comment.create',
+            Closure::fromCallable([$this, 'one'])
+        );
+
+        $events->listen(
+            'directus.response.route.project.activities.comment.update',
+            Closure::fromCallable([$this, 'one'])
+        );
+
+        $events->listen(
+            'directus.response.route.project.activities.fetch',
+            Closure::fromCallable([$this, 'one'])
+        );
+
+        $events->listen(
+            'directus.response.route.project.activities.comment.delete',
+            Closure::fromCallable([$this, 'delete'])
+        );
     }
 
     public function list(Response $response): void
