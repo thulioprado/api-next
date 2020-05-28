@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Directus\GraphQL;
 
+use Directus\GraphQL\Project\Project;
 use Directus\GraphQL\Server\Server;
 
 class GraphQL
