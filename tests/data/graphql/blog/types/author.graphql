@@ -1,0 +1,7 @@
+type Author {
+    name: String!
+}
+
+extend type Query {
+    authors: [Author!]!
+}

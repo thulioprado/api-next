@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Directus\GraphQL\Server;
+namespace Directus\GraphQL\Project;
 
 use Directus\GraphQL\Server\Resolvers\PingResolver;
 use Directus\GraphQL\Server\Resolvers\ProjectsResolver;
@@ -17,7 +17,7 @@ class Query extends ObjectType
     {
         parent::__construct([
             'name' => 'Query',
-            'description' => 'Server queries.',
+            'description' => 'Project related queries.',
             'fields' => [
                 'ping' => [
                     'type' => Types::required(Types::from(PingType::class)),

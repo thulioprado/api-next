@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Directus\Providers;
 
+use Directus\Testing\Providers\TestingProvider;
 use Illuminate\Support\ServiceProvider;
 
 /**
@@ -27,5 +28,8 @@ class DirectusProvider extends ServiceProvider
         $this->app->register(CommandsProvider::class);
         $this->app->register(GraphQLProvider::class);
         $this->app->register(PluginsProvider::class);
+        if ($this->app->runningUnitTests()) {
+            $this->app->register(TestingProvider::class);
+        }
     }
 }

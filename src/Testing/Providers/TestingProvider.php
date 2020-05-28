@@ -7,7 +7,6 @@ declare(strict_types=1);
 namespace Directus\Testing\Providers;
 
 use Carbon\Laravel\ServiceProvider;
-use Directus\Database\Database;
 use Directus\Testing\Extensions\Initializer;
 use Illuminate\Testing\TestResponse;
 use PHPUnit\Framework\Assert;

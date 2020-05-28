@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Directus\GraphQL\Server;
+namespace Directus\GraphQL\Project;
 
 use Directus\GraphQL\Types\Types;
 use GraphQL\Type\Definition\ObjectType;
 
-class Mutation extends ObjectType
+class MutationType extends ObjectType
 {
     public function __construct()
     {

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Directus\Tests\Unit\Responses;
+namespace Directus\Tests\Unit\GraphQL\Query;
 
 use Directus\Testing\TestCase;
 

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Directus\Providers;
 
+use Directus\GraphQL\Context;
 use Directus\GraphQL\GraphQL;
 use Illuminate\Support\ServiceProvider;
 use Webmozart\PathUtil\Path;
@@ -19,6 +20,7 @@ class GraphQLProvider extends ServiceProvider
     public function register(): void
     {
         $this->app->bind(GraphQL::class, GraphQL::class);
+        $this->app->bindIf(Context::class, Context::class);
 
         $this->publishes([
             __DIR__.'/../../public/graphiql' => public_path(

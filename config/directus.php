@@ -25,5 +25,10 @@ return [
     ],
     'project' => [
         'id' => env('DIRECTUS_PROJECT_ID', 'directus'),
+        'graphql' => [
+            'schema' => [
+                'cache' => 'file',
+            ],
+        ],
     ],
 ];

@@ -1,0 +1,20 @@
+directive @resolver(class: String!) on FIELD_DEFINITION
+
+enum Ping {
+    PONG
+}
+
+type Query
+{
+    ping: Ping! @resolver(class: "Directus\\GraphQL\\Server\\Resolvers\\PingResolver")
+}
+
+type Mutation
+{
+    sum(a: Int!, b: Int!): Int!
+}
+
+schema {
+    query: Query
+    mutation: Mutation
+}

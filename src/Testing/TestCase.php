@@ -5,11 +5,12 @@ declare(strict_types=1);
 namespace Directus\Testing;
 
 use Directus\Providers\DirectusProvider;
-use Directus\Testing\Providers\TestingProvider;
 use Generator;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\Storage;
 use Orchestra\Testbench\TestCase as OrchestraTestCase;
+use Webmozart\PathUtil\Path;
 
 /**
  * PHP Provider tests.
@@ -54,22 +55,28 @@ abstract class TestCase extends OrchestraTestCase
     {
         return Arr::flatten([
             DirectusProvider::class,
-            TestingProvider::class,
         ]);
+    }
+
+    protected function getDataFilesystem(string $root = '', array $config = [])
+    {
+        Storage::set('test_data', $storage = Storage::createLocalDriver(array_merge($config, [
+            'root' => $this->getDataPath($root),
+        ])));
+
+        return $storage;
     }
 
     /**
      * Resolves a path to a data file.
-     *
-     * @param string $path
      */
-    protected function getFilePath($path): string
+    protected function getDataPath(string $file = ''): string
     {
-        $path = str_replace('\\', '/', $path);
-        if ($path !== '' && strpos($path, '/') === 0) {
-            $path = substr($path, 1);
+        $root = sprintf('%s/tests/data/', dirname(__DIR__, 2));
+        if ($root === false) {
+            throw new \RuntimeException('Missing tests data folder');
         }
 
-        return __DIR__.'/../data/'.$path;
+        return Path::join($root, $file);
     }
 }

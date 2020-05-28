@@ -2,27 +2,31 @@
 
 declare(strict_types=1);
 
-namespace Directus\GraphQL\Project;
+namespace Directus\GraphQL\Server\Types;
 
+use Directus\GraphQL\Server\Resolvers\InfoResolver;
 use Directus\GraphQL\Server\Resolvers\PingResolver;
 use Directus\GraphQL\Server\Resolvers\ProjectsResolver;
-use Directus\GraphQL\Server\Types\PingType;
-use Directus\GraphQL\Server\Types\ProjectType;
 use Directus\GraphQL\Types\Types;
 use GraphQL\Type\Definition\ObjectType;
 
-class Query extends ObjectType
+class QueryType extends ObjectType
 {
     public function __construct()
     {
         parent::__construct([
             'name' => 'Query',
-            'description' => 'Server queries.',
+            'description' => 'Server related queries.',
             'fields' => [
                 'ping' => [
                     'type' => Types::required(Types::from(PingType::class)),
                     'description' => 'Pings the server instance.',
                     'resolve' => Types::resolver(PingResolver::class),
+                ],
+                'information' => [
+                    'type' => Types::required(Types::from(InfoType::class)),
+                    'description' => 'Server information.',
+                    'resolve' => Types::resolver(InfoResolver::class),
                 ],
                 'projects' => [
                     'type' => Types::required(Types::list(Types::required(Types::from(ProjectType::class)))),

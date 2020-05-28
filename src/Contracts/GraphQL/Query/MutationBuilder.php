@@ -9,4 +9,6 @@ use GraphQL\Executor\ExecutionResult;
 interface MutationBuilder
 {
     public function execute(array $arguments = []): ExecutionResult;
+
+    public function as(string $alias): self;
 }
