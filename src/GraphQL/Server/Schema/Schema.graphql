@@ -3,6 +3,7 @@ Server related queries.
 """
 type Query
 
+#include Scalars/*.graphql
 #include Types/*.graphql
 
 schema {

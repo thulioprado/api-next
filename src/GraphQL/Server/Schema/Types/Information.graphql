@@ -17,34 +17,14 @@ type EnvironmentInfo {
 }
 
 """
-PHP settings.
-"""
-type PhpSettings {
-    upload_max_filesize: String!
-}
-
-"""
-PHP extensions.
-"""
-type PhpExtensions {
-    pdo: Boolean!
-    curl: Boolean!
-    gd: Boolean!
-    fileinfo: Boolean!
-    mbstring: Boolean!
-    json: Boolean!
-}
-
-"""
 PHP information.
 """
 type PhpInfo {
     arch: String!
     version: String!
-    settings: PhpSettings!
-    extensions: PhpExtensions!
+    settings: Json!
+    extensions: Json!
 }
-
 
 """
 Directus server information.

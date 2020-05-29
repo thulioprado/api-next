@@ -85,9 +85,14 @@ abstract class Engine implements EngineContract
             return $this->transform($source);
         });
 
-        return Builder::build($source, function(string $type, string $field): ?callable {
-            return $this->resolve($type, $field);
-        });
+        return Builder::build($source,
+            function(string $type, string $field): ?callable {
+                return $this->resolve($type, $field);
+            },
+            function (string $name): ?string {
+                return $this->scalar($name);
+            }
+        );
     }
 
     /**
@@ -126,6 +131,11 @@ abstract class Engine implements EngineContract
      * Gets a field resolver from type and name.
      */
     abstract protected function resolve(string $type, string $field): ?callable;
+
+    /**
+     * Gets a scalar type.
+     */
+    abstract protected function scalar(string $name): ?string;
 
     /**
      * Transforms the schema source.

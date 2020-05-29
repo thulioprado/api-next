@@ -8,6 +8,8 @@ use Directus\GraphQL\Engine;
 use Directus\GraphQL\Events\EnhanceServerSchema;
 use Directus\GraphQL\Server\Resolvers\ProjectResolver;
 use Directus\GraphQL\Server\Resolvers\QueryResolver;
+use Directus\GraphQL\Types\Scalars\JsonType;
+use GraphQL\Type\Definition\ScalarType;
 use Illuminate\Support\Str;
 
 class Server extends Engine
@@ -15,6 +17,10 @@ class Server extends Engine
     private static $resolvers = [
         'Query' => QueryResolver::class,
         'Project' => ProjectResolver::class,
+    ];
+
+    private static $scalars = [
+        'Json' => JsonType::class,
     ];
 
     protected function file(): string
@@ -28,6 +34,10 @@ class Server extends Engine
         $sources = event(new EnhanceServerSchema($source));
         array_unshift($sources, $source);
         return implode('\n', $sources);
+    }
+
+    protected function scalar(string $type): ?string {
+        return static::$scalars[$type] ?? null;
     }
 
     protected function resolve(string $type, string $field): ?callable
