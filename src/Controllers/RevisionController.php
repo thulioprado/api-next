@@ -19,7 +19,7 @@ class RevisionController extends BaseController
         $fields = [];
 
         return directus()->respond()->withQuery(
-            directus()->graphql()->project($project)->execute('
+            directus()->graphql()->project($project)->execute(/** @lang GraphQL */ '
                 query {
                     revisions {
                         id
@@ -47,7 +47,7 @@ class RevisionController extends BaseController
         ];
 
         return directus()->respond()->withQuery(
-            directus()->graphql()->project($project)->execute('
+            directus()->graphql()->project($project)->execute(/** @lang GraphQL */ '
                 query Revisions($id: String!) {
                     revision(id: $id) {
                         id

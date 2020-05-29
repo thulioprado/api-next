@@ -21,7 +21,7 @@ class FileController extends BaseController
         // TODO: insert data field
 
         return directus()->respond()->withQuery(
-            directus()->graphql()->project($project)->execute('
+            directus()->graphql()->project($project)->execute(/** @lang GraphQL */ '
                 query {
                     files {
                         id
@@ -63,7 +63,7 @@ class FileController extends BaseController
         // TODO: insert data field
 
         return directus()->respond()->withQuery(
-            directus()->graphql()->project($project)->execute('
+            directus()->graphql()->project($project)->execute(/** @lang GraphQL */ '
                 query File($id: String!) {
                     file(id: $id) {
                         id
@@ -101,7 +101,7 @@ class FileController extends BaseController
         // TODO: insert data field
 
         return directus()->respond()->withQuery(
-            directus()->graphql()->project($project)->execute('
+            directus()->graphql()->project($project)->execute(/** @lang GraphQL */ '
                 mutation CreateFile(
                     $data: String!,
                     $filename_download: String,
@@ -159,7 +159,7 @@ class FileController extends BaseController
         // TODO: insert data field
 
         return directus()->respond()->withQuery(
-            directus()->graphql()->project($project)->execute('
+            directus()->graphql()->project($project)->execute(/** @lang GraphQL */ '
                 mutation UpdateFile(
                     $data: String!,
                     $filename_download: String,
@@ -215,7 +215,7 @@ class FileController extends BaseController
         ];
 
         return directus()->respond()->withQuery(
-            directus()->graphql()->project($project)->execute('
+            directus()->graphql()->project($project)->execute(/** @lang GraphQL */ '
                 mutation DeleteFile($id: String!) {
                     deleteFile(id: $id) {
                         id
@@ -236,7 +236,7 @@ class FileController extends BaseController
         ];
 
         return directus()->respond()->withQuery(
-            directus()->graphql()->project($project)->execute('
+            directus()->graphql()->project($project)->execute(/** @lang GraphQL */ '
                 query Revisions($item: String!, $offset: Int) {
                     revisions(item: $item, offset: $offset) {
                         id

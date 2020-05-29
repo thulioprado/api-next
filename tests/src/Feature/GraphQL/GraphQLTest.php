@@ -18,7 +18,7 @@ final class GraphQLTest extends TestCase
 
     /*public function testQuery(): void
     {
-        $response = directus()->graphql()->execute('
+        $response = directus()->graphql()->execute(/** @lang GraphQL */ '
             query {
                 server {
                     ping

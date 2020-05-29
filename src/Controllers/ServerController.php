@@ -15,7 +15,7 @@ class ServerController extends BaseController
     public function info(): JsonResponse
     {
         return directus()->respond()->withQuery(
-            directus()->graphql()->server()->execute('
+            directus()->graphql()->server()->execute(/** @lang GraphQL */ '
                 query {
                     info {
                         directus {
@@ -46,7 +46,7 @@ class ServerController extends BaseController
     public function ping(): JsonResponse
     {
         return directus()->respond()->public()->withQuery(
-            directus()->graphql()->server()->execute('
+            directus()->graphql()->server()->execute(/** @lang GraphQL */ '
                 query {
                     ping
                 }
@@ -58,7 +58,7 @@ class ServerController extends BaseController
     {
         // TODO: dynamic load of projects
         return directus()->respond()->public()->withQuery(
-            directus()->graphql()->server()->execute('
+            directus()->graphql()->server()->execute(/** @lang GraphQL */ '
                 query {
                     projects {
                         id

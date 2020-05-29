@@ -19,7 +19,7 @@ class PresetController extends BaseController
         $fields = [];
 
         return directus()->respond()->withQuery(
-            directus()->graphql()->project($project)->execute('
+            directus()->graphql()->project($project)->execute(/** @lang GraphQL */ '
                 query {
                     presets {
                         id
@@ -49,7 +49,7 @@ class PresetController extends BaseController
         ];
 
         return directus()->respond()->withQuery(
-            directus()->graphql()->project($project)->execute('
+            directus()->graphql()->project($project)->execute(/** @lang GraphQL */ '
                 query Preset($id: String!) {
                     preset(id: $id) {
                         id
@@ -75,7 +75,7 @@ class PresetController extends BaseController
         $fields = request()->all();
 
         return directus()->respond()->withQuery(
-            directus()->graphql()->project($project)->execute('
+            directus()->graphql()->project($project)->execute(/** @lang GraphQL */ '
                 mutation CreatePreset(
                     $collection_id: String!,
                     $user_id: String,
@@ -125,7 +125,7 @@ class PresetController extends BaseController
         ]);
 
         return directus()->respond()->withQuery(
-            directus()->graphql()->project($project)->execute('
+            directus()->graphql()->project($project)->execute(/** @lang GraphQL */ '
                 mutation UpdatePreset(
                     $id: String!,
                     $collection_id: String,
@@ -177,7 +177,7 @@ class PresetController extends BaseController
         ];
 
         return directus()->respond()->withQuery(
-            directus()->graphql()->project($project)->execute('
+            directus()->graphql()->project($project)->execute(/** @lang GraphQL */ '
                 mutation DeletePreset($id: String!) {
                     deletePreset(id: $id) {
                         id

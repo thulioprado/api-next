@@ -16,7 +16,7 @@ final class ServerQueryTest extends TestCase
     public function testPing(): void
     {
         $server = directus()->graphql()->server();
-        $result = $server->execute('
+        $result = $server->execute(/** @lang GraphQL */ '
             query {
                 ping
             }

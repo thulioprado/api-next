@@ -19,7 +19,7 @@ class FieldController extends BaseController
         $fields = [];
 
         return directus()->respond()->withQuery(
-            directus()->graphql()->project($project)->execute('
+            directus()->graphql()->project($project)->execute(/** @lang GraphQL */ '
                 query {
                     fields {
                         id
@@ -55,7 +55,7 @@ class FieldController extends BaseController
         ];
 
         return directus()->respond()->withQuery(
-            directus()->graphql()->project($project)->execute('
+            directus()->graphql()->project($project)->execute(/** @lang GraphQL */ '
                 query CollectionFields($collection_id: String!) {
                     fields(collection_id: $collection_id) {
                         id
@@ -92,7 +92,7 @@ class FieldController extends BaseController
         ];
 
         return directus()->respond()->withQuery(
-            directus()->graphql()->project($project)->execute('
+            directus()->graphql()->project($project)->execute(/** @lang GraphQL */ '
                 query CollectionField($id: String!, $collection_id: String!) {
                     field(id: $id, collection_id: $collection_id) {
                         id
@@ -126,7 +126,7 @@ class FieldController extends BaseController
         ];
 
         return directus()->respond()->withQuery(
-            directus()->graphql()->project($project)->execute('
+            directus()->graphql()->project($project)->execute(/** @lang GraphQL */ '
                 query CreateCollectionField(
                     $collection_id: String!,
                     $name: String,
@@ -195,7 +195,7 @@ class FieldController extends BaseController
         ];
 
         return directus()->respond()->withQuery(
-            directus()->graphql()->project($project)->execute('
+            directus()->graphql()->project($project)->execute(/** @lang GraphQL */ '
                 query UpdateCollectionField(
                     $id: String!,
                     $collection_id: String!,
@@ -266,7 +266,7 @@ class FieldController extends BaseController
         ];
 
         return directus()->respond()->withQuery(
-            directus()->graphql()->project($project)->execute('
+            directus()->graphql()->project($project)->execute(/** @lang GraphQL */ '
                 mutation DeleteFolder($id: String!, $collection_id: String!) {
                     deleteFolder(id: $id, collection_id: $collection_id) {
                         id
