@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Directus\GraphQL\Events;
 
-class SourceLoaded
+class EnhanceSchema
 {
     /**
      * @var string

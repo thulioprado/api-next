@@ -1,0 +1,8 @@
+type Query
+
+#include Types/*.graphql
+
+schema {
+    query: Query
+}
+

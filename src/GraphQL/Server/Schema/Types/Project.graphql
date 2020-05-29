@@ -1,0 +1,21 @@
+"""
+Directus project information.
+"""
+type Project {
+    """
+    Project id.
+    """
+    id: String!
+
+    """
+    Project name.
+    """
+    name: String!
+}
+
+extend type Query {
+    """
+    List of projects.
+    """
+    projects: [Project!]!
+}

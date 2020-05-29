@@ -7,14 +7,20 @@ namespace Directus\GraphQL;
 use Directus\Contracts\GraphQL\Engine as EngineContract;
 use Directus\Contracts\GraphQL\Query\MutationBuilder as MutationBuilderContract;
 use Directus\Contracts\GraphQL\Query\QueryBuilder as QueryBuilderContract;
+use Directus\Contracts\GraphQL\Resolver;
 use Directus\GraphQL\Query\MutationBuilder;
 use Directus\GraphQL\Query\QueryBuilder;
+use Directus\GraphQL\Schema\Builder;
+use Directus\GraphQL\Schema\Source;
 use GraphQL\Executor\ExecutionResult;
 use GraphQL\GraphQL;
 use GraphQL\Type\Schema;
 use GraphQL\Utils\BuildSchema;
 use GraphQL\Validator\Rules\DisableIntrospection;
 use Illuminate\Contracts\Container\Container;
+use Illuminate\Contracts\Filesystem\Filesystem;
+use Illuminate\Support\Facades\Storage;
+use Webmozart\PathUtil\Path;
 
 abstract class Engine implements EngineContract
 {
@@ -22,11 +28,6 @@ abstract class Engine implements EngineContract
      * @var Container
      */
     protected $container;
-
-    /**
-     * @var mixed
-     */
-    protected $context;
 
     /**
      * @var Schema
@@ -70,17 +71,23 @@ abstract class Engine implements EngineContract
      */
     public function schema(): Schema
     {
-        /** @var string $contents */
-        $contents = file_get_contents($this->file());
+        if ($this->schema !== null) {
+            return $this->schema;
+        }
 
-        $schema = BuildSchema::build(
-            $contents,
-            static function ($config, $definition) {
-                return $config;
-            }
-        );
+        $file = $this->file();
 
-        return $schema;
+        $loader = new Source(Storage::createLocalDriver([
+            'root' => Path::getDirectory($file),
+        ]));
+
+        $source = $loader->load(Path::getFilename($file), function ($source): string {
+            return $this->transform($source);
+        });
+
+        return Builder::build($source, function(string $type, string $field): ?callable {
+            return $this->resolve($type, $field);
+        });
     }
 
     /**
@@ -92,8 +99,7 @@ abstract class Engine implements EngineContract
 
         /** @var bool $debug */
         $debug = config('app.debug', false);
-
-        if ($debug) {
+        if (!$debug) {
             $rules = [
                 new DisableIntrospection(),
             ];
@@ -103,7 +109,7 @@ abstract class Engine implements EngineContract
             $this->schema(),
             $query,
             null,
-            $this->context ?? [],
+            $this->context(),
             $variables ?? [],
             null,
             null,
@@ -115,4 +121,14 @@ abstract class Engine implements EngineContract
      * The location if type language file.
      */
     abstract protected function file(): string;
+
+    /**
+     * Gets a field resolver from type and name.
+     */
+    abstract protected function resolve(string $type, string $field): ?callable;
+
+    /**
+     * Transforms the schema source.
+     */
+    abstract protected function transform(string $source): string;
 }

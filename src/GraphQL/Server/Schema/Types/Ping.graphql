@@ -1,0 +1,16 @@
+"""
+Server ping response.
+"""
+enum Ping {
+    """
+    Successful ping response.
+    """
+    pong
+}
+
+extend type Query {
+    """
+    Pings the server.
+    """
+    ping: Ping!
+}

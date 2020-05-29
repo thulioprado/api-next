@@ -4,6 +4,6 @@ declare(strict_types=1);
 
 namespace Directus\GraphQL\Events;
 
-class BuildSchema
+class EnhanceServerSchema extends EnhanceSchema
 {
 }

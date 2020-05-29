@@ -1,0 +1,11 @@
+"""
+Server related queries.
+"""
+type Query
+
+#include Types/*.graphql
+
+schema {
+    query: Query
+}
+

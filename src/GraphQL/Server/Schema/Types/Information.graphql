@@ -1,0 +1,63 @@
+"""
+Directus information.
+"""
+type DirectusInfo {
+    version: String!
+    extensions: [String!]!
+}
+
+"""
+Environment information.
+"""
+type EnvironmentInfo {
+    name: String!
+    server: String!
+    container: Boolean!
+    os: String!
+}
+
+"""
+PHP settings.
+"""
+type PhpSettings {
+    upload_max_filesize: String!
+}
+
+"""
+PHP extensions.
+"""
+type PhpExtensions {
+    pdo: Boolean!
+    curl: Boolean!
+    gd: Boolean!
+    fileinfo: Boolean!
+    mbstring: Boolean!
+    json: Boolean!
+}
+
+"""
+PHP information.
+"""
+type PhpInfo {
+    arch: String!
+    version: String!
+    settings: PhpSettings!
+    extensions: PhpExtensions!
+}
+
+
+"""
+Directus server information.
+"""
+type ServerInfo {
+    directus: DirectusInfo!
+    environment: EnvironmentInfo!
+    php: PhpInfo!
+}
+
+extend type Query {
+    """
+    Directus server information.
+    """
+    info: ServerInfo!
+}
