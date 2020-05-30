@@ -15,10 +15,8 @@ use Directus\GraphQL\Schema\Source;
 use GraphQL\Executor\ExecutionResult;
 use GraphQL\GraphQL;
 use GraphQL\Type\Schema;
-use GraphQL\Utils\BuildSchema;
 use GraphQL\Validator\Rules\DisableIntrospection;
 use Illuminate\Contracts\Container\Container;
-use Illuminate\Contracts\Filesystem\Filesystem;
 use Illuminate\Support\Facades\Storage;
 use Webmozart\PathUtil\Path;
 
@@ -85,8 +83,9 @@ abstract class Engine implements EngineContract
             return $this->transform($source);
         });
 
-        return Builder::build($source,
-            function(string $type, string $field): ?callable {
+        return Builder::build(
+            $source,
+            function (string $type, string $field): ?callable {
                 return $this->resolve($type, $field);
             },
             function (string $name): ?string {
@@ -98,7 +97,7 @@ abstract class Engine implements EngineContract
     /**
      * Executes a query.
      */
-    public function execute(string $query, ?array $variables = []): ExecutionResult
+    public function execute(string $query, ?array $variables = [], string $operationName = null): ExecutionResult
     {
         $rules = null;
 
@@ -116,7 +115,7 @@ abstract class Engine implements EngineContract
             null,
             $this->context(),
             $variables ?? [],
-            null,
+            $operationName,
             null,
             $rules
         );

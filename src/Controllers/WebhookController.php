@@ -19,7 +19,7 @@ class WebhookController extends BaseController
         $fields = [];
 
         return directus()->respond()->withQuery(
-            directus()->graphql()->project($project)->execute(/** @lang GraphQL */ '
+            directus()->graphql()->project($project)->execute(/* @lang GraphQL */ '
                 query {
                     webhooks {
                         id
@@ -44,7 +44,7 @@ class WebhookController extends BaseController
         ];
 
         return directus()->respond()->withQuery(
-            directus()->graphql()->project($project)->execute(/** @lang GraphQL */ '
+            directus()->graphql()->project($project)->execute(/* @lang GraphQL */ '
                 query Webhook($id: String!) {
                     webhook(id: $id) {
                         id
@@ -65,7 +65,7 @@ class WebhookController extends BaseController
         $fields = request()->all();
 
         return directus()->respond()->withQuery(
-            directus()->graphql()->project($project)->execute(/** @lang GraphQL */ '
+            directus()->graphql()->project($project)->execute(/* @lang GraphQL */ '
                 mutation CreateWebhook(
                     $status: String,
                     $http_action: String,
@@ -102,7 +102,7 @@ class WebhookController extends BaseController
         ]);
 
         return directus()->respond()->withQuery(
-            directus()->graphql()->project($project)->execute(/** @lang GraphQL */ '
+            directus()->graphql()->project($project)->execute(/* @lang GraphQL */ '
             mutation UpdateWebhook(
                 $id: String!,
                 $status: String,
@@ -139,7 +139,7 @@ class WebhookController extends BaseController
         ];
 
         return directus()->respond()->withQuery(
-            directus()->graphql()->project($project)->execute(/** @lang GraphQL */ '
+            directus()->graphql()->project($project)->execute(/* @lang GraphQL */ '
                 mutation DeleteWebhook($id: String!) {
                     deleteWebhook(id: $id) {
                         id
@@ -160,7 +160,7 @@ class WebhookController extends BaseController
         ];
 
         return directus()->respond()->withQuery(
-            directus()->graphql()->project($project)->execute(/** @lang GraphQL */ '
+            directus()->graphql()->project($project)->execute(/* @lang GraphQL */ '
                 query Revisions($item: String!, $offset: Int) {
                     revisions(item: $item, offset: $offset) {
                         id

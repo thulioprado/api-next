@@ -19,7 +19,7 @@ class FolderController extends BaseController
         $fields = [];
 
         return directus()->respond()->withQuery(
-            directus()->graphql()->project($project)->execute(/** @lang GraphQL */ '
+            directus()->graphql()->project($project)->execute(/* @lang GraphQL */ '
                 query {
                     folders {
                         id
@@ -41,7 +41,7 @@ class FolderController extends BaseController
         ];
 
         return directus()->respond()->withQuery(
-            directus()->graphql()->project($project)->execute(/** @lang GraphQL */ '
+            directus()->graphql()->project($project)->execute(/* @lang GraphQL */ '
                 query Folder($id: String!) {
                     folder(id: $id) {
                         id
@@ -59,7 +59,7 @@ class FolderController extends BaseController
         $fields = request()->all();
 
         return directus()->respond()->withQuery(
-            directus()->graphql()->project($project)->execute(/** @lang GraphQL */ '
+            directus()->graphql()->project($project)->execute(/* @lang GraphQL */ '
                 mutation CreateFolder($name: String!, $parent_id: String) {
                     createFolder(name: $name, parent_id: $parent_id) {
                         id
@@ -79,7 +79,7 @@ class FolderController extends BaseController
         ]);
 
         return directus()->respond()->withQuery(
-            directus()->graphql()->project($project)->execute(/** @lang GraphQL */ '
+            directus()->graphql()->project($project)->execute(/* @lang GraphQL */ '
                 mutation UpdateFolder($id: String!, $name: String, $parent_id: String) {
                     updateFolder(id: $id, name: $name, parent_id: $parent_id) {
                         id
@@ -99,7 +99,7 @@ class FolderController extends BaseController
         ];
 
         return directus()->respond()->withQuery(
-            directus()->graphql()->project($project)->execute(/** @lang GraphQL */ '
+            directus()->graphql()->project($project)->execute(/* @lang GraphQL */ '
                 mutation DeleteFolder($id: String!) {
                     deleteFolder(id: $id) {
                         id

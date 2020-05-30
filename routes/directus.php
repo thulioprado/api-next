@@ -49,8 +49,6 @@ Route::group([
     ], static function (): void {
         Route::get('', [GraphQLController::class, 'system'])->name('get');
         Route::post('', [GraphQLController::class, 'system'])->name('post');
-        Route::get('project', [GraphQLController::class, 'project'])->name('get');
-        Route::post('project', [GraphQLController::class, 'project'])->name('post');
     });
 
     // Server
@@ -208,6 +206,16 @@ Route::group([
             Route::post('', [FolderController::class, 'create'])->name('create');
             Route::patch('{key}', [FolderController::class, 'update'])->name('update');
             Route::delete('{key}', [FolderController::class, 'delete'])->name('delete');
+        });
+
+        // GraphQL
+        // https://docs.directus.io/api/graphql.html
+        Route::group([
+            'prefix' => 'graphql',
+            'as' => 'graphql.',
+        ], static function (): void {
+            Route::get('', [GraphQLController::class, 'project'])->name('get');
+            Route::post('', [GraphQLController::class, 'project'])->name('post');
         });
 
         // Mail

@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace Directus\GraphQL\Server\Resolvers;
 
-use Directus\Contracts\GraphQL\Resolver;
-use Directus\GraphQL\Resolvers\Traits\StaticResolver;
 use Illuminate\Support\Str;
 
 class ProjectResolver

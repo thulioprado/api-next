@@ -108,6 +108,24 @@ class MutationBuilder implements MutationBuilderContract
             ]);
         }
 
+        $selectedFields = null;
+
+        if ($this->fields !== null) {
+            $selectedFieldList = [];
+
+            foreach ($this->fields as $field) {
+                $selectedFieldList[] = new FieldNode([
+                    'name' => new NameNode([
+                        'value' => $field,
+                    ]),
+                ]);
+            }
+
+            $selectedFields = new SelectionSetNode([
+                'selections' => $selectedFieldList,
+            ]);
+        }
+
         $document = new DocumentNode([
             'definitions' => [
                 new OperationDefinitionNode([
@@ -123,6 +141,7 @@ class MutationBuilder implements MutationBuilderContract
                                     'value' => $this->alias,
                                 ]),
                                 'arguments' => $arguments,
+                                'selectionSet' => $selectedFields,
                             ]),
                         ],
                     ]),

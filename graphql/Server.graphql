@@ -1,0 +1,12 @@
+"""
+Server related queries.
+"""
+type Query
+
+#include Common/Scalars/*.graphql
+#include Server/*.graphql
+
+schema {
+    query: Query
+}
+

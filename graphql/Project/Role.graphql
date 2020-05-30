@@ -1,0 +1,56 @@
+"""
+Directus role information.
+"""
+type Role {
+    """
+    Unique role id.
+    """
+    id: String!
+
+    """
+    Name of the role.
+    """
+    name: String!
+
+    """
+    Description of the role.
+    """
+    description: String
+
+    """
+    Array of IP addresses that are allowed to connect to the API as a user of this role.
+    """
+    ip_whitelist: [String!]
+
+    """
+    ID used with external services in SCIM.
+    """
+    external_id: String
+
+    """
+    Custom override for the admin app module bar navigation.
+    """
+    module_listing: Json
+
+    """
+    Custom override for the admin app collection navigation.
+    """
+    collection_listing: Json
+
+    """
+    Whether or not this role enforces the use of 2FA.
+    """
+    enforce_twofactor: Boolean!
+}
+
+extend type Query {
+    """
+    Lists roles.
+    """
+    roles: [Role!]!
+
+    """
+    Get a role.
+    """
+    role(id: String!): Role!
+}

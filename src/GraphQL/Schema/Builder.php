@@ -10,14 +10,11 @@ use GraphQL\Language\AST\ScalarTypeDefinitionNode;
 use GraphQL\Language\AST\TypeDefinitionNode;
 use GraphQL\Language\AST\TypeExtensionNode;
 use GraphQL\Language\Parser;
-use GraphQL\Language\Printer;
 use GraphQL\Type\Definition\ObjectType;
 use GraphQL\Type\Definition\ScalarType;
 use GraphQL\Type\Schema;
-use GraphQL\Utils\AST;
 use GraphQL\Utils\BuildSchema;
 use GraphQL\Utils\SchemaExtender;
-use Nuwave\Lighthouse\Schema\AST\ASTHelper;
 
 class Builder
 {
@@ -40,8 +37,9 @@ class Builder
             }
         }
 
-        $schema = BuildSchema::build($document,
-            static function($config, $definition) use ($scalar) {
+        $schema = BuildSchema::build(
+            $document,
+            static function ($config, $definition) use ($scalar) {
                 if ($definition instanceof ScalarTypeDefinitionNode) {
                     $type = $scalar($definition->name->value);
                     if ($type !== null) {
@@ -51,6 +49,7 @@ class Builder
                         $config['parseLiteral'] = [$instance, 'parseLiteral'];
                     }
                 }
+
                 return $config;
             }
         );
@@ -59,7 +58,7 @@ class Builder
             'definitions' => $extensions,
         ]));
 
-        /**
+        /*
         $extended = BuildSchema::build($extendedSource,
             function ($config, $definition) use ($resolve) {
                 if ($definition instanceof ObjectTypeDefinitionNode) {
@@ -90,7 +89,8 @@ class Builder
         return $extended;
     }
 
-    private static function applyResolversToFields(ObjectType $type, callable $resolve) {
+    private static function applyResolversToFields(ObjectType $type, callable $resolve)
+    {
         foreach ($type->getFields() as $field) {
             $resolver = $resolve($type->name, $field->name);
             if ($resolver !== null) {

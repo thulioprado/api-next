@@ -9,7 +9,6 @@ use Directus\GraphQL\Events\EnhanceServerSchema;
 use Directus\GraphQL\Server\Resolvers\ProjectResolver;
 use Directus\GraphQL\Server\Resolvers\QueryResolver;
 use Directus\GraphQL\Types\Scalars\JsonType;
-use GraphQL\Type\Definition\ScalarType;
 use Illuminate\Support\Str;
 
 class Server extends Engine
@@ -25,7 +24,7 @@ class Server extends Engine
 
     protected function file(): string
     {
-        return __DIR__ . '/Schema/Schema.graphql';
+        return dirname(__DIR__, 3).'/graphql/Server.graphql';
     }
 
     protected function transform(string $source): string
@@ -33,10 +32,12 @@ class Server extends Engine
         /** @var array<string> $additional */
         $sources = event(new EnhanceServerSchema($source));
         array_unshift($sources, $source);
+
         return implode('\n', $sources);
     }
 
-    protected function scalar(string $type): ?string {
+    protected function scalar(string $type): ?string
+    {
         return static::$scalars[$type] ?? null;
     }
 

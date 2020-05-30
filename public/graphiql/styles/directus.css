@@ -97,3 +97,24 @@ Base on Prism's vsc-dark-plus
   text-decoration: none !important;
   color: white !important;
 }
+
+.loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 15%;
+}
+
+.loading .loader {
+  border: 8px solid #666;
+  border-top: 8px solid white;
+  border-radius: 50%;
+  width: 32px;
+  height: 32px;
+  animation: spin 2s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}

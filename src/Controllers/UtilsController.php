@@ -17,7 +17,7 @@ class UtilsController extends BaseController
         $fields = request()->all();
 
         return directus()->respond()->withQuery(
-            directus()->graphql()->project($project)->execute(/** @lang GraphQL */ '
+            directus()->graphql()->project($project)->execute(/* @lang GraphQL */ '
                 query randomString($length: Int) {
                     randomString(length: $length) {
                         random
@@ -33,7 +33,7 @@ class UtilsController extends BaseController
         $fields = request()->all();
 
         return directus()->respond()->withQuery(
-            directus()->graphql()->project($project)->execute(/** @lang GraphQL */ '
+            directus()->graphql()->project($project)->execute(/* @lang GraphQL */ '
                 query hashCreate($length: Int) {
                     hashCreate(length: $length) {
                         hash
@@ -49,7 +49,7 @@ class UtilsController extends BaseController
         $fields = request()->all();
 
         return directus()->respond()->withQuery(
-            directus()->graphql()->project($project)->execute(/** @lang GraphQL */ '
+            directus()->graphql()->project($project)->execute(/* @lang GraphQL */ '
                 query hashMatch($string: String!, $hash: String!) {
                     hashMatch(string: $string, hash: $hash) {
                         valid
@@ -64,7 +64,7 @@ class UtilsController extends BaseController
         $project = config('directus.project.id', 'api');
 
         return directus()->respond()->withQuery(
-            directus()->graphql()->project($project)->execute(/** @lang GraphQL */ '
+            directus()->graphql()->project($project)->execute(/* @lang GraphQL */ '
                 query GenerateTFSecret($length: Int) {
                     generateTFSecret(length: $length) {
                         twofactor_secret

@@ -20,7 +20,7 @@ class UserController extends BaseController
         $fields = [];
 
         return directus()->respond()->withQuery(
-            directus()->graphql()->project($project)->execute(/** @lang GraphQL */ '
+            directus()->graphql()->project($project)->execute(/* @lang GraphQL */ '
                 query {
                     users {
                         id
@@ -59,7 +59,7 @@ class UserController extends BaseController
         ];
 
         return directus()->respond()->withQuery(
-            directus()->graphql()->project($project)->execute(/** @lang GraphQL */ '
+            directus()->graphql()->project($project)->execute(/* @lang GraphQL */ '
                 query User($id: String!) {
                     user(id: $id) {
                         id
@@ -94,7 +94,7 @@ class UserController extends BaseController
         $fields = request()->all();
 
         return directus()->respond()->withQuery(
-            directus()->graphql()->project($project)->execute(/** @lang GraphQL */ '
+            directus()->graphql()->project($project)->execute(/* @lang GraphQL */ '
                 mutation CreateUser(
                     $status: String!,
                     $role_id: String!,
@@ -171,7 +171,7 @@ class UserController extends BaseController
         ]);
 
         return directus()->respond()->withQuery(
-            directus()->graphql()->project($project)->execute(/** @lang GraphQL */ '
+            directus()->graphql()->project($project)->execute(/* @lang GraphQL */ '
                 mutation UpdateUser(
                     $status: String!,
                     $role_id: String!,
@@ -248,7 +248,7 @@ class UserController extends BaseController
         ];
 
         return directus()->respond()->withQuery(
-            directus()->graphql()->project($project)->execute(/** @lang GraphQL */ '
+            directus()->graphql()->project($project)->execute(/* @lang GraphQL */ '
                 mutation DeleteUser($id: String!) {
                     deleteUser(id: $id) {
                         id
@@ -276,7 +276,7 @@ class UserController extends BaseController
             ];
 
             return directus()->respond()->withQuery(
-                directus()->graphql()->project($project)->execute(/** @lang GraphQL */ '
+                directus()->graphql()->project($project)->execute(/* @lang GraphQL */ '
                     mutation AcceptInviteUser($token: String!) {
                         acceptInviteUser(token: $token) {
                             id
@@ -308,7 +308,7 @@ class UserController extends BaseController
         $fields = request()->all();
 
         return directus()->respond()->withQuery(
-            directus()->graphql()->project($project)->execute(/** @lang GraphQL */ '
+            directus()->graphql()->project($project)->execute(/* @lang GraphQL */ '
                 mutation InviteUser($email: String!) {
                     inviteUser(email: $email) {
                         id
@@ -345,7 +345,7 @@ class UserController extends BaseController
         ];
 
         return directus()->respond()->withQuery(
-            directus()->graphql()->project($project)->execute(/** @lang GraphQL */ '
+            directus()->graphql()->project($project)->execute(/* @lang GraphQL */ '
                 mutation UpdateLastPageUser($id: String!, $last_page: String!) {
                     updateLastPageUser(id: $id, last_page: $last_page) {
                         id
@@ -385,7 +385,7 @@ class UserController extends BaseController
         ];
 
         return directus()->respond()->withQuery(
-            directus()->graphql()->project($project)->execute(/** @lang GraphQL */ '
+            directus()->graphql()->project($project)->execute(/* @lang GraphQL */ '
                 query Revisions($item: String!, $offset: Int) {
                     revisions(item: $item, offset: $offset) {
                         id

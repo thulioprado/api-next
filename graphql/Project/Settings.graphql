@@ -1,0 +1,43 @@
+"""
+Project settings.
+"""
+type Setting {
+    """
+    Key of the setting.
+    """
+    key: String!
+
+    """
+    Value of the setting.
+    """
+    value: Json
+}
+
+extend type Query {
+    """
+    Lists settings.
+    """
+    settings: [Setting!]!
+
+    """
+    Fetch a setting.
+    """
+    setting(key: String!): Setting!
+}
+
+extend type Mutation {
+    """
+    Create a setting.
+    """
+    createSetting(key: String!, value: Json): Setting!
+
+    """
+    Update a setting.
+    """
+    updateSetting(key: String!, newKey: String, value: Json): Setting!
+
+    """
+    Delete a setting.
+    """
+    deleteSetting(key: String!): Setting!
+}

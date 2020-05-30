@@ -20,7 +20,7 @@ class SettingsController extends BaseController
         $fields = [];
 
         return directus()->respond()->withQuery(
-            directus()->graphql()->project($project)->execute(/** @lang GraphQL */ '
+            directus()->graphql()->project($project)->execute(/* @lang GraphQL */ '
                 query {
                     settings {
                         key
@@ -41,7 +41,7 @@ class SettingsController extends BaseController
         ];
 
         return directus()->respond()->withQuery(
-            directus()->graphql()->project($project)->execute(/** @lang GraphQL */ '
+            directus()->graphql()->project($project)->execute(/* @lang GraphQL */ '
                 query Setting($key: String!) {
                     setting(key: $key) {
                         key
@@ -60,7 +60,7 @@ class SettingsController extends BaseController
         $fields = request()->all();
 
         return directus()->respond()->withQuery(
-            directus()->graphql()->project($project)->execute(/** @lang GraphQL */ '
+            directus()->graphql()->project($project)->execute(/* @lang GraphQL */ '
                 mutation CreateSetting($key: String!, $value: String) {
                     createSetting(key: $key, value: $value) {
                         key
@@ -81,7 +81,7 @@ class SettingsController extends BaseController
         ]);
 
         return directus()->respond()->withQuery(
-            directus()->graphql()->project($project)->execute(/** @lang GraphQL */ '
+            directus()->graphql()->project($project)->execute(/* @lang GraphQL */ '
                 query UpdateSetting($key: String!, $value: String) {
                     updateSetting(key: $key, value: $value) {
                         key
@@ -100,7 +100,7 @@ class SettingsController extends BaseController
         ];
 
         return directus()->respond()->withQuery(
-            directus()->graphql()->project($project)->execute(/** @lang GraphQL */ '
+            directus()->graphql()->project($project)->execute(/* @lang GraphQL */ '
                 mutation DeleteSetting($key: String!) {
                     deleteSetting(key: $key) {
                         key

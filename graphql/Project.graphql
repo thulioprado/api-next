@@ -1,0 +1,11 @@
+type Query
+type Mutation
+
+#include Common/Scalars/*.graphql
+#include Project/*.graphql
+
+schema {
+    query: Query
+    mutation: Mutation
+}
+

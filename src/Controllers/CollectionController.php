@@ -19,7 +19,7 @@ class CollectionController extends BaseController
         $fields = [];
 
         return directus()->respond()->withQuery(
-            directus()->graphql()->project($project)->execute(/** @lang GraphQL */ '
+            directus()->graphql()->project($project)->execute(/* @lang GraphQL */ '
                 query {
                     collections {
                         id
@@ -46,7 +46,7 @@ class CollectionController extends BaseController
         ];
 
         return directus()->respond()->withQuery(
-            directus()->graphql()->project($project)->execute(/** @lang GraphQL */ '
+            directus()->graphql()->project($project)->execute(/* @lang GraphQL */ '
                 query Collection($id: String!) {
                     collection(id: $id) {
                         id
@@ -69,7 +69,7 @@ class CollectionController extends BaseController
         $fields = request()->all();
 
         return directus()->respond()->withQuery(
-            directus()->graphql()->project($project)->execute(/** @lang GraphQL */ '
+            directus()->graphql()->project($project)->execute(/* @lang GraphQL */ '
                 mutation CreateCollection(
                     $name: String!,
                     $fields: Json!,
@@ -112,7 +112,7 @@ class CollectionController extends BaseController
         ]);
 
         return directus()->respond()->withQuery(
-            directus()->graphql()->project($project)->execute(/** @lang GraphQL */ '
+            directus()->graphql()->project($project)->execute(/* @lang GraphQL */ '
                 mutation UpdateCollection(
                     $id: String!,
                     $name: String,
@@ -156,7 +156,7 @@ class CollectionController extends BaseController
         ];
 
         return directus()->respond()->withQuery(
-            directus()->graphql()->project($project)->execute(/** @lang GraphQL */ '
+            directus()->graphql()->project($project)->execute(/* @lang GraphQL */ '
                 mutation DeleteCollection($id: String!) {
                     deleteCollection(id: $id) {
                         id

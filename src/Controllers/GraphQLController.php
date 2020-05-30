@@ -12,11 +12,12 @@ class GraphQLController extends BaseController
     {
         $query = request()->input('query', 'query {}');
         $variables = request()->input('variables', []);
+        $operation = request()->input('operationName', null);
 
         $graphql = directus()->graphql()->server();
 
         return directus()->respond()->withQuery(
-            $graphql->execute($query, $variables)
+            $graphql->execute($query, $variables, $operation)
         );
     }
 
@@ -25,11 +26,12 @@ class GraphQLController extends BaseController
         $project = config('directus.project.id');
         $query = request()->input('query', 'query {}');
         $variables = request()->input('variables', []);
+        $operation = request()->input('operationName', null);
 
         $graphql = directus()->graphql()->project($project);
 
         return directus()->respond()->withQuery(
-            $graphql->execute($query, $variables)
+            $graphql->execute($query, $variables, $operation)
         );
     }
 }

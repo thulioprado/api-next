@@ -6,8 +6,8 @@ namespace Directus\GraphQL\Resolvers\Traits;
 
 use Directus\Contracts\GraphQL\Context;
 use GraphQL\Type\Definition\ResolveInfo;
-use RuntimeException;
 use Illuminate\Support\Str;
+use RuntimeException;
 
 trait StaticResolver
 {

@@ -20,7 +20,7 @@ class ActivityController extends BaseController
         $fields = [];
 
         return directus()->respond()->withQuery(
-            directus()->graphql()->project($project)->execute(/** @lang GraphQL */ '
+            directus()->graphql()->project($project)->execute(/* @lang GraphQL */ '
                 query {
                     activities {
                         id
@@ -50,7 +50,7 @@ class ActivityController extends BaseController
         ];
 
         return directus()->respond()->withQuery(
-            directus()->graphql()->project($project)->execute(/** @lang GraphQL */ '
+            directus()->graphql()->project($project)->execute(/* @lang GraphQL */ '
                 query Activity($id: String!) {
                     activity(id: $id) {
                         id
@@ -81,7 +81,7 @@ class ActivityController extends BaseController
         // TODO: query fields
 
         return directus()->respond()->withQuery(
-            directus()->graphql()->project($project)->execute(/** @lang GraphQL */ '
+            directus()->graphql()->project($project)->execute(/* @lang GraphQL */ '
                 mutation CreateActivityComment(
                     $collection: String!,
                     $item: String!,
@@ -123,7 +123,7 @@ class ActivityController extends BaseController
         ]);
 
         return directus()->respond()->withQuery(
-            directus()->graphql()->project($project)->execute(/** @lang GraphQL */ '
+            directus()->graphql()->project($project)->execute(/* @lang GraphQL */ '
                 mutation UpdateActivityComment(
                     $id: String!,
                     $comment: String!,
@@ -162,7 +162,7 @@ class ActivityController extends BaseController
         ];
 
         return directus()->respond()->withQuery(
-            directus()->graphql()->project($project)->execute(/** @lang GraphQL */ '
+            directus()->graphql()->project($project)->execute(/* @lang GraphQL */ '
                 mutation DeleteActivityComment(
                     id: String!,
                     $comment_deleted_on: DateTime

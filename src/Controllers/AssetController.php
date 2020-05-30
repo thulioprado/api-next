@@ -21,7 +21,7 @@ class AssetController extends BaseController
         ];
 
         return directus()->respond()->withQuery(
-            directus()->graphql()->project($project)->execute(/** @lang GraphQL */ '
+            directus()->graphql()->project($project)->execute(/* @lang GraphQL */ '
                 query Asset($private_hash: String!) {
                     asset(private_hash: $private_hash) {
                         id
