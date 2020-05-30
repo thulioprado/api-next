@@ -14,6 +14,11 @@ use Directus\Testing\TestCase;
  */
 final class ResponseTest extends TestCase
 {
+    protected function setUp(): void
+    {
+        $this->markTestSkipped();
+    }
+
     public function testSuccessfulResponse(): void
     {
         $response = new Response();

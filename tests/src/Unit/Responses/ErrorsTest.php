@@ -13,7 +13,12 @@ use Directus\Testing\TestCase;
  */
 final class ErrorsTest extends TestCase
 {
-    /*public function testErrorFor(): void
+    protected function setUp(): void
+    {
+        $this->markTestSkipped();
+    }
+
+    public function testErrorFor(): void
     {
         $error = Errors::for(Errors::SETTING_NOT_FOUND);
 
@@ -50,5 +55,5 @@ final class ErrorsTest extends TestCase
         static::assertSame([
             'key' => 'this is public',
         ], $error['context']);
-    }*/
+    }
 }

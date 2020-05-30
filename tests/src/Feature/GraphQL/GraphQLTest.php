@@ -16,7 +16,12 @@ final class GraphQLTest extends TestCase
 {
     use DatabaseTransactions;
 
-    /*public function testQuery(): void
+    protected function setUp(): void
+    {
+        $this->markTestSkipped();
+    }
+
+    public function testQuery(): void
     {
         $response = directus()->graphql()->execute('
             query {
@@ -27,5 +32,5 @@ final class GraphQLTest extends TestCase
         ');
 
         static::assertIsArray($response);
-    }*/
+    }
 }
